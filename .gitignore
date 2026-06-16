@@ -1,0 +1,59 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.so
+
+# Jittor cache
+.cache/
+.jittor/
+.jittor_cache/
+
+# Environment
+.env
+.venv/
+venv/
+conda-meta/
+
+# Data and checkpoints
+data/*
+!data/.gitkeep
+
+checkpoints/*
+!checkpoints/.gitkeep
+
+outputs/*
+!outputs/.gitkeep
+
+logs/*
+!logs/.gitkeep
+
+runs/*
+!runs/.gitkeep
+
+tests/*
+!tests/.gitkeep
+
+# Experiment tools
+wandb/
+tensorboard/
+*.log
+
+# Model weights
+*.pt
+*.pth
+*.ckpt
+*.safetensors
+*.bin
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Other files
+runs/*
+!runs/.gitkeep
+
+assets/*
+!assets/.gitkeep
