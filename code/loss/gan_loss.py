@@ -9,20 +9,17 @@ except ImportError:
 
 
 def generator_realism_loss(fake_logits):
-    """Generator-side non-saturating realism loss: softplus(-D(fake))."""
-
+    # Generator-side non-saturating realism loss: softplus(-D(fake)).
     return softplus(-fake_logits).mean()
 
 
 def guidance_realism_loss(real_logits, fake_logits):
-    """Guidance/classifier real-vs-fake loss from the official DMD2 code."""
-
+    # Guidance/classifier real-vs-fake loss from the official DMD2 code.
     return (softplus(fake_logits) + softplus(-real_logits)).mean()
 
 
 def clean_classifier_losses(real_logits, fake_logits):
-    """Return classifier loss dict and detached realism probabilities."""
-
+    # Return classifier loss dict and detached realism probabilities.
     loss_dict = {
         "guidance_cls_loss": guidance_realism_loss(real_logits, fake_logits),
     }

@@ -9,8 +9,7 @@ except ImportError:
 
 
 def make_denoising_step_list(denoising_timestep, num_denoising_step):
-    """Create the descending timestep list used by official SD backward simulation."""
-
+    # Create the descending timestep list used by official SD backward simulation.
     if num_denoising_step <= 0:
         raise ValueError("num_denoising_step must be positive.")
     interval = denoising_timestep // num_denoising_step
@@ -23,19 +22,12 @@ def make_denoising_step_list(denoising_timestep, num_denoising_step):
 
 
 def select_backward_step(num_denoising_step):
-    """Sample one shared backward-simulation step index."""
-
+    # Sample one shared backward-simulation step index.
     return jt.randint(low=0, high=num_denoising_step, shape=[1]).int32()
 
 
 def edm_backward_step(noisy_image, model, sigma, labels=None, next_sigma=None, noise=None):
-    """Run one EDM backward-simulation step.
-
-    The EDM model predicts x0 directly. A following noisy state can be produced by
-    adding Gaussian noise with next_sigma, mirroring the official SD helper that
-    re-noises the predicted clean image at the next timestep.
-    """
-
+    # Run one EDM backward-simulation step and optionally re-noise the output.
     clean_image = model(noisy_image, sigma, labels)
     if next_sigma is None:
         return clean_image, clean_image
@@ -55,20 +47,7 @@ def sample_backward_edm(
     selected_step=None,
     noise_fn=None,
 ):
-    """EDM variant of official backward simulation for small DMD2 pipelines.
-
-    Args:
-        noisy_image: Initial noisy tensor.
-        model: Denoiser returning clean x0 from (x, sigma, labels).
-        sigmas: Fixed sigma schedule indexed by step_indices.
-        labels: Optional class labels.
-        step_indices: Descending integer timesteps. Defaults to all sigmas.
-        selected_step: Number of denoising transitions to simulate. If None,
-            one shared value is sampled, as in the official PyTorch code.
-        noise_fn: Optional callable receiving a reference tensor and returning
-            noise. Useful for deterministic tests.
-    """
-
+    # EDM variant of official backward simulation for small DMD2 pipelines.
     if step_indices is None:
         step_indices = jt.arange(sigmas.shape[0]).int32()
 

@@ -10,15 +10,8 @@ except ImportError:
 
 
 def dmd_gradient(latents, pred_real_image, pred_fake_image):
-    """Compute the DMD gradient used by the official DMD2 implementation.
-
-    Official PyTorch formula:
-        p_real = latents - pred_real_image
-        p_fake = latents - pred_fake_image
-        grad = (p_real - p_fake) / abs(p_real).mean([1, 2, 3], keepdim=True)
-        grad = torch.nan_to_num(grad)
-    """
-
+    # Compute the DMD gradient used by the official DMD2 implementation.
+    # grad = (p_real - p_fake) / abs(p_real).mean([1, 2, 3], keepdim=True)
     p_real = latents - pred_real_image
     p_fake = latents - pred_fake_image
     weight_factor = mean_abs(p_real, dims=(1, 2, 3), keepdims=True)
@@ -34,8 +27,7 @@ def distribution_matching_loss(
     timesteps=None,
     prefix="dmtrain",
 ):
-    """Return DMD loss and log tensors from real/fake denoised predictions."""
-
+    # Return DMD loss and log tensors from real/fake denoised predictions.
     grad = stop_grad(dmd_gradient(latents, pred_real_image, pred_fake_image))
     target = stop_grad(latents - grad)
     loss = 0.5 * mse_loss(latents, target)
@@ -58,7 +50,7 @@ def distribution_matching_loss(
 
 
 class DistributionMatchingLoss(nn.Module):
-    """Module wrapper for the DMD loss formula."""
+    # Module wrapper for the DMD loss formula.
 
     def __init__(self, prefix="dmtrain"):
         super().__init__()
@@ -93,8 +85,7 @@ def compute_distribution_matching_loss(
     timesteps=None,
     prefix="dmtrain",
 ):
-    """Network-facing helper matching EDMGuidance.compute_distribution_matching_loss."""
-
+    # Network-facing helper matching EDMGuidance.compute_distribution_matching_loss.
     if noise is None:
         noise = jt.randn_like(latents)
     if noisy_latents is None:
