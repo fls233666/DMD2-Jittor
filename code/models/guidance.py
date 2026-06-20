@@ -1,7 +1,6 @@
 """EDM guidance model for Jittor DMD2 training."""
 
 import copy
-import numpy as np
 import jittor as jt
 from jittor import nn
 
@@ -12,57 +11,27 @@ except ImportError:
     from diffusion import get_edm_network, get_sigmas_karras
     from discriminator import EDMRealismHead
 
+try:
+    from loss.common import nan_to_num as _nan_to_num
+    from loss.common import sigmoid as _sigmoid
+    from loss.common import softplus as _softplus
+    from loss.common import stop_grad as _stop_grad
+    from loss.dmd_loss import distribution_matching_loss
+    from loss.gan_loss import clean_classifier_losses, generator_realism_loss
+    from loss.regression_loss import edm_fake_score_denoising_loss
+except ImportError:
+    from common import nan_to_num as _nan_to_num
+    from common import sigmoid as _sigmoid
+    from common import softplus as _softplus
+    from common import stop_grad as _stop_grad
+    from dmd_loss import distribution_matching_loss
+    from gan_loss import clean_classifier_losses, generator_realism_loss
+    from regression_loss import edm_fake_score_denoising_loss
+
 
 def _get_arg(args, name, default):
     # Read an argparse-style attribute with a fallback.
     return getattr(args, name, default) if args is not None else default
-
-
-def _stop_grad(x):
-    # Detach a Jittor Var from the gradient graph.
-    if hasattr(x, "stop_grad"):
-        return x.stop_grad()
-    if hasattr(x, "detach"):
-        return x.detach()
-    return x
-
-
-def _nan_to_num(x, nan=0.0, posinf=None, neginf=None):
-    # Replace non-finite values without depending on jt.nan_to_num.
-    if posinf is None:
-        posinf = np.finfo(np.float32).max
-    if neginf is None:
-        neginf = np.finfo(np.float32).min
-
-    if hasattr(jt, "nan_to_num"):
-        return jt.nan_to_num(x, nan=nan, posinf=posinf, neginf=neginf)
-
-    x = jt.where(jt.isnan(x), jt.zeros_like(x) + nan, x)
-    x = jt.where(jt.isinf(x) & (x > 0), jt.zeros_like(x) + posinf, x)
-    x = jt.where(jt.isinf(x) & (x < 0), jt.zeros_like(x) + neginf, x)
-    return x
-
-
-def _softplus(x):
-    # Stable softplus wrapper.
-    if hasattr(nn, "softplus"):
-        return nn.softplus(x)
-    return jt.log(1 + jt.exp(-jt.abs(x))) + jt.maximum(x, jt.zeros_like(x))
-
-
-def _sigmoid(x):
-    # Sigmoid wrapper for logging.
-    return jt.sigmoid(x)
-
-
-def _mse_loss(x, target):
-    # Mean squared error.
-    return ((x - target) ** 2).mean()
-
-
-def _mean_abs(x, dims, keepdims=True):
-    # Mean absolute value over multiple dimensions.
-    return jt.abs(x).mean(dims=dims, keepdims=keepdims)
 
 
 class EDMGuidance(nn.Module):
@@ -204,7 +173,6 @@ class EDMGuidance(nn.Module):
 
     def compute_distribution_matching_loss(self, latents, labels):
         # Compute the DMD distribution matching loss for generator training.
-        original_latents = latents
         batch_size = latents.shape[0]
 
         with jt.no_grad():
@@ -216,28 +184,13 @@ class EDMGuidance(nn.Module):
             pred_real_image = self.real_unet(noisy_latents, timestep_sigma, labels)
             pred_fake_image = self.fake_unet(noisy_latents, timestep_sigma, labels)
 
-            p_real = latents - pred_real_image
-            p_fake = latents - pred_fake_image
-
-            weight_factor = _mean_abs(p_real, dims=[1, 2, 3], keepdims=True)
-            grad = (p_real - p_fake) / weight_factor
-            grad = _nan_to_num(grad)
-
-        target = _stop_grad(original_latents - grad)
-        loss = 0.5 * _mse_loss(original_latents, target)
-
-        loss_dict = {
-            "loss_dm": loss,
-        }
-        log_dict = {
-            "dmtrain_noisy_latents": _stop_grad(noisy_latents),
-            "dmtrain_pred_real_image": _stop_grad(pred_real_image),
-            "dmtrain_pred_fake_image": _stop_grad(pred_fake_image),
-            "dmtrain_grad": _stop_grad(grad),
-            "dmtrain_gradient_norm": jt.sqrt((grad ** 2).sum()),
-            "dmtrain_timesteps": _stop_grad(timesteps),
-        }
-        return loss_dict, log_dict
+        return distribution_matching_loss(
+            latents=latents,
+            pred_real_image=pred_real_image,
+            pred_fake_image=pred_fake_image,
+            noisy_latents=noisy_latents,
+            timesteps=timesteps,
+        )
 
     def compute_loss_fake(self, latents, labels):
         # Train the fake score model to denoise generated images.
@@ -254,10 +207,12 @@ class EDMGuidance(nn.Module):
         noisy_latents = latents + timestep_sigma.reshape(-1, 1, 1, 1) * noise
 
         fake_x0_pred = self.fake_unet(noisy_latents, timestep_sigma, labels)
-
-        snrs = timestep_sigma ** -2
-        weights = snrs + 1.0 / (self.sigma_data ** 2)
-        loss_fake = (weights * (fake_x0_pred - latents) ** 2).mean()
+        loss_fake = edm_fake_score_denoising_loss(
+            fake_x0_pred=fake_x0_pred,
+            target_latents=latents,
+            timestep_sigma=timestep_sigma,
+            sigma_data=self.sigma_data,
+        )
 
         loss_dict = {
             "loss_fake_mean": loss_fake,
@@ -302,7 +257,7 @@ class EDMGuidance(nn.Module):
             label=fake_labels,
         )
         return {
-            "gen_cls_loss": _softplus(-logits).mean(),
+            "gen_cls_loss": generator_realism_loss(logits),
         }
 
     def compute_guidance_clean_cls_loss(self, real_image, fake_image, real_label, fake_label):
@@ -316,15 +271,7 @@ class EDMGuidance(nn.Module):
             label=fake_label,
         )
 
-        classification_loss = _softplus(pred_fake) + _softplus(-pred_real)
-        loss_dict = {
-            "guidance_cls_loss": classification_loss.mean(),
-        }
-        log_dict = {
-            "pred_realism_on_real": _stop_grad(_sigmoid(pred_real).reshape(-1)),
-            "pred_realism_on_fake": _stop_grad(_sigmoid(pred_fake).reshape(-1)),
-        }
-        return loss_dict, log_dict
+        return clean_classifier_losses(real_logits=pred_real, fake_logits=pred_fake)
 
     def generator_forward(self, image, labels):
         # Compute guidance losses needed for the generator update.
