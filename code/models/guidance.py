@@ -1,6 +1,7 @@
 """EDM guidance model for Jittor DMD2 training."""
 
 import copy
+import numpy as np
 import jittor as jt
 from jittor import nn
 
@@ -26,13 +27,20 @@ def _stop_grad(x):
     return x
 
 
-def _nan_to_num(x, nan=0.0, posinf=0.0, neginf=0.0):
+def _nan_to_num(x, nan=0.0, posinf=None, neginf=None):
     # Replace non-finite values without depending on jt.nan_to_num.
+    if posinf is None:
+        posinf = np.finfo(np.float32).max
+    if neginf is None:
+        neginf = np.finfo(np.float32).min
+
     if hasattr(jt, "nan_to_num"):
         return jt.nan_to_num(x, nan=nan, posinf=posinf, neginf=neginf)
 
-    finite = (x == x) & (x != float("inf")) & (x != -float("inf"))
-    return jt.where(finite, x, jt.zeros_like(x) + nan)
+    x = jt.where(jt.isnan(x), jt.zeros_like(x) + nan, x)
+    x = jt.where(jt.isinf(x) & (x > 0), jt.zeros_like(x) + posinf, x)
+    x = jt.where(jt.isinf(x) & (x < 0), jt.zeros_like(x) + neginf, x)
+    return x
 
 
 def _softplus(x):
@@ -154,7 +162,7 @@ class EDMGuidance(nn.Module):
                 bottleneck_resolution=bottleneck_resolution,
             )
 
-        self._karras_sigmas = get_sigmas_karras(
+        self.karras_sigmas_buffer = get_sigmas_karras(
             n=self.num_train_timesteps,
             sigma_min=self.sigma_min,
             sigma_max=self.sigma_max,
@@ -164,7 +172,7 @@ class EDMGuidance(nn.Module):
     @property
     def karras_sigmas(self):
         # Return the fixed Karras sigma schedule, small sigma first.
-        return self._karras_sigmas
+        return self.karras_sigmas_buffer
 
     def sample_timesteps(self, batch_size, min_step=None, max_step=None, shape=None):
         # Sample timestep indices.
@@ -179,7 +187,7 @@ class EDMGuidance(nn.Module):
 
     def timestep_to_sigma(self, timesteps):
         # Map integer timesteps to sigma values.
-        return self._karras_sigmas[timesteps]
+        return self.karras_sigmas_buffer[timesteps]
 
     def add_noise(self, latents, timesteps=None, sigma=None, noise=None):
         # Add Gaussian noise to clean images/latents.

@@ -122,7 +122,7 @@ class Conv2d(nn.Module):
             filt = jt.array(resample_filter).float32()
             filt = jt.matmul(filt.reshape(-1, 1), filt.reshape(1, -1))
             filt = filt.reshape(1, 1, filt.shape[0], filt.shape[1])
-            filt = filt / (jt.sum(filt) ** 2)
+            filt = filt / jt.sum(filt)
             self._resample_filter = filt.stop_grad()
 
     def execute(self, x):
@@ -313,12 +313,12 @@ class FourierEmbedding(nn.Module):
 
         self.num_channels = num_channels
         self.scale = scale
-        self._freqs = (jt.randn([num_channels // 2]) * scale).stop_grad()
+        self.freqs = (jt.randn([num_channels // 2]) * scale).stop_grad()
 
     def execute(self, x):
         # Map scalar inputs to random Fourier embeddings.
         x = x.reshape(-1, 1).float32()
-        freqs = (2 * np.pi * self._freqs).reshape(1, -1).float32()
+        freqs = (2 * np.pi * self.freqs).reshape(1, -1).float32()
         x = jt.matmul(x, freqs)
 
         return jt.concat([jt.cos(x), jt.sin(x)], dim=1)

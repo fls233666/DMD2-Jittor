@@ -83,6 +83,8 @@ class ExponentialMovingAverage:
         # Forward through the EMA model for convenience.
         return self.model(*args, **kwargs)
 
+    __call__ = execute
+
 
 class EMAModel(nn.Module):
     # Module wrapper variant that can be registered inside larger models.

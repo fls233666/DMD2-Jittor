@@ -285,7 +285,7 @@ class EDMTeacherStudent(nn.Module):
         self.student = student
 
         # Official code flips the Karras schedule so small sigma appears first.
-        self._karras_sigmas = get_sigmas_karras(
+        self.karras_sigmas_buffer = get_sigmas_karras(
             n=num_train_timesteps,
             sigma_min=sigma_min,
             sigma_max=sigma_max,
@@ -295,7 +295,7 @@ class EDMTeacherStudent(nn.Module):
     @property
     def karras_sigmas(self):
         # Return the fixed Karras schedule.
-        return self._karras_sigmas
+        return self.karras_sigmas_buffer
 
     def sample_timesteps(self, batch_size, min_step=None, max_step=None):
         # Sample integer timesteps from the training interval.
@@ -305,14 +305,14 @@ class EDMTeacherStudent(nn.Module):
         # jt.randint high is exclusive, so use max_step + 1.
         timesteps = jt.randint(
             low=min_step,
-            high=max_step + 1,
+            high=min(max_step + 1, self.num_train_timesteps),
             shape=[batch_size, 1, 1, 1],
         )
         return timesteps.int32()
 
     def timestep_to_sigma(self, timesteps):
         # Map integer timestep tensor to sigma tensor.
-        return self._karras_sigmas[timesteps]
+        return self.karras_sigmas_buffer[timesteps]
 
     def add_noise(self, x, sigma=None, noise=None, timesteps=None):
         # Add Gaussian noise according to either sigma or sampled timesteps.
