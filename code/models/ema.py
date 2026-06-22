@@ -1,7 +1,19 @@
 """Exponential moving average helpers for Jittor models."""
 
 import copy
+import jittor as jt
 from jittor import nn
+
+
+def _detach_var(value):
+    # Avoid Var.stop_grad(), which mutates the Var and can freeze live params.
+    if hasattr(jt, "detach"):
+        return jt.detach(value)
+    if hasattr(value, "detach"):
+        return value.detach()
+    if hasattr(value, "stop_grad"):
+        return value.stop_grad()
+    return value
 
 
 def _assign_var(dst, src):
@@ -25,9 +37,7 @@ def copy_params_and_buffers(src_module, dst_module, require_all=False):
             missing.append(name)
             continue
 
-        src_value = src_state[name]
-        if hasattr(src_value, "stop_grad"):
-            src_value = src_value.stop_grad()
+        src_value = _detach_var(src_state[name])
         _assign_var(dst_value, src_value)
 
     if require_all and missing:
@@ -54,9 +64,7 @@ class ExponentialMovingAverage:
             if name not in model_state:
                 continue
 
-            value = model_state[name]
-            if hasattr(value, "stop_grad"):
-                value = value.stop_grad()
+            value = _detach_var(model_state[name])
 
             updated = ema_value * decay + value * (1.0 - decay)
             _assign_var(ema_value, updated)
@@ -106,9 +114,7 @@ class EMAModel(nn.Module):
         for name, ema_value in ema_state.items():
             if name not in model_state:
                 continue
-            value = model_state[name]
-            if hasattr(value, "stop_grad"):
-                value = value.stop_grad()
+            value = _detach_var(model_state[name])
             _assign_var(ema_value, ema_value * decay + value * (1.0 - decay))
 
     def execute(self, *args, **kwargs):

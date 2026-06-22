@@ -9,10 +9,14 @@ def stop_grad(x):
     # Detach a Jittor Var from the gradient graph.
     if x is None:
         return None
-    if hasattr(x, "stop_grad"):
-        return x.stop_grad()
+    # Var.stop_grad() is in-place in Jittor and can invalidate a loss graph
+    # when the same Var is also used for optimization. jt.detach() is not.
+    if hasattr(jt, "detach"):
+        return jt.detach(x)
     if hasattr(x, "detach"):
         return x.detach()
+    if hasattr(x, "stop_grad"):
+        return x.stop_grad()
     return x
 
 

@@ -95,13 +95,11 @@ class EDMUniModel(nn.Module):
                     "label": labels,
                     "real_train_dict": real_train_dict,
                 }
-                self.guidance_model.requires_grad_(False)
                 loss_dict, log_dict = self.guidance_model(
                     generator_turn=True,
                     guidance_turn=False,
                     generator_data_dict=generator_data_dict,
                 )
-                self.guidance_model.requires_grad_(True)
             else:
                 loss_dict = {}
                 log_dict = {}
@@ -120,4 +118,3 @@ class EDMUniModel(nn.Module):
             guidance_turn=True,
             guidance_data_dict=guidance_data_dict,
         )
-

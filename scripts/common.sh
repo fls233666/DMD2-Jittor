@@ -35,5 +35,18 @@ setup_jittor_env() {
   USE_CUDA="${USE_CUDA:-0}"
   if [[ "${USE_CUDA}" != "1" ]]; then
     export nvcc_path="${nvcc_path:-}"
+  else
+    if [[ -d /usr/lib/wsl/lib ]]; then
+      export LD_LIBRARY_PATH="/usr/lib/wsl/lib:${LD_LIBRARY_PATH:-}"
+    fi
+    export cuda_arch="${cuda_arch:-89}"
+    export conv_opt="${conv_opt:-1}"
+    if [[ -z "${cc_path:-}" && -x /usr/bin/g++-10 ]]; then
+      export cc_path="/usr/bin/g++-10"
+    elif [[ -z "${cc_path:-}" ]]; then
+      echo "WARNING: USE_CUDA=1 but /usr/bin/g++-10 was not found." >&2
+      echo "Jittor with CUDA 11.5 may fail with the default /usr/bin/g++." >&2
+      echo "Install it with: sudo apt install gcc-10 g++-10" >&2
+    fi
   fi
 }

@@ -7,6 +7,14 @@ import jittor as jt
 from jittor import nn
 
 try:
+    from loss.common import stop_grad
+except ImportError:
+    try:
+        from ..loss.common import stop_grad
+    except ImportError:
+        from common import stop_grad
+
+try:
     from datasets.cifar10 import batch_to_real_train_dict
     from samplers.scheduler import constant_sigma, randn_image
 except ImportError:
@@ -209,13 +217,13 @@ class DMD2DebugEngine:
             generator_turn=True,
             guidance_turn=False,
         )
-        log_dict["train_noise"] = noise.stop_grad()
-        log_dict["train_sigma"] = sigma.stop_grad()
-        log_dict["real_image"] = image.stop_grad()
+        log_dict["train_noise"] = stop_grad(noise)
+        log_dict["train_sigma"] = stop_grad(sigma)
+        log_dict["real_image"] = stop_grad(image)
         if labels is not None:
-            log_dict["fake_label"] = labels.stop_grad()
+            log_dict["fake_label"] = stop_grad(labels)
         if class_id is not None:
-            log_dict["fake_class_id"] = class_id.stop_grad()
+            log_dict["fake_class_id"] = stop_grad(class_id)
         return loss_dict, log_dict
 
     def generator_step(self, batch, compute_generator_gradient=True):
