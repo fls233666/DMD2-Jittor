@@ -1,0 +1,60 @@
+# CIFAR-10 smoke/debug run for validating the Jittor DMD2 training loop.
+
+name: cifar10_debug
+script: scripts/train_cifar10_debug.sh
+purpose: code_path_debug
+
+env:
+  RUN_NAME: cifar10_debug
+  CONDA_ENV: dmd2-jittor
+  USE_CUDA: "0"
+  DATA_ROOT: data/cifar10
+  MAX_STEPS: "50"
+  BATCH_SIZE: "8"
+  MAX_SAMPLES: "1024"
+  LOG_INTERVAL: "10"
+  CHECKPOINT_INTERVAL: "50"
+  EVAL_INTERVAL: "50"
+  NO_AUGMENT: "0"
+
+dataset:
+  name: cifar10
+  root: data/cifar10
+  image_size: 32
+  num_classes: 10
+  max_samples: 1024
+  augment: true
+
+model:
+  dataset_name: cifar10
+  config_name: tiny
+  resolution: 32
+  label_dim: 10
+  sigma_data: 0.5
+  sigma_min: 0.002
+  sigma_max: 80.0
+  rho: 7.0
+  num_train_timesteps: 1000
+  min_step_percent: 0.02
+  max_step_percent: 0.98
+  gan_classifier: false
+
+training:
+  max_steps: 50
+  batch_size: 8
+  optimizer: adam
+  lr_generator: 0.0002
+  lr_guidance: 0.0002
+  adam_beta1: 0.0
+  adam_beta2: 0.999
+  ema_decay: 0.999
+  conditioning_sigma: 80.0
+  dfake_gen_update_ratio: 1
+
+records:
+  checkpoint_dir: checkpoints/cifar10_debug
+  sample_dir: outputs/samples/cifar10_debug
+  metrics_log: logs/cifar10_debug/train_metrics.jsonl
+  performance_log: logs/cifar10_debug/performance.jsonl
+  loss_curve: outputs/curves/cifar10_debug_loss.svg
+  performance_curve: outputs/curves/cifar10_debug_performance.svg

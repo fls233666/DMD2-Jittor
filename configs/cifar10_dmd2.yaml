@@ -1,0 +1,61 @@
+# Longer CIFAR-10 DMD2 run after cifar10_debug is stable.
+
+name: cifar10_dmd2
+script: scripts/train_cifar10_debug.sh
+purpose: small_scale_training
+
+env:
+  RUN_NAME: cifar10_dmd2
+  CONDA_ENV: dmd2-jittor
+  USE_CUDA: "1"
+  DATA_ROOT: data/cifar10
+  MAX_STEPS: "5000"
+  BATCH_SIZE: "32"
+  MAX_SAMPLES: "50000"
+  LOG_INTERVAL: "100"
+  CHECKPOINT_INTERVAL: "1000"
+  EVAL_INTERVAL: "500"
+  NO_AUGMENT: "0"
+
+dataset:
+  name: cifar10
+  root: data/cifar10
+  image_size: 32
+  num_classes: 10
+  max_samples: 50000
+  augment: true
+
+model:
+  dataset_name: cifar10
+  config_name: tiny
+  resolution: 32
+  label_dim: 10
+  sigma_data: 0.5
+  sigma_min: 0.002
+  sigma_max: 80.0
+  rho: 7.0
+  num_train_timesteps: 1000
+  min_step_percent: 0.02
+  max_step_percent: 0.98
+  gan_classifier: false
+
+training:
+  max_steps: 5000
+  batch_size: 32
+  optimizer: adam
+  lr_generator: 0.0002
+  lr_guidance: 0.0002
+  adam_beta1: 0.0
+  adam_beta2: 0.999
+  ema_decay: 0.999
+  conditioning_sigma: 80.0
+  dfake_gen_update_ratio: 1
+
+records:
+  checkpoint_dir: checkpoints/cifar10_dmd2
+  sample_dir: outputs/samples/cifar10_dmd2
+  metrics_log: logs/cifar10_dmd2/train_metrics.jsonl
+  performance_log: logs/cifar10_dmd2/performance.jsonl
+  loss_curve: outputs/curves/cifar10_dmd2_loss.svg
+  performance_curve: outputs/curves/cifar10_dmd2_performance.svg
+  fid_output: outputs/fid_results/cifar10_dmd2_fid.json

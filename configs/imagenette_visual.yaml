@@ -1,0 +1,42 @@
+# Planned Imagenette/Imagewoof visual supplement.
+
+name: imagenette_visual
+script: pending
+purpose: planned_visual_supplement
+status: planned
+
+dataset:
+  name: imagenette
+  root: data/imagenette
+  image_size: 64
+  num_classes: 10
+  augment: true
+
+model:
+  dataset_name: tiny
+  config_name: tiny
+  resolution: 64
+  label_dim: 10
+  sigma_data: 0.5
+  sigma_min: 0.002
+  sigma_max: 80.0
+  rho: 7.0
+  num_train_timesteps: 1000
+  min_step_percent: 0.02
+  max_step_percent: 0.98
+  gan_classifier: false
+
+training:
+  max_steps: 10000
+  batch_size: 16
+  optimizer: adam
+  lr_generator: 0.0001
+  lr_guidance: 0.0001
+  conditioning_sigma: 80.0
+
+records:
+  checkpoint_dir: checkpoints/imagenette_visual
+  sample_dir: outputs/samples/imagenette_visual
+  metrics_log: logs/imagenette_visual/train_metrics.jsonl
+  performance_log: logs/imagenette_visual/performance.jsonl
+  sample_grid: outputs/grids/imagenette_visual_samples.svg

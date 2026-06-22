@@ -1,0 +1,42 @@
+# PyTorch-to-Jittor checkpoint conversion and key/shape alignment.
+
+name: pytorch_jittor_align_imagenet64
+script: scripts/align_pytorch_jittor.sh
+purpose: checkpoint_conversion_alignment
+
+generator_env:
+  TARGET: generator
+  JITTOR_CONDA_ENV: dmd2-jittor
+  PYTORCH_CONDA_ENV: dmd2
+  USE_CUDA: "0"
+  PYTORCH_ROOT: ../DMD2-pytorch
+  PYTORCH_CKPT: ../DMD2-pytorch/checkpoints/imagenet_fid151/pytorch_model.bin
+  SAVE_CONVERTED: checkpoints/imagenet64_demo/generator_jittor.pkl
+  SHAPES_PATH: /tmp/dmd2_generator_target_shapes.pkl
+  LOG_PATH: logs/pytorch_jittor_align_generator.log
+
+guidance_env:
+  TARGET: guidance
+  JITTOR_CONDA_ENV: dmd2-jittor
+  PYTORCH_CONDA_ENV: dmd2
+  USE_CUDA: "0"
+  GAN_CLASSIFIER: "1"
+  PYTORCH_ROOT: ../DMD2-pytorch
+  PYTORCH_CKPT: ../DMD2-pytorch/checkpoints/imagenet_fid151/pytorch_model_1.bin
+  SAVE_CONVERTED: checkpoints/imagenet64_demo/guidance_jittor.pkl
+  SHAPES_PATH: /tmp/dmd2_guidance_target_shapes.pkl
+  LOG_PATH: logs/pytorch_jittor_align_guidance.log
+
+model:
+  dataset_name: imagenet
+  config_name: imagenet
+  resolution: 64
+  label_dim: 1000
+  channel_mult: [1, 2, 3, 4]
+  num_blocks: 3
+  model_channels: 192
+  attn_resolutions: [32, 16, 8]
+
+records:
+  generator_log: logs/pytorch_jittor_align_generator.log
+  guidance_log: logs/pytorch_jittor_align_guidance.log

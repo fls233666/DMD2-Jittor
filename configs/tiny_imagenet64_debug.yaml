@@ -1,0 +1,47 @@
+# Planned Tiny-ImageNet-64 subset debug run.
+# Dataset loader/trainer support is not implemented yet; this records the target setup.
+
+name: tiny_imagenet64_debug
+script: pending
+purpose: planned_main_dataset_debug
+status: planned
+
+dataset:
+  name: tiny_imagenet64
+  root: data/tiny-imagenet-200
+  image_size: 64
+  num_classes: 20
+  classes: first_20
+  images_per_class: 500
+  augment: true
+
+model:
+  dataset_name: tiny
+  config_name: tiny
+  resolution: 64
+  label_dim: 20
+  sigma_data: 0.5
+  sigma_min: 0.002
+  sigma_max: 80.0
+  rho: 7.0
+  num_train_timesteps: 1000
+  min_step_percent: 0.02
+  max_step_percent: 0.98
+  gan_classifier: false
+
+training:
+  max_steps: 5000
+  batch_size: 16
+  optimizer: adam
+  lr_generator: 0.0001
+  lr_guidance: 0.0001
+  conditioning_sigma: 80.0
+  dfake_gen_update_ratio: 1
+
+records:
+  checkpoint_dir: checkpoints/tiny_imagenet64_debug
+  sample_dir: outputs/samples/tiny_imagenet64_debug
+  metrics_log: logs/tiny_imagenet64_debug/train_metrics.jsonl
+  performance_log: logs/tiny_imagenet64_debug/performance.jsonl
+  loss_curve: outputs/curves/tiny_imagenet64_debug_loss.svg
+  performance_curve: outputs/curves/tiny_imagenet64_debug_performance.svg

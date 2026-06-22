@@ -1,0 +1,49 @@
+# Official ImageNet-64 DMD2 one-step demo with converted generator weights.
+
+name: imagenet64_demo
+script: scripts/sample_imagenet64_demo.sh
+purpose: official_checkpoint_sampling
+
+env:
+  RUN_NAME: imagenet64_demo
+  CONDA_ENV: dmd2-jittor
+  USE_CUDA: "1"
+  CONVERTED_CKPT: checkpoints/imagenet64_demo/generator_jittor.pkl
+  PYTORCH_CKPT: ../DMD2-pytorch/checkpoints/imagenet_fid151/pytorch_model.bin
+  OUTPUT_GRID: outputs/grids/imagenet64_demo.svg
+  OUTPUT_DIR: outputs/samples/imagenet64_demo
+  OUTPUT_NPZ: outputs/samples/imagenet64_demo.npz
+  BATCH_SIZE: "16"
+  NROW: "4"
+  CLASS_IDX: ""
+  LABELS: ""
+
+checkpoint:
+  source_format: official_pytorch
+  pytorch_ckpt: ../DMD2-pytorch/checkpoints/imagenet_fid151/pytorch_model.bin
+  converted_ckpt: checkpoints/imagenet64_demo/generator_jittor.pkl
+  target: generator
+
+model:
+  dataset_name: imagenet
+  config_name: imagenet
+  resolution: 64
+  label_dim: 1000
+  sigma_data: 0.5
+  sigma_min: 0.002
+  sigma_max: 80.0
+  rho: 7.0
+  num_train_timesteps: 1000
+
+sampling:
+  mode: one_step
+  batch_size: 16
+  conditioning_sigma: 80.0
+  nrow: 4
+  class_idx: null
+  labels: []
+
+records:
+  output_grid: outputs/grids/imagenet64_demo.svg
+  output_dir: outputs/samples/imagenet64_demo
+  output_npz: outputs/samples/imagenet64_demo.npz

@@ -1,0 +1,29 @@
+# Export curves, sample grids, and lightweight pixel-FID for CIFAR-10 debug.
+
+name: eval_cifar10_debug
+script: scripts/eval_fid.sh
+purpose: record_export
+
+env:
+  RUN_NAME: cifar10_debug
+  CONDA_ENV: dmd2-jittor
+  METRICS_LOG: logs/cifar10_debug/train_metrics.jsonl
+  PERFORMANCE_LOG: logs/cifar10_debug/performance.jsonl
+  SAMPLES_INPUT: outputs/samples/cifar10_debug
+  REF_IMAGES: data/ref_images
+  LOSS_CURVE: outputs/curves/cifar10_debug_loss.svg
+  PERF_CURVE: outputs/curves/cifar10_debug_performance.svg
+  SAMPLE_GRID: outputs/grids/cifar10_debug_samples.svg
+  FID_OUTPUT: outputs/fid_results/cifar10_debug_fid.json
+  IMAGE_SIZE: "32"
+  MAX_IMAGES: "64"
+  NROW: "8"
+
+records:
+  metrics_log: logs/cifar10_debug/train_metrics.jsonl
+  performance_log: logs/cifar10_debug/performance.jsonl
+  loss_curve: outputs/curves/cifar10_debug_loss.svg
+  performance_curve: outputs/curves/cifar10_debug_performance.svg
+  sample_grid: outputs/grids/cifar10_debug_samples.svg
+  fid_output: outputs/fid_results/cifar10_debug_fid.json
+  fid_mode: pixel-fid

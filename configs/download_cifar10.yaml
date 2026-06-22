@@ -1,0 +1,18 @@
+# Dataset download config for CIFAR-10.
+
+name: download_cifar10
+script: scripts/download_datasets.sh
+purpose: dataset_preparation
+
+env:
+  CONDA_ENV: dmd2-jittor
+  DATASET: cifar10
+  DATA_ROOT: data/cifar10
+  TRAIN_ONLY: "0"
+  TEST_ONLY: "0"
+
+dataset:
+  name: cifar10
+  root: data/cifar10
+  train_split: true
+  test_split: true

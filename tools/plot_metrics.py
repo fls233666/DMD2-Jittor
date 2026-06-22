@@ -2,6 +2,7 @@
 
 import argparse
 import csv
+import html
 import os
 import sys
 
@@ -74,16 +75,19 @@ def scalar_series(records, names=None):
 
 
 def plot_series(records, output_path, names=None, title=None):
-    os.environ.setdefault("MPLCONFIGDIR", "/tmp/matplotlib")
-    os.environ.setdefault("XDG_CACHE_HOME", "/tmp")
-    import matplotlib
-
-    matplotlib.use("Agg")
-    import matplotlib.pyplot as plt
-
     _, series = scalar_series(records, names=names)
     if not series:
         raise ValueError("No scalar series found to plot.")
+
+    os.environ.setdefault("MPLCONFIGDIR", "/tmp/matplotlib")
+    os.environ.setdefault("XDG_CACHE_HOME", "/tmp")
+    try:
+        import matplotlib
+    except ModuleNotFoundError:
+        return plot_series_svg(series, output_path, title=title)
+
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
 
     directory = os.path.dirname(output_path)
     if directory:
@@ -105,6 +109,112 @@ def plot_series(records, output_path, names=None, title=None):
         save_kwargs["dpi"] = 150
     plt.savefig(output_path, **save_kwargs)
     plt.close()
+    return output_path
+
+
+def _scale(value, src_min, src_max, dst_min, dst_max):
+    if abs(src_max - src_min) < 1e-12:
+        return (dst_min + dst_max) * 0.5
+    ratio = (value - src_min) / (src_max - src_min)
+    return dst_min + ratio * (dst_max - dst_min)
+
+
+def plot_series_svg(series, output_path, title=None):
+    # Lightweight SVG fallback for environments without matplotlib.
+    directory = os.path.dirname(output_path)
+    if directory:
+        os.makedirs(directory, exist_ok=True)
+
+    width, height = 900, 520
+    left, right, top, bottom = 80, 30, 60, 80
+    plot_left = left
+    plot_right = width - right
+    plot_top = top
+    plot_bottom = height - bottom
+
+    all_x = np.concatenate([x for x, _ in series.values()])
+    all_y = np.concatenate([y for _, y in series.values()])
+    x_min, x_max = float(all_x.min()), float(all_x.max())
+    y_min, y_max = float(all_y.min()), float(all_y.max())
+    if abs(y_max - y_min) < 1e-12:
+        pad = max(abs(y_min) * 0.1, 1.0)
+        y_min -= pad
+        y_max += pad
+
+    colors = [
+        "#2563eb",
+        "#dc2626",
+        "#16a34a",
+        "#9333ea",
+        "#ea580c",
+        "#0891b2",
+    ]
+    lines = [
+        f'<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" '
+        f'viewBox="0 0 {width} {height}" role="img">',
+        '<rect width="100%" height="100%" fill="white"/>',
+    ]
+    if title:
+        lines.append(
+            f'<text x="{width / 2:.1f}" y="28" text-anchor="middle" '
+            f'font-family="sans-serif" font-size="18">{html.escape(title)}</text>'
+        )
+
+    lines.extend([
+        f'<line x1="{plot_left}" y1="{plot_bottom}" x2="{plot_right}" y2="{plot_bottom}" stroke="#333"/>',
+        f'<line x1="{plot_left}" y1="{plot_top}" x2="{plot_left}" y2="{plot_bottom}" stroke="#333"/>',
+    ])
+
+    for index in range(6):
+        t = index / 5
+        y = plot_bottom - t * (plot_bottom - plot_top)
+        value = y_min + t * (y_max - y_min)
+        lines.append(f'<line x1="{plot_left}" y1="{y:.1f}" x2="{plot_right}" y2="{y:.1f}" stroke="#e5e7eb"/>')
+        lines.append(
+            f'<text x="{plot_left - 8}" y="{y + 4:.1f}" text-anchor="end" '
+            f'font-family="sans-serif" font-size="11" fill="#555">{value:.4g}</text>'
+        )
+
+    for index in range(6):
+        t = index / 5
+        x = plot_left + t * (plot_right - plot_left)
+        value = x_min + t * (x_max - x_min)
+        lines.append(f'<line x1="{x:.1f}" y1="{plot_bottom}" x2="{x:.1f}" y2="{plot_bottom + 5}" stroke="#333"/>')
+        lines.append(
+            f'<text x="{x:.1f}" y="{plot_bottom + 22}" text-anchor="middle" '
+            f'font-family="sans-serif" font-size="11" fill="#555">{value:.4g}</text>'
+        )
+
+    for index, (name, (x_values, y_values)) in enumerate(series.items()):
+        color = colors[index % len(colors)]
+        points = []
+        for x_value, y_value in zip(x_values, y_values):
+            px = _scale(float(x_value), x_min, x_max, plot_left, plot_right)
+            py = _scale(float(y_value), y_min, y_max, plot_bottom, plot_top)
+            points.append(f"{px:.2f},{py:.2f}")
+        if len(points) == 1:
+            px, py = points[0].split(",")
+            lines.append(f'<circle cx="{px}" cy="{py}" r="4" fill="{color}"/>')
+        else:
+            lines.append(
+                f'<polyline points="{" ".join(points)}" fill="none" '
+                f'stroke="{color}" stroke-width="2"/>'
+            )
+
+        legend_y = 52 + index * 18
+        lines.append(f'<rect x="{plot_left + 12}" y="{legend_y - 9}" width="10" height="10" fill="{color}"/>')
+        lines.append(
+            f'<text x="{plot_left + 28}" y="{legend_y}" font-family="sans-serif" '
+            f'font-size="12" fill="#222">{html.escape(name)}</text>'
+        )
+
+    lines.append(
+        f'<text x="{(plot_left + plot_right) / 2:.1f}" y="{height - 24}" '
+        f'text-anchor="middle" font-family="sans-serif" font-size="13" fill="#333">step</text>'
+    )
+    lines.append("</svg>\n")
+    with open(output_path, "w", encoding="utf-8") as handle:
+        handle.write("\n".join(lines))
     return output_path
 
 

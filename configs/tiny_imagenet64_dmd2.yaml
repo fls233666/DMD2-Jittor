@@ -1,0 +1,53 @@
+# Planned Tiny-ImageNet-64 main presentation run.
+# Use after tiny_imagenet64_debug has a working dataset loader and smoke run.
+
+name: tiny_imagenet64_dmd2
+script: pending
+purpose: planned_main_presentation_experiment
+status: planned
+
+dataset:
+  name: tiny_imagenet64
+  root: data/tiny-imagenet-200
+  image_size: 64
+  num_classes: 200
+  classes: all
+  augment: true
+
+model:
+  dataset_name: tiny
+  config_name: tiny
+  resolution: 64
+  label_dim: 200
+  sigma_data: 0.5
+  sigma_min: 0.002
+  sigma_max: 80.0
+  rho: 7.0
+  num_train_timesteps: 1000
+  min_step_percent: 0.02
+  max_step_percent: 0.98
+  gan_classifier: true
+
+training:
+  max_steps: 30000
+  batch_size: 16
+  optimizer: adam
+  lr_generator: 0.0001
+  lr_guidance: 0.0001
+  conditioning_sigma: 80.0
+  dfake_gen_update_ratio: 1
+
+ablations:
+  - full
+  - without_gan
+  - without_ttur
+  - without_backward_simulation
+
+records:
+  checkpoint_dir: checkpoints/tiny_imagenet64_dmd2
+  sample_dir: outputs/samples/tiny_imagenet64_dmd2
+  metrics_log: logs/tiny_imagenet64_dmd2/train_metrics.jsonl
+  performance_log: logs/tiny_imagenet64_dmd2/performance.jsonl
+  loss_curve: outputs/curves/tiny_imagenet64_dmd2_loss.svg
+  performance_curve: outputs/curves/tiny_imagenet64_dmd2_performance.svg
+  fid_output: outputs/fid_results/tiny_imagenet64_dmd2_fid.json
