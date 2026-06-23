@@ -1,7 +1,9 @@
 """Run a compact CIFAR-10 DMD2 debug training job."""
 
 import argparse
+import copy
 import os
+import pickle
 import sys
 from types import SimpleNamespace
 
@@ -29,9 +31,10 @@ import jittor as jt
 from jittor import nn
 
 from datasets.cifar10 import build_cifar10_debug_loader
+from models.diffusion import get_edm_network
 from models.ema import ExponentialMovingAverage
 from models.unified_model import EDMUniModel
-from trainer.checkpoint import save_checkpoint
+from trainer.checkpoint import load_checkpoint, save_checkpoint
 from trainer.engine import DMD2DebugEngine
 from trainer.evaluator import DebugSamplerEvaluator
 from trainer.train_loop import train_debug
@@ -61,7 +64,7 @@ def model_args(args):
         sigma_min=args.sigma_min,
         sigma_max=args.sigma_max,
         rho=args.rho,
-        config_name="tiny",
+        config_name=args.teacher_config,
         gan_classifier=args.gan_classifier,
         diffusion_gan=args.diffusion_gan,
         diffusion_gan_max_timestep=args.diffusion_gan_max_timestep,
@@ -69,6 +72,36 @@ def model_args(args):
         min_step_percent=args.min_step_percent,
         max_step_percent=args.max_step_percent,
     )
+
+
+def load_checkpoint_object(path):
+    with open(path, "rb") as handle:
+        try:
+            return pickle.load(handle)
+        except Exception:
+            handle.seek(0)
+    return jt.load(path)
+
+
+def select_state(obj, state_key=""):
+    if state_key:
+        for part in state_key.split("."):
+            obj = obj[part]
+        return obj
+
+    if isinstance(obj, dict) and "state_dict" in obj:
+        return obj["state_dict"]
+    return obj
+
+
+def to_jittor_state(state):
+    converted = {}
+    for key, value in state.items():
+        if isinstance(value, jt.Var):
+            converted[key] = value
+        else:
+            converted[key] = jt.array(np.asarray(value))
+    return converted
 
 
 def module_parameters(module):
@@ -101,9 +134,34 @@ def make_optimizer(params, lr, beta1=0.0, beta2=0.999, optimizer_name="adam"):
 
 
 def build_model(args):
+    args_obj = model_args(args)
+    real_unet = None
+    feedforward_model = None
+
+    if args.real_unet_checkpoint:
+        if not os.path.exists(args.real_unet_checkpoint):
+            raise FileNotFoundError(args.real_unet_checkpoint)
+
+        real_unet = get_edm_network(args=args_obj)
+        raw_state = load_checkpoint_object(args.real_unet_checkpoint)
+        state = select_state(raw_state, state_key=args.real_unet_state_key)
+        real_unet.load_state_dict(to_jittor_state(state))
+        if hasattr(real_unet, "requires_grad_"):
+            real_unet.requires_grad_(False)
+
+        if args.init_generator_from_real:
+            feedforward_model = copy.deepcopy(real_unet)
+
     return EDMUniModel(
-        args=model_args(args),
+        args=args_obj,
         initialize_generator=True,
+        real_unet=real_unet,
+        feedforward_model=feedforward_model,
+        copy_real_to_fake=(
+            args.init_fake_from_real
+            if real_unet is not None
+            else True
+        ),
     )
 
 
@@ -112,6 +170,18 @@ def guidance_train_parameters(model):
     params.extend(module_parameters(model.guidance_model.fake_unet))
     params.extend(module_parameters(model.guidance_model.cls_pred_branch))
     return params
+
+
+def cache_frozen_linear_transposes(module):
+    if module is None or not hasattr(module, "named_modules"):
+        return 0
+
+    count = 0
+    for _, child in module.named_modules():
+        if hasattr(child, "freeze_transposed_weight"):
+            child.freeze_transposed_weight()
+            count += 1
+    return count
 
 
 def create_argparser():
@@ -135,6 +205,32 @@ def create_argparser():
     parser.add_argument("--conditioning-sigma", type=float, default=80.0)
     parser.add_argument("--dfake-gen-update-ratio", type=int, default=1)
     parser.add_argument("--max-grad-norm", type=float, default=None)
+    parser.add_argument(
+        "--teacher-config",
+        choices=("tiny", "cifar10"),
+        default="tiny",
+        help="Network config for real/fake/generator EDM models.",
+    )
+    parser.add_argument(
+        "--real-unet-checkpoint",
+        default="",
+        help="Converted Jittor real teacher state dict, e.g. cifar10_teacher_jittor.pkl.",
+    )
+    parser.add_argument(
+        "--real-unet-state-key",
+        default="",
+        help="Optional nested state key inside --real-unet-checkpoint.",
+    )
+    parser.add_argument(
+        "--init-fake-from-real",
+        action="store_true",
+        help="Initialize fake score model by copying the loaded real teacher.",
+    )
+    parser.add_argument(
+        "--init-generator-from-real",
+        action="store_true",
+        help="Initialize generator by copying the loaded real teacher.",
+    )
 
     parser.add_argument("--lr-generator", type=float, default=2e-4)
     parser.add_argument("--lr-guidance", type=float, default=2e-4)
@@ -152,6 +248,8 @@ def create_argparser():
     parser.add_argument("--min-step-percent", type=float, default=0.02)
     parser.add_argument("--max-step-percent", type=float, default=0.98)
     parser.add_argument("--gan-classifier", action="store_true")
+    parser.add_argument("--gen-cls-loss-weight", type=float, default=0.0)
+    parser.add_argument("--cls-loss-weight", type=float, default=1.0)
     parser.add_argument("--diffusion-gan", action="store_true")
     parser.add_argument("--diffusion-gan-max-timestep", type=int, default=1)
 
@@ -159,6 +257,16 @@ def create_argparser():
     parser.add_argument("--sample-dir", default=os.path.join(PROJECT_ROOT, "outputs", "samples", "cifar10_debug"))
     parser.add_argument("--metrics-log", default=os.path.join(PROJECT_ROOT, "logs", "cifar10_debug", "train_metrics.jsonl"))
     parser.add_argument("--performance-log", default=os.path.join(PROJECT_ROOT, "logs", "cifar10_debug", "performance.jsonl"))
+    parser.add_argument(
+        "--resume-checkpoint",
+        default="",
+        help="Resume model, optimizers, EMA, and step from a debug checkpoint.",
+    )
+    parser.add_argument(
+        "--resume-model-only",
+        action="store_true",
+        help="Resume model/EMA/step but reinitialize optimizers; use after changing trainable parameters.",
+    )
     parser.add_argument("--final-checkpoint", default="")
     parser.add_argument("--skip-final-eval", action="store_true")
     return parser
@@ -192,6 +300,15 @@ def main(argv=None):
     )
 
     model = build_model(args)
+    if args.real_unet_checkpoint:
+        print(f"loaded real teacher: {args.real_unet_checkpoint}")
+        print(f"teacher config: {args.teacher_config}")
+        print(f"init fake from real: {int(args.init_fake_from_real)}")
+        print(f"init generator from real: {int(args.init_generator_from_real)}")
+    cached_linear_count = cache_frozen_linear_transposes(model.guidance_model.real_unet)
+    if cached_linear_count:
+        print(f"cached real teacher linear transposes: {cached_linear_count}")
+
     generator_optimizer = make_optimizer(
         module_parameters(model.feedforward_model),
         lr=args.lr_generator,
@@ -227,6 +344,14 @@ def main(argv=None):
         generator_optimizer=generator_optimizer,
         guidance_optimizer=guidance_optimizer,
         conditioning_sigma=args.conditioning_sigma,
+        generator_loss_weights={
+            "loss_dm": 1.0,
+            "gen_cls_loss": args.gen_cls_loss_weight,
+        },
+        guidance_loss_weights={
+            "loss_fake_mean": 1.0,
+            "guidance_cls_loss": args.cls_loss_weight,
+        },
         ema=ema,
         img_channels=3,
         img_resolution=args.image_size,
@@ -234,6 +359,23 @@ def main(argv=None):
         dfake_gen_update_ratio=args.dfake_gen_update_ratio,
         max_grad_norm=args.max_grad_norm,
     )
+
+    start_step = 0
+    if args.resume_checkpoint:
+        state = load_checkpoint(
+            args.resume_checkpoint,
+            model=model,
+            generator_optimizer=None if args.resume_model_only else generator_optimizer,
+            guidance_optimizer=None if args.resume_model_only else guidance_optimizer,
+            ema=ema,
+        )
+        start_step = int(state.get("step", 0))
+        engine.global_step = start_step
+        cached_linear_count = cache_frozen_linear_transposes(model.guidance_model.real_unet)
+        print(f"resumed checkpoint: {args.resume_checkpoint}")
+        print(f"resume start step: {start_step}")
+        print(f"resume model only: {int(args.resume_model_only)}")
+        print(f"refreshed real teacher linear transpose cache: {cached_linear_count}")
 
     history = train_debug(
         engine=engine,
@@ -246,9 +388,10 @@ def main(argv=None):
         eval_interval=args.eval_interval,
         metrics_logger=args.metrics_log,
         performance_logger=args.performance_log,
+        start_step=start_step,
     )
 
-    final_step = history[-1]["step"] if history else 0
+    final_step = history[-1]["step"] if history else start_step
     final_checkpoint = args.final_checkpoint
     if not final_checkpoint:
         final_checkpoint = os.path.join(args.checkpoint_dir, "checkpoint_final.pkl")
@@ -263,6 +406,18 @@ def main(argv=None):
             "dataset": "cifar10",
             "max_samples": args.max_samples,
             "image_size": args.image_size,
+            "teacher_config": args.teacher_config,
+            "real_unet_checkpoint": args.real_unet_checkpoint,
+            "resume_checkpoint": args.resume_checkpoint,
+            "resume_model_only": args.resume_model_only,
+            "init_fake_from_real": args.init_fake_from_real,
+            "init_generator_from_real": args.init_generator_from_real,
+            "dfake_gen_update_ratio": args.dfake_gen_update_ratio,
+            "gan_classifier": args.gan_classifier,
+            "gen_cls_loss_weight": args.gen_cls_loss_weight,
+            "cls_loss_weight": args.cls_loss_weight,
+            "diffusion_gan": args.diffusion_gan,
+            "diffusion_gan_max_timestep": args.diffusion_gan_max_timestep,
         },
     )
 

@@ -16,6 +16,16 @@ env:
   CHECKPOINT_INTERVAL: "1000"
   EVAL_INTERVAL: "500"
   NO_AUGMENT: "0"
+  TEACHER_CONFIG: cifar10
+  REAL_UNET_CHECKPOINT: /home/koishi/DMD2/teacher-models/cifar10_teacher/cifar10_teacher_jittor.pkl
+  INIT_FAKE_FROM_REAL: "1"
+  INIT_GENERATOR_FROM_REAL: "1"
+  DFAKE_GEN_UPDATE_RATIO: "5"
+  GAN_CLASSIFIER: "1"
+  GEN_CLS_LOSS_WEIGHT: "3e-3"
+  CLS_LOSS_WEIGHT: "1e-2"
+  DIFFUSION_GAN: "1"
+  DIFFUSION_GAN_MAX_TIMESTEP: "1000"
 
 dataset:
   name: cifar10
@@ -27,7 +37,7 @@ dataset:
 
 model:
   dataset_name: cifar10
-  config_name: tiny
+  config_name: cifar10
   resolution: 32
   label_dim: 10
   sigma_data: 0.5
@@ -37,7 +47,9 @@ model:
   num_train_timesteps: 1000
   min_step_percent: 0.02
   max_step_percent: 0.98
-  gan_classifier: false
+  gan_classifier: true
+  diffusion_gan: true
+  diffusion_gan_max_timestep: 1000
 
 training:
   max_steps: 5000
@@ -49,7 +61,9 @@ training:
   adam_beta2: 0.999
   ema_decay: 0.999
   conditioning_sigma: 80.0
-  dfake_gen_update_ratio: 1
+  dfake_gen_update_ratio: 5
+  gen_cls_loss_weight: 0.003
+  cls_loss_weight: 0.01
 
 records:
   checkpoint_dir: checkpoints/cifar10_dmd2

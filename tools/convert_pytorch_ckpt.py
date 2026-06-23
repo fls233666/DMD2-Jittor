@@ -107,6 +107,73 @@ def build_dhariwal_name_maps(
     return enc_map, dec_map
 
 
+def build_song_name_maps(
+    img_resolution: int = 32,
+    channel_mult: Sequence[int] = (2, 2, 2),
+    num_blocks: int = 4,
+    encoder_type: str = "standard",
+    decoder_type: str = "standard",
+) -> Tuple[Dict[str, str], Dict[str, str]]:
+    """Return official SongUNet ModuleDict name -> Jittor attribute maps."""
+
+    channel_mult = tuple(channel_mult)
+
+    enc_map: Dict[str, str] = {}
+    enc_index = 0
+    for level, _ in enumerate(channel_mult):
+        res = img_resolution >> level
+        if level == 0:
+            name = f"{res}x{res}_conv"
+            enc_map[name] = f"enc_{enc_index}_{name}"
+            enc_index += 1
+        else:
+            name = f"{res}x{res}_down"
+            enc_map[name] = f"enc_{enc_index}_{name}"
+            enc_index += 1
+            if encoder_type == "skip":
+                for name in (f"{res}x{res}_aux_down", f"{res}x{res}_aux_skip"):
+                    enc_map[name] = f"enc_{enc_index}_{name}"
+                    enc_index += 1
+            if encoder_type == "residual":
+                name = f"{res}x{res}_aux_residual"
+                enc_map[name] = f"enc_{enc_index}_{name}"
+                enc_index += 1
+
+        for block_index in range(num_blocks):
+            name = f"{res}x{res}_block{block_index}"
+            enc_map[name] = f"enc_{enc_index}_{name}"
+            enc_index += 1
+
+    dec_map: Dict[str, str] = {}
+    dec_index = 0
+    for level, _ in reversed(list(enumerate(channel_mult))):
+        res = img_resolution >> level
+        if level == len(channel_mult) - 1:
+            for name in (f"{res}x{res}_in0", f"{res}x{res}_in1"):
+                dec_map[name] = f"dec_{dec_index}_{name}"
+                dec_index += 1
+        else:
+            name = f"{res}x{res}_up"
+            dec_map[name] = f"dec_{dec_index}_{name}"
+            dec_index += 1
+
+        for block_index in range(num_blocks + 1):
+            name = f"{res}x{res}_block{block_index}"
+            dec_map[name] = f"dec_{dec_index}_{name}"
+            dec_index += 1
+
+        if decoder_type == "skip" or level == 0:
+            if decoder_type == "skip" and level < len(channel_mult) - 1:
+                name = f"{res}x{res}_aux_up"
+                dec_map[name] = f"dec_{dec_index}_{name}"
+                dec_index += 1
+            for name in (f"{res}x{res}_aux_norm", f"{res}x{res}_aux_conv"):
+                dec_map[name] = f"dec_{dec_index}_{name}"
+                dec_index += 1
+
+    return enc_map, dec_map
+
+
 def map_official_key(
     key: str,
     enc_map: Optional[Mapping[str, str]] = None,
@@ -215,13 +282,25 @@ def convert_state_dict(
     img_resolution: int = 64,
     channel_mult: Sequence[int] = (1, 2, 3, 4),
     num_blocks: int = 3,
+    architecture: str = "dhariwal",
+    encoder_type: str = "standard",
+    decoder_type: str = "standard",
     keep_unmatched: bool = False,
 ) -> Tuple[OrderedDict, ConversionReport]:
-    enc_map, dec_map = build_dhariwal_name_maps(
-        img_resolution=img_resolution,
-        channel_mult=channel_mult,
-        num_blocks=num_blocks,
-    )
+    if architecture == "song":
+        enc_map, dec_map = build_song_name_maps(
+            img_resolution=img_resolution,
+            channel_mult=channel_mult,
+            num_blocks=num_blocks,
+            encoder_type=encoder_type,
+            decoder_type=decoder_type,
+        )
+    else:
+        enc_map, dec_map = build_dhariwal_name_maps(
+            img_resolution=img_resolution,
+            channel_mult=channel_mult,
+            num_blocks=num_blocks,
+        )
 
     converted = OrderedDict()
     report = ConversionReport(total_keys=len(source_state))
@@ -416,6 +495,14 @@ def create_argparser() -> argparse.ArgumentParser:
     parser.add_argument("--channel-mult", default="1,2,3,4")
     parser.add_argument("--num-blocks", type=int, default=3)
     parser.add_argument(
+        "--architecture",
+        choices=("dhariwal", "song"),
+        default="dhariwal",
+        help="Underlying official ModuleDict layout to map.",
+    )
+    parser.add_argument("--encoder-type", default="standard")
+    parser.add_argument("--decoder-type", default="standard")
+    parser.add_argument(
         "--target-state",
         default=None,
         help="Optional Jittor/converted state dict used for key and shape validation.",
@@ -463,6 +550,9 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         img_resolution=args.resolution,
         channel_mult=channel_mult,
         num_blocks=args.num_blocks,
+        architecture=args.architecture,
+        encoder_type=args.encoder_type,
+        decoder_type=args.decoder_type,
         keep_unmatched=args.keep_unmatched,
     )
 
@@ -472,6 +562,9 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
             "resolution": args.resolution,
             "channel_mult": channel_mult,
             "num_blocks": args.num_blocks,
+            "architecture": args.architecture,
+            "encoder_type": args.encoder_type,
+            "decoder_type": args.decoder_type,
         }
         save_converted_state(
             args.output,

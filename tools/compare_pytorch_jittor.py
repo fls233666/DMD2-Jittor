@@ -137,6 +137,31 @@ def build_pytorch_generator(args):
 
     from third_party.edm.training.networks import EDMPrecond
 
+    if args.dataset_name == "cifar10" and args.config_name != "tiny":
+        return EDMPrecond(
+            img_resolution=args.resolution,
+            img_channels=3,
+            label_dim=args.label_dim,
+            use_fp16=False,
+            sigma_min=0,
+            sigma_max=float("inf"),
+            sigma_data=args.sigma_data,
+            model_type="SongUNet",
+            augment_dim=9,
+            model_channels=args.model_channels,
+            channel_mult=list(parse_int_list(args.channel_mult)),
+            channel_mult_emb=4,
+            num_blocks=args.num_blocks,
+            attn_resolutions=list(parse_int_list(args.attn_resolutions)),
+            dropout=0.0,
+            label_dropout=0,
+            embedding_type="positional",
+            channel_mult_noise=1,
+            encoder_type=args.encoder_type,
+            decoder_type=args.decoder_type,
+            resample_filter=[1, 1],
+        )
+
     return EDMPrecond(
         img_resolution=args.resolution,
         img_channels=3,
@@ -247,6 +272,14 @@ def create_argparser() -> argparse.ArgumentParser:
     parser.add_argument("--num-blocks", type=int, default=3)
     parser.add_argument("--model-channels", type=int, default=192)
     parser.add_argument("--attn-resolutions", default="32,16,8")
+    parser.add_argument(
+        "--architecture",
+        choices=("dhariwal", "song"),
+        default="dhariwal",
+        help="Official ModuleDict layout used during checkpoint conversion.",
+    )
+    parser.add_argument("--encoder-type", default="standard")
+    parser.add_argument("--decoder-type", default="standard")
     parser.add_argument("--num-train-timesteps", type=int, default=1000)
     parser.add_argument("--min-step-percent", type=float, default=0.02)
     parser.add_argument("--max-step-percent", type=float, default=0.98)
@@ -300,6 +333,9 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
             img_resolution=args.resolution,
             channel_mult=parse_int_list(args.channel_mult),
             num_blocks=args.num_blocks,
+            architecture=args.architecture,
+            encoder_type=args.encoder_type,
+            decoder_type=args.decoder_type,
         )
 
     report_text = format_report(report)

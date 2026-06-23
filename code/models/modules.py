@@ -55,14 +55,27 @@ class Linear(nn.Module):
         if bias:
             self.bias = weight_init([out_features], **init_kwargs) * init_bias
 
+        self._cached_weight_t = None
+
+    def clear_transposed_weight_cache(self):
+        self._cached_weight_t = None
+
+    def freeze_transposed_weight(self):
+        # Cache W^T for frozen teacher networks to avoid repeated CUDA transposes.
+        self._cached_weight_t = self.weight.transpose(0, 1).stop_grad()
+        self._cached_weight_t.persistent = False
+        return self._cached_weight_t
+
     def execute(self, x):
         # Apply the affine transformation y = xW^T + b.
-        weight = self.weight
+        weight = self._cached_weight_t
+        if weight is None:
+            weight = self.weight.transpose(0, 1)
         bias = self.bias
 
         if hasattr(weight, "to"):
             weight = weight.to(x.dtype)
-        x = x @ weight.transpose(0, 1)
+        x = x @ weight
 
         if bias is not None:
             if hasattr(bias, "to"):

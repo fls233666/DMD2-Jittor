@@ -27,6 +27,19 @@ LOG_INTERVAL="${LOG_INTERVAL:-10}"
 CHECKPOINT_INTERVAL="${CHECKPOINT_INTERVAL:-50}"
 EVAL_INTERVAL="${EVAL_INTERVAL:-50}"
 NO_AUGMENT="${NO_AUGMENT:-0}"
+TEACHER_CONFIG="${TEACHER_CONFIG:-tiny}"
+REAL_UNET_CHECKPOINT="${REAL_UNET_CHECKPOINT:-}"
+REAL_UNET_STATE_KEY="${REAL_UNET_STATE_KEY:-}"
+INIT_FAKE_FROM_REAL="${INIT_FAKE_FROM_REAL:-0}"
+INIT_GENERATOR_FROM_REAL="${INIT_GENERATOR_FROM_REAL:-0}"
+RESUME_CHECKPOINT="${RESUME_CHECKPOINT:-}"
+RESUME_MODEL_ONLY="${RESUME_MODEL_ONLY:-0}"
+DFAKE_GEN_UPDATE_RATIO="${DFAKE_GEN_UPDATE_RATIO:-1}"
+GAN_CLASSIFIER="${GAN_CLASSIFIER:-0}"
+GEN_CLS_LOSS_WEIGHT="${GEN_CLS_LOSS_WEIGHT:-0.0}"
+CLS_LOSS_WEIGHT="${CLS_LOSS_WEIGHT:-1.0}"
+DIFFUSION_GAN="${DIFFUSION_GAN:-0}"
+DIFFUSION_GAN_MAX_TIMESTEP="${DIFFUSION_GAN_MAX_TIMESTEP:-1}"
 
 ARGS=(
   --data-root "${DATA_ROOT}"
@@ -40,6 +53,11 @@ ARGS=(
   --sample-dir "${SAMPLE_DIR}"
   --metrics-log "${METRICS_LOG}"
   --performance-log "${PERFORMANCE_LOG}"
+  --teacher-config "${TEACHER_CONFIG}"
+  --dfake-gen-update-ratio "${DFAKE_GEN_UPDATE_RATIO}"
+  --gen-cls-loss-weight "${GEN_CLS_LOSS_WEIGHT}"
+  --cls-loss-weight "${CLS_LOSS_WEIGHT}"
+  --diffusion-gan-max-timestep "${DIFFUSION_GAN_MAX_TIMESTEP}"
 )
 
 if [[ "${NO_AUGMENT}" == "1" ]]; then
@@ -51,6 +69,30 @@ fi
 if [[ -n "${CLASS_SUBSET:-}" ]]; then
   ARGS+=(--class-subset "${CLASS_SUBSET}")
 fi
+if [[ -n "${REAL_UNET_CHECKPOINT}" ]]; then
+  ARGS+=(--real-unet-checkpoint "${REAL_UNET_CHECKPOINT}")
+fi
+if [[ -n "${REAL_UNET_STATE_KEY}" ]]; then
+  ARGS+=(--real-unet-state-key "${REAL_UNET_STATE_KEY}")
+fi
+if [[ "${INIT_FAKE_FROM_REAL}" == "1" ]]; then
+  ARGS+=(--init-fake-from-real)
+fi
+if [[ "${INIT_GENERATOR_FROM_REAL}" == "1" ]]; then
+  ARGS+=(--init-generator-from-real)
+fi
+if [[ -n "${RESUME_CHECKPOINT}" ]]; then
+  ARGS+=(--resume-checkpoint "${RESUME_CHECKPOINT}")
+fi
+if [[ "${RESUME_MODEL_ONLY}" == "1" ]]; then
+  ARGS+=(--resume-model-only)
+fi
+if [[ "${GAN_CLASSIFIER}" == "1" ]]; then
+  ARGS+=(--gan-classifier)
+fi
+if [[ "${DIFFUSION_GAN}" == "1" ]]; then
+  ARGS+=(--diffusion-gan)
+fi
 
 "${RUN[@]}" tools/train_cifar10_debug.py "${ARGS[@]}" "$@"
 
@@ -58,7 +100,7 @@ if [[ -f "${METRICS_LOG}" ]]; then
   "${RUN[@]}" tools/plot_metrics.py \
     "${METRICS_LOG}" \
     "${LOSS_CURVE}" \
-    --keys "${LOSS_KEYS:-loss_generator,loss_guidance,generator/loss_dm,guidance/loss_fake_mean}" \
+    --keys "${LOSS_KEYS:-loss_generator,loss_guidance,generator/loss_dm,generator/gen_cls_loss,guidance/loss_fake_mean,guidance/guidance_cls_loss}" \
     --title "${RUN_NAME} loss" \
     --summary-json "${LOSS_SUMMARY}"
 fi

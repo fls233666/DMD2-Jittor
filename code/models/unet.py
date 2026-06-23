@@ -5,9 +5,9 @@ import jittor as jt
 from jittor import nn
 
 try:
-    from .modules import Linear, Conv2d, GroupNorm, PositionalEmbedding, AttentionOp
+    from .modules import Linear, Conv2d, GroupNorm, PositionalEmbedding, FourierEmbedding, AttentionOp
 except ImportError:
-    from modules import Linear, Conv2d, GroupNorm, PositionalEmbedding, AttentionOp
+    from modules import Linear, Conv2d, GroupNorm, PositionalEmbedding, FourierEmbedding, AttentionOp
 
 try:
     from .modules import silu
@@ -447,6 +447,336 @@ class DhariwalUNet(nn.Module):
 
         x = self.out_conv(silu(self.out_norm(x)))
         return x
+
+
+class SongUNet(nn.Module):
+    # Implement the DDPM++/NCSN++ Song U-Net used by official EDM CIFAR models.
+    def __init__(
+        self,
+        img_resolution,
+        in_channels,
+        out_channels,
+        label_dim=0,
+        augment_dim=0,
+        model_channels=128,
+        channel_mult=(1, 2, 2, 2),
+        channel_mult_emb=4,
+        num_blocks=4,
+        attn_resolutions=(16,),
+        dropout=0.10,
+        label_dropout=0,
+        embedding_type="positional",
+        channel_mult_noise=1,
+        encoder_type="standard",
+        decoder_type="standard",
+        resample_filter=(1, 1),
+    ):
+        super().__init__()
+
+        assert embedding_type in ("fourier", "positional")
+        assert encoder_type in ("standard", "skip", "residual")
+        assert decoder_type in ("standard", "skip")
+
+        self.img_resolution = img_resolution
+        self.in_channels = in_channels
+        self.out_channels = out_channels
+        self.label_dim = label_dim
+        self.augment_dim = augment_dim
+        self.label_dropout = label_dropout
+        self.encoder_type = encoder_type
+        self.decoder_type = decoder_type
+
+        emb_channels = model_channels * channel_mult_emb
+        noise_channels = model_channels * channel_mult_noise
+        init = dict(init_mode="xavier_uniform")
+        init_zero = dict(init_mode="xavier_uniform", init_weight=1e-5)
+        init_attn = dict(init_mode="xavier_uniform", init_weight=np.sqrt(0.2))
+        block_kwargs = dict(
+            emb_channels=emb_channels,
+            num_heads=1,
+            dropout=dropout,
+            skip_scale=np.sqrt(0.5),
+            eps=1e-6,
+            resample_filter=resample_filter,
+            resample_proj=True,
+            adaptive_scale=False,
+            init=init,
+            init_zero=init_zero,
+            init_attn=init_attn,
+        )
+
+        if embedding_type == "positional":
+            self.map_noise = PositionalEmbedding(
+                num_channels=noise_channels,
+                endpoint=True,
+            )
+        else:
+            self.map_noise = FourierEmbedding(num_channels=noise_channels)
+
+        self.map_label = None
+        if label_dim:
+            self.map_label = Linear(
+                in_features=label_dim,
+                out_features=noise_channels,
+                **init,
+            )
+
+        self.map_augment = None
+        if augment_dim:
+            self.map_augment = Linear(
+                in_features=augment_dim,
+                out_features=noise_channels,
+                bias=False,
+                **init,
+            )
+
+        self.map_layer0 = Linear(
+            in_features=noise_channels,
+            out_features=emb_channels,
+            **init,
+        )
+        self.map_layer1 = Linear(
+            in_features=emb_channels,
+            out_features=emb_channels,
+            **init,
+        )
+
+        self._enc_items = []
+        cout = in_channels
+        caux = in_channels
+        for level, mult in enumerate(channel_mult):
+            res = img_resolution >> level
+            if level == 0:
+                cin = cout
+                cout = model_channels
+                self._add_enc(
+                    f"{res}x{res}_conv",
+                    Conv2d(
+                        in_channels=cin,
+                        out_channels=cout,
+                        kernel=3,
+                        **init,
+                    ),
+                )
+            else:
+                self._add_enc(
+                    f"{res}x{res}_down",
+                    UNetBlock(
+                        in_channels=cout,
+                        out_channels=cout,
+                        down=True,
+                        **block_kwargs,
+                    ),
+                )
+                if encoder_type == "skip":
+                    self._add_enc(
+                        f"{res}x{res}_aux_down",
+                        Conv2d(
+                            in_channels=caux,
+                            out_channels=caux,
+                            kernel=0,
+                            down=True,
+                            resample_filter=resample_filter,
+                        ),
+                    )
+                    self._add_enc(
+                        f"{res}x{res}_aux_skip",
+                        Conv2d(
+                            in_channels=caux,
+                            out_channels=cout,
+                            kernel=1,
+                            **init,
+                        ),
+                    )
+                if encoder_type == "residual":
+                    self._add_enc(
+                        f"{res}x{res}_aux_residual",
+                        Conv2d(
+                            in_channels=caux,
+                            out_channels=cout,
+                            kernel=3,
+                            down=True,
+                            resample_filter=resample_filter,
+                            fused_resample=True,
+                            **init,
+                        ),
+                    )
+                    caux = cout
+
+            for idx in range(num_blocks):
+                cin = cout
+                cout = model_channels * mult
+                self._add_enc(
+                    f"{res}x{res}_block{idx}",
+                    UNetBlock(
+                        in_channels=cin,
+                        out_channels=cout,
+                        attention=(res in attn_resolutions),
+                        **block_kwargs,
+                    ),
+                )
+
+        skip_channels = [
+            getattr(self, attr_name).out_channels
+            for name, attr_name in self._enc_items
+            if "aux" not in name
+        ]
+
+        self._dec_items = []
+        for level, mult in reversed(list(enumerate(channel_mult))):
+            res = img_resolution >> level
+            if level == len(channel_mult) - 1:
+                self._add_dec(
+                    f"{res}x{res}_in0",
+                    UNetBlock(
+                        in_channels=cout,
+                        out_channels=cout,
+                        attention=True,
+                        **block_kwargs,
+                    ),
+                )
+                self._add_dec(
+                    f"{res}x{res}_in1",
+                    UNetBlock(
+                        in_channels=cout,
+                        out_channels=cout,
+                        **block_kwargs,
+                    ),
+                )
+            else:
+                self._add_dec(
+                    f"{res}x{res}_up",
+                    UNetBlock(
+                        in_channels=cout,
+                        out_channels=cout,
+                        up=True,
+                        **block_kwargs,
+                    ),
+                )
+
+            for idx in range(num_blocks + 1):
+                cin = cout + skip_channels.pop()
+                cout = model_channels * mult
+                self._add_dec(
+                    f"{res}x{res}_block{idx}",
+                    UNetBlock(
+                        in_channels=cin,
+                        out_channels=cout,
+                        attention=(idx == num_blocks and res in attn_resolutions),
+                        **block_kwargs,
+                    ),
+                )
+
+            if decoder_type == "skip" or level == 0:
+                if decoder_type == "skip" and level < len(channel_mult) - 1:
+                    self._add_dec(
+                        f"{res}x{res}_aux_up",
+                        Conv2d(
+                            in_channels=out_channels,
+                            out_channels=out_channels,
+                            kernel=0,
+                            up=True,
+                            resample_filter=resample_filter,
+                        ),
+                    )
+                self._add_dec(
+                    f"{res}x{res}_aux_norm",
+                    GroupNorm(num_channels=cout, eps=1e-6),
+                )
+                self._add_dec(
+                    f"{res}x{res}_aux_conv",
+                    Conv2d(
+                        in_channels=cout,
+                        out_channels=out_channels,
+                        kernel=3,
+                        **init_zero,
+                    ),
+                )
+
+    def _add_enc(self, name, module):
+        attr_name = f"enc_{len(self._enc_items)}_{name}"
+        setattr(self, attr_name, module)
+        self._enc_items.append((name, attr_name))
+
+    def _add_dec(self, name, module):
+        attr_name = f"dec_{len(self._dec_items)}_{name}"
+        setattr(self, attr_name, module)
+        self._dec_items.append((name, attr_name))
+
+    def _map_embeddings(self, x, noise_labels, class_labels=None, augment_labels=None):
+        emb = self.map_noise(noise_labels)
+        emb = emb.reshape(emb.shape[0], 2, -1)
+        emb = jt.concat([emb[:, 1:2, :], emb[:, 0:1, :]], dim=1)
+        emb = emb.reshape(emb.shape[0], -1)
+
+        if self.map_label is not None:
+            if class_labels is None:
+                class_labels = jt.zeros([x.shape[0], self.label_dim])
+            tmp = class_labels
+            if _is_training(self) and self.label_dropout:
+                mask = jt.rand([x.shape[0], 1]) >= self.label_dropout
+                tmp = tmp * mask.float32()
+            emb = emb + self.map_label(tmp * np.sqrt(self.map_label.in_features))
+
+        if self.map_augment is not None and augment_labels is not None:
+            emb = emb + self.map_augment(augment_labels)
+
+        emb = silu(self.map_layer0(emb))
+        emb = silu(self.map_layer1(emb))
+        return emb
+
+    def execute(
+        self,
+        x,
+        noise_labels,
+        class_labels=None,
+        augment_labels=None,
+        return_bottleneck=False,
+    ):
+        emb = self._map_embeddings(
+            x=x,
+            noise_labels=noise_labels,
+            class_labels=class_labels,
+            augment_labels=augment_labels,
+        )
+
+        skips = []
+        aux = x
+        for name, attr_name in self._enc_items:
+            block = getattr(self, attr_name)
+            if "aux_down" in name:
+                aux = block(aux)
+            elif "aux_skip" in name:
+                x = skips[-1] + block(aux)
+                skips[-1] = x
+            elif "aux_residual" in name:
+                x = (skips[-1] + block(aux)) / np.sqrt(2)
+                skips[-1] = x
+                aux = x
+            else:
+                x = block(x, emb) if isinstance(block, UNetBlock) else block(x)
+                skips.append(x)
+
+        if return_bottleneck:
+            return x
+
+        aux = None
+        tmp = None
+        for name, attr_name in self._dec_items:
+            block = getattr(self, attr_name)
+            if "aux_up" in name:
+                aux = block(aux)
+            elif "aux_norm" in name:
+                tmp = block(x)
+            elif "aux_conv" in name:
+                tmp = block(silu(tmp))
+                aux = tmp if aux is None else tmp + aux
+            else:
+                if x.shape[1] != block.in_channels:
+                    x = jt.concat([x, skips.pop()], dim=1)
+                x = block(x, emb)
+
+        return aux
 
 
 def get_imagenet_dhariwal_unet(

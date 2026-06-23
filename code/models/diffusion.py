@@ -15,9 +15,9 @@ import jittor as jt
 from jittor import nn
 
 try:
-    from .unet import DhariwalUNet
+    from .unet import DhariwalUNet, SongUNet
 except ImportError:
-    from unet import DhariwalUNet
+    from unet import DhariwalUNet, SongUNet
 
 
 def _as_float32(x):
@@ -97,12 +97,16 @@ class EDMPrecond(nn.Module):
         self.sigma_data = sigma_data
         self.model_type = model_type
 
-        if model_type != "DhariwalUNet":
+        if model_type == "DhariwalUNet":
+            model_cls = DhariwalUNet
+        elif model_type == "SongUNet":
+            model_cls = SongUNet
+        else:
             raise NotImplementedError(
-                f'Only model_type="DhariwalUNet" is implemented, got {model_type!r}.'
+                f'Unsupported EDMPrecond model_type={model_type!r}.'
             )
 
-        self.model = DhariwalUNet(
+        self.model = model_cls(
             img_resolution=img_resolution,
             in_channels=img_channels,
             out_channels=img_channels,
@@ -187,6 +191,25 @@ def get_tiny_edm_config():
     )
 
 
+def get_cifar10_edm_config():
+    # Return the official EDM CIFAR-10 class-conditional DDPM++ configuration.
+    return dict(
+        augment_dim=9,
+        model_channels=128,
+        channel_mult=(2, 2, 2),
+        channel_mult_emb=4,
+        num_blocks=4,
+        attn_resolutions=(16,),
+        dropout=0.0,
+        label_dropout=0,
+        embedding_type="positional",
+        channel_mult_noise=1,
+        encoder_type="standard",
+        decoder_type="standard",
+        resample_filter=(1, 1),
+    )
+
+
 def get_edm_network(args=None, **kwargs):
     # Build an EDMPrecond network, matching the official get_edm_network style.
     if args is not None:
@@ -207,12 +230,18 @@ def get_edm_network(args=None, **kwargs):
     if dataset_name not in ("imagenet", "tiny", "cifar10", "debug"):
         raise NotImplementedError(f"Unsupported dataset_name: {dataset_name}")
 
-    if config_name == "tiny" or dataset_name in ("tiny", "cifar10", "debug"):
+    if dataset_name == "cifar10" and config_name != "tiny":
+        model_config = get_cifar10_edm_config()
+        model_type = "SongUNet"
+    elif config_name == "tiny" or dataset_name in ("tiny", "cifar10", "debug"):
         model_config = get_tiny_edm_config()
+        model_type = "DhariwalUNet"
     else:
         model_config = get_imagenet_edm_config()
+        model_type = "DhariwalUNet"
 
     model_config.update(kwargs)
+    model_type = model_config.pop("model_type", model_type)
 
     return EDMPrecond(
         img_resolution=resolution,
@@ -222,7 +251,7 @@ def get_edm_network(args=None, **kwargs):
         sigma_min=0,
         sigma_max=float("inf"),
         sigma_data=sigma_data,
-        model_type="DhariwalUNet",
+        model_type=model_type,
         **model_config,
     )
 
