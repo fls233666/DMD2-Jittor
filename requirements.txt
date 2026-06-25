@@ -1,0 +1,24 @@
+# DMD2-jittor runtime dependencies.
+# Tested with Python 3.8.20 in the local dmd2-jittor conda environment.
+#
+# System-side requirements for GPU runs are not pip packages:
+#   - Linux with a working C++ compiler.
+#   - NVIDIA driver visible to the process.
+#   - CUDA toolkit / nvcc and cuDNN headers + libraries compatible with Jittor.
+#   - Writable HOME or JITTOR_HOME, because Jittor compiles and caches kernels
+#     on first import/run.
+
+jittor==1.3.11.0
+numpy==1.24.4
+Pillow==10.4.0
+
+# Evaluation and plotting helpers used by tools/compute_fid.py and tools/plot_metrics.py.
+scipy==1.10.1
+matplotlib==3.7.5
+
+# Test runner for validating the deployment.
+pytest==8.3.4
+
+# PyTorch is intentionally not listed here. Checkpoint conversion/alignment
+# scripts use the separate DMD2-pytorch environment because torch depends on
+# the server CUDA stack.
