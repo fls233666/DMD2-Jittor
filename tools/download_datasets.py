@@ -10,6 +10,7 @@ import tarfile
 import time
 import urllib.error
 import urllib.request
+import zipfile
 
 
 def setup_paths():
@@ -36,6 +37,11 @@ CIFAR10_EXTRACTED_FILES = {
     "test_batch": "40351d587109b95175f43aff81a1287e",
     "batches.meta": "5ff9c542aee3614f3951f8cda6e48888",
 }
+
+TINY_IMAGENET_URL = "http://cs231n.stanford.edu/tiny-imagenet-200.zip"
+TINY_IMAGENET_FILENAME = "tiny-imagenet-200.zip"
+TINY_IMAGENET_DIRNAME = "tiny-imagenet-200"
+TINY_IMAGENET_NUM_CLASSES = 200
 
 
 def file_md5(path, chunk_size=1024 * 1024):
@@ -352,11 +358,147 @@ def download_cifar10(root, train=True, test=True, method="auto", resume=True, re
     return root
 
 
+def _tiny_imagenet_paths(root):
+    root = os.path.abspath(root)
+    if os.path.basename(root.rstrip(os.sep)) == TINY_IMAGENET_DIRNAME:
+        extract_parent = os.path.dirname(root)
+        dataset_root = root
+    else:
+        extract_parent = root
+        dataset_root = os.path.join(root, TINY_IMAGENET_DIRNAME)
+    archive_path = os.path.join(extract_parent, TINY_IMAGENET_FILENAME)
+    return archive_path, extract_parent, dataset_root
+
+
+def check_tiny_imagenet_integrity(root, require_archive=False, verbose=True):
+    archive_path, _, dataset_root = _tiny_imagenet_paths(root)
+    problems = []
+
+    if require_archive and not os.path.exists(archive_path):
+        problems.append(f"archive missing: {archive_path}")
+
+    required = [
+        os.path.join(dataset_root, "wnids.txt"),
+        os.path.join(dataset_root, "words.txt"),
+        os.path.join(dataset_root, "train"),
+        os.path.join(dataset_root, "val", "images"),
+        os.path.join(dataset_root, "val", "val_annotations.txt"),
+    ]
+    for path in required:
+        if not os.path.exists(path):
+            problems.append(f"missing: {path}")
+
+    wnids_path = os.path.join(dataset_root, "wnids.txt")
+    if os.path.exists(wnids_path):
+        with open(wnids_path, "r", encoding="utf-8") as handle:
+            wnids = [line.strip() for line in handle if line.strip()]
+        if len(wnids) != TINY_IMAGENET_NUM_CLASSES:
+            problems.append(
+                f"expected {TINY_IMAGENET_NUM_CLASSES} wnids, found {len(wnids)}"
+            )
+
+    ok = not problems
+    if verbose:
+        if ok:
+            print(f"Tiny-ImageNet integrity check passed: {dataset_root}", flush=True)
+        else:
+            print(f"Tiny-ImageNet integrity check failed: {dataset_root}", flush=True)
+            for problem in problems:
+                print(f"  - {problem}", flush=True)
+    return ok, problems
+
+
+def extract_tiny_imagenet_archive(root):
+    archive_path, extract_parent, _ = _tiny_imagenet_paths(root)
+    if not os.path.exists(archive_path):
+        raise RuntimeError(f"Cannot extract missing archive: {archive_path}")
+
+    print(f"Extracting {archive_path} to {extract_parent}", flush=True)
+    with zipfile.ZipFile(archive_path, "r") as archive:
+        archive.extractall(extract_parent)
+
+
+def prepare_tiny_imagenet_archive(root, method="auto", resume=True, retries=5):
+    archive_path, extract_parent, _ = _tiny_imagenet_paths(root)
+    os.makedirs(extract_parent, exist_ok=True)
+
+    if os.path.exists(archive_path) and os.path.getsize(archive_path) > 0:
+        print(f"archive already exists: {archive_path}", flush=True)
+        return archive_path
+
+    if method == "jittor":
+        raise ValueError("Tiny-ImageNet does not support --method=jittor.")
+
+    methods = []
+    if method == "auto":
+        methods.append("python")
+        if shutil.which("curl"):
+            methods.append("curl")
+        if shutil.which("wget"):
+            methods.append("wget")
+    else:
+        methods.append(method)
+
+    last_error = None
+    for current_method in methods:
+        try:
+            if current_method == "python":
+                download_with_python(
+                    TINY_IMAGENET_URL,
+                    archive_path,
+                    resume=resume,
+                    retries=retries,
+                )
+            elif current_method == "curl":
+                download_with_curl(
+                    TINY_IMAGENET_URL,
+                    archive_path,
+                    resume=resume,
+                    retries=retries,
+                )
+            elif current_method == "wget":
+                download_with_wget(
+                    TINY_IMAGENET_URL,
+                    archive_path,
+                    resume=resume,
+                    retries=retries,
+                )
+            else:
+                raise ValueError(f"Unsupported download method: {current_method}")
+            if os.path.exists(archive_path) and os.path.getsize(archive_path) > 0:
+                return archive_path
+        except Exception as exc:
+            last_error = exc
+            print(f"{current_method} download failed: {exc}", flush=True)
+
+    raise RuntimeError(f"Failed to download Tiny-ImageNet archive: {last_error}")
+
+
+def download_tiny_imagenet(root, method="auto", resume=True, retries=5):
+    prepare_tiny_imagenet_archive(
+        root=root,
+        method=method,
+        resume=resume,
+        retries=retries,
+    )
+
+    extracted_ok, _ = check_tiny_imagenet_integrity(root, verbose=False)
+    if not extracted_ok:
+        extract_tiny_imagenet_archive(root)
+
+    ok, problems = check_tiny_imagenet_integrity(root)
+    if not ok:
+        raise RuntimeError("Tiny-ImageNet integrity check failed: " + "; ".join(problems))
+
+    _, _, dataset_root = _tiny_imagenet_paths(root)
+    return dataset_root
+
+
 def create_argparser():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "--dataset",
-        choices=("cifar10",),
+        choices=("cifar10", "tiny-imagenet", "tiny_imagenet", "tinyimagenet"),
         default="cifar10",
         help="Dataset to download.",
     )
@@ -376,12 +518,12 @@ def create_argparser():
     parser.add_argument(
         "--check-only",
         action="store_true",
-        help="Only verify downloaded/extracted CIFAR-10 files.",
+        help="Only verify downloaded/extracted dataset files.",
     )
     parser.add_argument(
         "--require-archive",
         action="store_true",
-        help="When checking, require cifar-10-python.tar.gz to be present and md5-valid.",
+        help="When checking, require the dataset archive to be present.",
     )
     parser.add_argument("--train-only", action="store_true")
     parser.add_argument("--test-only", action="store_true")
@@ -400,6 +542,12 @@ def main(argv=None):
                 require_archive=args.require_archive,
             )
             return 0 if ok else 1
+        if args.dataset in ("tiny-imagenet", "tiny_imagenet", "tinyimagenet"):
+            ok, _ = check_tiny_imagenet_integrity(
+                args.root,
+                require_archive=args.require_archive,
+            )
+            return 0 if ok else 1
         raise ValueError(f"Unsupported dataset: {args.dataset}")
 
     train = not args.test_only
@@ -409,6 +557,13 @@ def main(argv=None):
             args.root,
             train=train,
             test=test,
+            method=args.method,
+            resume=not args.no_resume,
+            retries=args.retries,
+        )
+    elif args.dataset in ("tiny-imagenet", "tiny_imagenet", "tinyimagenet"):
+        path = download_tiny_imagenet(
+            args.root,
             method=args.method,
             resume=not args.no_resume,
             retries=args.retries,

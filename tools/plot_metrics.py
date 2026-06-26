@@ -22,6 +22,14 @@ setup_paths()
 from utils.logger import read_jsonl, write_json
 
 
+def safe_filename(name):
+    # Keep metric-derived filenames portable and readable.
+    return "".join(
+        char if char.isalnum() or char in ("-", "_", ".") else "_"
+        for char in str(name)
+    ).strip("_") or "metric"
+
+
 def read_records(path):
     if path.endswith(".jsonl"):
         return read_jsonl(path)
@@ -110,6 +118,29 @@ def plot_series(records, output_path, names=None, title=None):
     plt.savefig(output_path, **save_kwargs)
     plt.close()
     return output_path
+
+
+def split_output_path(output_path, key):
+    root, ext = os.path.splitext(output_path)
+    ext = ext or ".svg"
+    return os.path.join(root, f"{safe_filename(key)}{ext}")
+
+
+def plot_split_series(records, output_path, names=None, title=None):
+    _, series = scalar_series(records, names=names)
+    if not series:
+        raise ValueError("No scalar series found to plot.")
+
+    outputs = {}
+    for name in series:
+        item_title = f"{title}: {name}" if title else name
+        outputs[name] = plot_series(
+            records,
+            split_output_path(output_path, name),
+            names=[name],
+            title=item_title,
+        )
+    return outputs
 
 
 def _scale(value, src_min, src_max, dst_min, dst_max):
@@ -229,6 +260,11 @@ def create_argparser():
     )
     parser.add_argument("--title", default=None)
     parser.add_argument("--summary-json", default=None)
+    parser.add_argument(
+        "--split",
+        action="store_true",
+        help="Plot each metric key into a separate file under OUTPUT without its extension.",
+    )
     return parser
 
 
@@ -236,7 +272,10 @@ def main(argv=None):
     args = create_argparser().parse_args(argv)
     records = read_records(args.input)
     keys = [key.strip() for key in args.keys.split(",") if key.strip()]
-    output = plot_series(records, args.output, names=keys, title=args.title)
+    if args.split:
+        output = plot_split_series(records, args.output, names=keys, title=args.title)
+    else:
+        output = plot_series(records, args.output, names=keys, title=args.title)
 
     if args.summary_json:
         _, series = scalar_series(records, names=keys)
@@ -251,7 +290,10 @@ def main(argv=None):
         }
         write_json(args.summary_json, summary)
 
-    print(f"saved curve: {output}")
+    if isinstance(output, dict):
+        print(f"saved {len(output)} curves under: {os.path.splitext(args.output)[0]}")
+    else:
+        print(f"saved curve: {output}")
     return 0
 
 

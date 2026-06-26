@@ -1,13 +1,12 @@
-# Planned Tiny-ImageNet-64 subset debug run.
-# Dataset loader/trainer support is not implemented yet; this records the target setup.
+# Tiny-ImageNet-64 subset debug run.
 
 name: tiny_imagenet64_debug
-script: pending
+script: scripts/train_tiny_imagenet64_debug.sh
 purpose: planned_main_dataset_debug
-status: planned
+status: runnable
 
 dataset:
-  name: tiny_imagenet64
+  name: tiny-imagenet
   root: data/tiny-imagenet-200
   image_size: 64
   num_classes: 20
@@ -16,7 +15,7 @@ dataset:
   augment: true
 
 model:
-  dataset_name: tiny
+  dataset_name: tinyimagenet
   config_name: tiny
   resolution: 64
   label_dim: 20

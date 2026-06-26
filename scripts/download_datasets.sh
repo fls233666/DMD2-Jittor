@@ -10,7 +10,16 @@ make_conda_run "${CONDA_ENV}" "${PYTHON_BIN}"
 setup_jittor_env
 
 DATASET="${DATASET:-cifar10}"
-DATA_ROOT="${DATA_ROOT:-data/cifar10}"
+if [[ -z "${DATA_ROOT:-}" ]]; then
+  case "${DATASET}" in
+    tiny-imagenet|tiny_imagenet|tinyimagenet)
+      DATA_ROOT="data/tiny-imagenet-200"
+      ;;
+    *)
+      DATA_ROOT="data/cifar10"
+      ;;
+  esac
+fi
 METHOD="${METHOD:-auto}"
 RETRIES="${RETRIES:-20}"
 

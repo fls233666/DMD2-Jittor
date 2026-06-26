@@ -1,13 +1,14 @@
-# Planned Tiny-ImageNet-64 main presentation run.
-# Use after tiny_imagenet64_debug has a working dataset loader and smoke run.
+# Tiny-ImageNet-64 main presentation run.
+# Requires a converted Jittor Tiny-ImageNet EDM teacher checkpoint when
+# REAL_UNET_CHECKPOINT is set.
 
 name: tiny_imagenet64_dmd2
-script: pending
+script: scripts/train_tiny_imagenet64_debug.sh
 purpose: planned_main_presentation_experiment
-status: planned
+status: runnable
 
 dataset:
-  name: tiny_imagenet64
+  name: tiny-imagenet
   root: data/tiny-imagenet-200
   image_size: 64
   num_classes: 200
@@ -15,8 +16,8 @@ dataset:
   augment: true
 
 model:
-  dataset_name: tiny
-  config_name: tiny
+  dataset_name: tinyimagenet
+  config_name: tinyimagenet
   resolution: 64
   label_dim: 200
   sigma_data: 0.5
@@ -27,6 +28,31 @@ model:
   min_step_percent: 0.02
   max_step_percent: 0.98
   gan_classifier: true
+
+env:
+  DATASET_NAME: tiny-imagenet
+  RUN_NAME: tiny_imagenet64_dmd2
+  USE_CUDA: "1"
+  DATA_ROOT: data/tiny-imagenet-200
+  IMAGE_SIZE: "64"
+  LABEL_DIM: "200"
+  CLASS_SUBSET: ""
+  MAX_STEPS: "30000"
+  BATCH_SIZE: "16"
+  MAX_SAMPLES: "100000"
+  LOG_INTERVAL: "100"
+  CHECKPOINT_INTERVAL: "1000"
+  EVAL_INTERVAL: "500"
+  TEACHER_CONFIG: tinyimagenet
+  REAL_UNET_CHECKPOINT: ""
+  INIT_FAKE_FROM_REAL: "0"
+  INIT_GENERATOR_FROM_REAL: "0"
+  DFAKE_GEN_UPDATE_RATIO: "1"
+  GAN_CLASSIFIER: "1"
+  GEN_CLS_LOSS_WEIGHT: "3e-3"
+  CLS_LOSS_WEIGHT: "1e-2"
+  DIFFUSION_GAN: "1"
+  DIFFUSION_GAN_MAX_TIMESTEP: "1000"
 
 training:
   max_steps: 30000

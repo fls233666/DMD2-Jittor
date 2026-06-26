@@ -1,0 +1,19 @@
+# Download and verify Tiny-ImageNet-200.
+
+name: download_tiny_imagenet
+script: scripts/download_datasets.sh
+purpose: dataset_download
+
+env:
+  DATASET: tiny-imagenet
+  DATA_ROOT: data/tiny-imagenet-200
+  METHOD: auto
+  RETRIES: "20"
+
+dataset:
+  name: tiny-imagenet
+  root: data/tiny-imagenet-200
+  archive: data/tiny-imagenet-200.zip
+  url: http://cs231n.stanford.edu/tiny-imagenet-200.zip
+  image_size: 64
+  num_classes: 200

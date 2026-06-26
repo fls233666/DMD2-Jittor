@@ -177,6 +177,12 @@ def get_imagenet_edm_config():
     )
 
 
+def get_tiny_imagenet_edm_config():
+    # Match the official ImageNet-64 ADM EDM architecture; Tiny-ImageNet only
+    # changes label_dim at the EDMPrecond wrapper level.
+    return get_imagenet_edm_config()
+
+
 def get_tiny_edm_config():
     # Return a small config for CPU/GPU smoke tests and CIFAR-like debugging.
     return dict(
@@ -227,12 +233,23 @@ def get_edm_network(args=None, **kwargs):
         sigma_data = kwargs.pop("sigma_data", 0.5)
         config_name = kwargs.pop("config_name", "imagenet")
 
-    if dataset_name not in ("imagenet", "tiny", "cifar10", "debug"):
+    if dataset_name not in (
+        "imagenet",
+        "tinyimagenet",
+        "tiny_imagenet",
+        "tiny_imagenet64",
+        "tiny",
+        "cifar10",
+        "debug",
+    ):
         raise NotImplementedError(f"Unsupported dataset_name: {dataset_name}")
 
     if dataset_name == "cifar10" and config_name != "tiny":
         model_config = get_cifar10_edm_config()
         model_type = "SongUNet"
+    elif dataset_name in ("tinyimagenet", "tiny_imagenet", "tiny_imagenet64") and config_name != "tiny":
+        model_config = get_tiny_imagenet_edm_config()
+        model_type = "DhariwalUNet"
     elif config_name == "tiny" or dataset_name in ("tiny", "cifar10", "debug"):
         model_config = get_tiny_edm_config()
         model_type = "DhariwalUNet"

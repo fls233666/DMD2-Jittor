@@ -15,6 +15,16 @@ def _get_arg(args, name, default):
     return getattr(args, name, default) if args is not None else default
 
 
+def _set_requires_grad(module, requires_grad):
+    if module is not None and hasattr(module, "requires_grad_"):
+        module.requires_grad_(bool(requires_grad))
+
+
+def _set_guidance_trainable(guidance_model, requires_grad):
+    _set_requires_grad(getattr(guidance_model, "fake_unet", None), requires_grad)
+    _set_requires_grad(getattr(guidance_model, "cls_pred_branch", None), requires_grad)
+
+
 class EDMUniModel(nn.Module):
     # Wrap feedforward generator and guidance model, matching official DMD2 flow.
     def __init__(
@@ -95,11 +105,15 @@ class EDMUniModel(nn.Module):
                     "label": labels,
                     "real_train_dict": real_train_dict,
                 }
-                loss_dict, log_dict = self.guidance_model(
-                    generator_turn=True,
-                    guidance_turn=False,
-                    generator_data_dict=generator_data_dict,
-                )
+                _set_guidance_trainable(self.guidance_model, False)
+                try:
+                    loss_dict, log_dict = self.guidance_model(
+                        generator_turn=True,
+                        guidance_turn=False,
+                        generator_data_dict=generator_data_dict,
+                    )
+                finally:
+                    _set_guidance_trainable(self.guidance_model, True)
             else:
                 loss_dict = {}
                 log_dict = {}

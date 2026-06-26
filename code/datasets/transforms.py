@@ -131,3 +131,53 @@ def make_cifar10_transform(
         hflip_prob=hflip_prob,
         normalize=normalize,
     )
+
+
+class ImageClassificationTransform:
+    # Generic RGB classification transform for ImageNet-like datasets.
+    def __init__(
+        self,
+        train=True,
+        image_size=64,
+        augment=True,
+        crop_padding=4,
+        hflip_prob=0.5,
+        normalize=True,
+    ):
+        self.train = train
+        self.image_size = image_size
+        self.augment = augment
+        self.crop_padding = crop_padding
+        self.hflip_prob = hflip_prob
+        self.normalize = normalize
+
+    def __call__(self, image):
+        image = resize(image, size=self.image_size)
+
+        if self.train and self.augment:
+            image = random_crop(
+                image,
+                size=self.image_size,
+                padding=self.crop_padding,
+            )
+            image = random_horizontal_flip(image, p=self.hflip_prob)
+
+        return image_to_nchw_float(image, normalize=self.normalize)
+
+
+def make_image_classification_transform(
+    train=True,
+    image_size=64,
+    augment=True,
+    crop_padding=4,
+    hflip_prob=0.5,
+    normalize=True,
+):
+    return ImageClassificationTransform(
+        train=train,
+        image_size=image_size,
+        augment=augment,
+        crop_padding=crop_padding,
+        hflip_prob=hflip_prob,
+        normalize=normalize,
+    )

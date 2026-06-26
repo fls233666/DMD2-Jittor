@@ -7,18 +7,18 @@ import jittor as jt
 
 try:
     from samplers.one_step import sample_one_step
-    from samplers.scheduler import images_to_uint8
+    from samplers.scheduler import images_to_uint8, randn_image
     from utils.image import make_image_grid as _make_image_grid
     from utils.image import save_image_grid as _save_image_grid
 except ImportError:
     try:
         from ..samplers.one_step import sample_one_step
-        from ..samplers.scheduler import images_to_uint8
+        from ..samplers.scheduler import images_to_uint8, randn_image
         from ..utils.image import make_image_grid as _make_image_grid
         from ..utils.image import save_image_grid as _save_image_grid
     except ImportError:
         from one_step import sample_one_step
-        from scheduler import images_to_uint8
+        from scheduler import images_to_uint8, randn_image
         from image import make_image_grid as _make_image_grid
         from image import save_image_grid as _save_image_grid
 
@@ -28,6 +28,16 @@ def to_numpy(x):
         jt.sync_all()
         return np.asarray(x.numpy())
     return np.asarray(x)
+
+
+def detach(x):
+    if x is None:
+        return None
+    if hasattr(jt, "detach"):
+        return jt.detach(x)
+    if hasattr(x, "detach"):
+        return x.detach()
+    return x.stop_grad()
 
 
 def make_image_grid(images, nrow=4):
@@ -51,6 +61,8 @@ class DebugSamplerEvaluator:
         conditioning_sigma=80.0,
         img_channels=None,
         img_resolution=None,
+        label_dim=10,
+        save_legacy_svg=True,
     ):
         self.output_dir = output_dir
         self.batch_size = batch_size
@@ -60,18 +72,102 @@ class DebugSamplerEvaluator:
         self.conditioning_sigma = conditioning_sigma
         self.img_channels = img_channels
         self.img_resolution = img_resolution
+        self.label_dim = label_dim
+        self.save_legacy_svg = save_legacy_svg
+        self.fixed_noise = None
+        self.fixed_class_ids = None
 
-    def evaluate(self, model, step=0):
-        generator = model.feedforward_model if hasattr(model, "feedforward_model") else model
-        images = sample_one_step(
+    def _init_fixed_inputs(self, generator):
+        if self.fixed_noise is not None:
+            return
+
+        channels = self.img_channels
+        resolution = self.img_resolution
+        if channels is None and hasattr(generator, "img_channels"):
+            channels = int(generator.img_channels)
+        if resolution is None and hasattr(generator, "img_resolution"):
+            resolution = int(generator.img_resolution)
+        channels = 3 if channels is None else int(channels)
+        resolution = 32 if resolution is None else int(resolution)
+
+        self.fixed_noise = randn_image(
+            batch_size=self.batch_size,
+            channels=channels,
+            resolution=resolution,
+            sigma=1.0,
+        )
+        self.fixed_noise = detach(self.fixed_noise)
+
+        if int(self.label_dim) <= 0:
+            self.fixed_class_ids = None
+        elif self.labels is not None:
+            labels = np.asarray(self.labels, dtype=np.int32).reshape(-1)
+            self.fixed_class_ids = detach(jt.array(labels).int32())
+        elif self.class_idx is not None:
+            labels = np.full([self.batch_size], int(self.class_idx), dtype=np.int32)
+            self.fixed_class_ids = detach(jt.array(labels).int32())
+        else:
+            labels = np.arange(self.batch_size, dtype=np.int32) % int(self.label_dim)
+            self.fixed_class_ids = detach(jt.array(labels).int32())
+
+    def _sample(self, generator, fixed=False):
+        if fixed:
+            self._init_fixed_inputs(generator)
+            return sample_one_step(
+                generator=generator,
+                batch_size=self.batch_size,
+                labels=self.fixed_class_ids,
+                conditioning_sigma=self.conditioning_sigma,
+                img_channels=self.img_channels,
+                img_resolution=self.img_resolution,
+                noise=self.fixed_noise,
+            )
+
+        return sample_one_step(
             generator=generator,
             batch_size=self.batch_size,
-            labels=self.labels,
+            labels=(
+                jt.randint(low=0, high=int(self.label_dim), shape=[self.batch_size]).int32()
+                if self.labels is None and self.class_idx is None and int(self.label_dim) > 0
+                else self.labels
+            ),
             class_idx=self.class_idx,
             conditioning_sigma=self.conditioning_sigma,
             img_channels=self.img_channels,
             img_resolution=self.img_resolution,
         )
-        images = images_to_uint8(images, nchw=True)
-        path = os.path.join(self.output_dir, f"samples_{int(step):06d}.svg")
-        return save_image_grid(images, path=path, nrow=self.nrow)
+
+    def evaluate(self, model, step=0):
+        generator = model.feedforward_model if hasattr(model, "feedforward_model") else model
+        is_training = getattr(generator, "is_training", None)
+        was_training = bool(is_training()) if callable(is_training) else bool(
+            getattr(generator, "training", False)
+        )
+        if hasattr(generator, "eval"):
+            generator.eval()
+
+        with jt.no_grad():
+            fixed_images = self._sample(generator, fixed=True)
+            random_images = self._sample(generator, fixed=False)
+        jt.sync_all()
+
+        fixed_images = images_to_uint8(fixed_images, nchw=True)
+        random_images = images_to_uint8(random_images, nchw=True)
+        fixed_path = os.path.join(self.output_dir, f"fixed_step_{int(step):06d}.png")
+        random_path = os.path.join(self.output_dir, f"random_step_{int(step):06d}.png")
+        save_image_grid(fixed_images, path=fixed_path, nrow=self.nrow)
+        save_image_grid(random_images, path=random_path, nrow=self.nrow)
+
+        legacy_path = None
+        if self.save_legacy_svg:
+            legacy_path = os.path.join(self.output_dir, f"samples_{int(step):06d}.svg")
+            save_image_grid(random_images, path=legacy_path, nrow=self.nrow)
+
+        if was_training and hasattr(generator, "train"):
+            generator.train()
+
+        return {
+            "fixed": fixed_path,
+            "random": random_path,
+            "legacy": legacy_path,
+        }

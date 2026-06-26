@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+export DATASET_NAME="${DATASET_NAME:-tiny-imagenet}"
+export RUN_NAME="${RUN_NAME:-tiny_imagenet64_debug}"
+export DATA_ROOT="${DATA_ROOT:-data/tiny-imagenet-200}"
+export IMAGE_SIZE="${IMAGE_SIZE:-64}"
+export LABEL_DIM="${LABEL_DIM:-20}"
+export CLASS_SUBSET="${CLASS_SUBSET:-0-19}"
+export MAX_STEPS="${MAX_STEPS:-5000}"
+export BATCH_SIZE="${BATCH_SIZE:-16}"
+export MAX_SAMPLES="${MAX_SAMPLES:-10000}"
+export LOG_INTERVAL="${LOG_INTERVAL:-100}"
+export CHECKPOINT_INTERVAL="${CHECKPOINT_INTERVAL:-1000}"
+export EVAL_INTERVAL="${EVAL_INTERVAL:-500}"
+export TEACHER_CONFIG="${TEACHER_CONFIG:-tiny}"
+export DFAKE_GEN_UPDATE_RATIO="${DFAKE_GEN_UPDATE_RATIO:-1}"
+export GAN_CLASSIFIER="${GAN_CLASSIFIER:-0}"
+export GEN_CLS_LOSS_WEIGHT="${GEN_CLS_LOSS_WEIGHT:-0.0}"
+export CLS_LOSS_WEIGHT="${CLS_LOSS_WEIGHT:-1.0}"
+export DIFFUSION_GAN="${DIFFUSION_GAN:-0}"
+export DIFFUSION_GAN_MAX_TIMESTEP="${DIFFUSION_GAN_MAX_TIMESTEP:-1}"
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+"${SCRIPT_DIR}/train_cifar10_debug.sh" "$@"

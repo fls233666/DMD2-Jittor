@@ -1,4 +1,4 @@
-"""Run a compact CIFAR-10 DMD2 debug training job."""
+"""Run a compact image DMD2 debug training job."""
 
 import argparse
 import copy
@@ -31,6 +31,7 @@ import jittor as jt
 from jittor import nn
 
 from datasets.cifar10 import build_cifar10_debug_loader
+from datasets.tiny_imagenet import build_tiny_imagenet_loader
 from models.diffusion import get_edm_network
 from models.ema import ExponentialMovingAverage
 from models.unified_model import EDMUniModel
@@ -56,9 +57,9 @@ def set_seed(seed):
 
 def model_args(args):
     return SimpleNamespace(
-        dataset_name="cifar10",
+        dataset_name=args.dataset_name,
         resolution=args.image_size,
-        label_dim=10,
+        label_dim=args.label_dim,
         use_fp16=False,
         sigma_data=args.sigma_data,
         sigma_min=args.sigma_min,
@@ -186,11 +187,18 @@ def cache_frozen_linear_transposes(module):
 
 def create_argparser():
     parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--dataset-name",
+        choices=("cifar10", "tiny-imagenet", "tiny_imagenet", "tinyimagenet"),
+        default="cifar10",
+        help="Dataset and model family to train.",
+    )
     parser.add_argument("--data-root", default=os.path.join(PROJECT_ROOT, "data", "cifar10"))
     parser.add_argument("--max-samples", type=int, default=1024)
     parser.add_argument("--batch-size", type=int, default=8)
     parser.add_argument("--num-workers", type=int, default=0)
     parser.add_argument("--image-size", type=int, default=32)
+    parser.add_argument("--label-dim", type=int, default=10)
     parser.add_argument("--class-subset", default="")
     parser.add_argument("--seed", type=int, default=0)
     parser.add_argument("--no-augment", action="store_true")
@@ -207,7 +215,7 @@ def create_argparser():
     parser.add_argument("--max-grad-norm", type=float, default=None)
     parser.add_argument(
         "--teacher-config",
-        choices=("tiny", "cifar10"),
+        choices=("tiny", "cifar10", "tinyimagenet"),
         default="tiny",
         help="Network config for real/fake/generator EDM models.",
     )
@@ -274,6 +282,12 @@ def create_argparser():
 
 def main(argv=None):
     args = create_argparser().parse_args(argv)
+    if args.dataset_name in ("tiny-imagenet", "tiny_imagenet"):
+        args.dataset_name = "tinyimagenet"
+    if args.dataset_name == "tinyimagenet" and args.teacher_config == "cifar10":
+        raise ValueError("--teacher-config=cifar10 is only valid for --dataset-name=cifar10")
+    if args.dataset_name == "cifar10" and args.label_dim != 10:
+        raise ValueError("CIFAR-10 requires --label-dim=10")
     jt.flags.use_cuda = 1 if args.use_cuda else 0
     set_seed(args.seed)
 
@@ -284,20 +298,39 @@ def main(argv=None):
     if args.performance_log:
         os.makedirs(os.path.dirname(os.path.abspath(args.performance_log)), exist_ok=True)
 
-    loader = build_cifar10_debug_loader(
-        root=args.data_root,
-        train=True,
-        download=False,
-        max_samples=args.max_samples,
-        batch_size=args.batch_size,
-        shuffle=True,
-        drop_last=True,
-        num_workers=args.num_workers,
-        image_size=args.image_size,
-        augment=not args.no_augment,
-        seed=args.seed,
-        class_subset=parse_int_list(args.class_subset),
-    )
+    class_subset = parse_int_list(args.class_subset)
+    if args.dataset_name == "cifar10":
+        loader = build_cifar10_debug_loader(
+            root=args.data_root,
+            train=True,
+            download=False,
+            max_samples=args.max_samples,
+            batch_size=args.batch_size,
+            shuffle=True,
+            drop_last=True,
+            num_workers=args.num_workers,
+            image_size=args.image_size,
+            augment=not args.no_augment,
+            seed=args.seed,
+            class_subset=class_subset,
+        )
+    elif args.dataset_name == "tinyimagenet":
+        loader = build_tiny_imagenet_loader(
+            root=args.data_root,
+            train=True,
+            max_samples=args.max_samples,
+            batch_size=args.batch_size,
+            shuffle=True,
+            drop_last=True,
+            num_workers=args.num_workers,
+            image_size=args.image_size,
+            augment=not args.no_augment,
+            seed=args.seed,
+            class_subset=class_subset,
+            num_classes=args.label_dim,
+        )
+    else:
+        raise ValueError(f"Unsupported dataset: {args.dataset_name}")
 
     model = build_model(args)
     if args.real_unet_checkpoint:
@@ -337,6 +370,7 @@ def main(argv=None):
             conditioning_sigma=args.conditioning_sigma,
             img_channels=3,
             img_resolution=args.image_size,
+            label_dim=args.label_dim,
         )
 
     engine = DMD2DebugEngine(
@@ -355,7 +389,7 @@ def main(argv=None):
         ema=ema,
         img_channels=3,
         img_resolution=args.image_size,
-        label_dim=10,
+        label_dim=args.label_dim,
         dfake_gen_update_ratio=args.dfake_gen_update_ratio,
         max_grad_norm=args.max_grad_norm,
     )
@@ -403,9 +437,11 @@ def main(argv=None):
         ema=ema,
         step=final_step,
         extra={
-            "dataset": "cifar10",
+            "dataset": args.dataset_name,
+            "dataset_name": args.dataset_name,
             "max_samples": args.max_samples,
             "image_size": args.image_size,
+            "label_dim": args.label_dim,
             "teacher_config": args.teacher_config,
             "real_unet_checkpoint": args.real_unet_checkpoint,
             "resume_checkpoint": args.resume_checkpoint,
@@ -425,7 +461,7 @@ def main(argv=None):
         if final_step == 0 or final_step % int(args.eval_interval) != 0:
             evaluator.evaluate(model, step=final_step)
 
-    print(f"finished CIFAR-10 debug training: steps={final_step}")
+    print(f"finished {args.dataset_name} debug training: steps={final_step}")
     print(f"metrics log: {args.metrics_log}")
     print(f"performance log: {args.performance_log}")
     print(f"final checkpoint: {final_checkpoint}")

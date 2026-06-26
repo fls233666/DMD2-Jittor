@@ -10,6 +10,7 @@ make_conda_run "${CONDA_ENV}" "${PYTHON_BIN}"
 setup_jittor_env
 
 RUN_NAME="${RUN_NAME:-cifar10_debug}"
+DATASET_NAME="${DATASET_NAME:-cifar10}"
 DATA_ROOT="${DATA_ROOT:-data/cifar10}"
 CHECKPOINT_DIR="${CHECKPOINT_DIR:-checkpoints/${RUN_NAME}}"
 SAMPLE_DIR="${SAMPLE_DIR:-outputs/samples/${RUN_NAME}}"
@@ -23,6 +24,8 @@ PERF_SUMMARY="${PERF_SUMMARY:-outputs/curves/${RUN_NAME}_performance_summary.jso
 MAX_STEPS="${MAX_STEPS:-50}"
 BATCH_SIZE="${BATCH_SIZE:-8}"
 MAX_SAMPLES="${MAX_SAMPLES:-1024}"
+IMAGE_SIZE="${IMAGE_SIZE:-32}"
+LABEL_DIM="${LABEL_DIM:-10}"
 LOG_INTERVAL="${LOG_INTERVAL:-10}"
 CHECKPOINT_INTERVAL="${CHECKPOINT_INTERVAL:-50}"
 EVAL_INTERVAL="${EVAL_INTERVAL:-50}"
@@ -42,10 +45,13 @@ DIFFUSION_GAN="${DIFFUSION_GAN:-0}"
 DIFFUSION_GAN_MAX_TIMESTEP="${DIFFUSION_GAN_MAX_TIMESTEP:-1}"
 
 ARGS=(
+  --dataset-name "${DATASET_NAME}"
   --data-root "${DATA_ROOT}"
   --max-steps "${MAX_STEPS}"
   --batch-size "${BATCH_SIZE}"
   --max-samples "${MAX_SAMPLES}"
+  --image-size "${IMAGE_SIZE}"
+  --label-dim "${LABEL_DIM}"
   --log-interval "${LOG_INTERVAL}"
   --checkpoint-interval "${CHECKPOINT_INTERVAL}"
   --eval-interval "${EVAL_INTERVAL}"
@@ -102,7 +108,8 @@ if [[ -f "${METRICS_LOG}" ]]; then
     "${LOSS_CURVE}" \
     --keys "${LOSS_KEYS:-loss_generator,loss_guidance,generator/loss_dm,generator/gen_cls_loss,guidance/loss_fake_mean,guidance/guidance_cls_loss}" \
     --title "${RUN_NAME} loss" \
-    --summary-json "${LOSS_SUMMARY}"
+    --summary-json "${LOSS_SUMMARY}" \
+    --split
 fi
 
 if [[ -f "${PERFORMANCE_LOG}" ]]; then
@@ -114,8 +121,8 @@ if [[ -f "${PERFORMANCE_LOG}" ]]; then
     --summary-json "${PERF_SUMMARY}"
 fi
 
-echo "CIFAR-10 debug run finished."
+echo "${DATASET_NAME} debug run finished."
 echo "metrics: ${METRICS_LOG}"
 echo "performance: ${PERFORMANCE_LOG}"
-echo "loss curve: ${LOSS_CURVE}"
+echo "loss curves: ${LOSS_CURVE%.*}/"
 echo "performance curve: ${PERF_CURVE}"

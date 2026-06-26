@@ -28,7 +28,8 @@ if [[ -f "${METRICS_LOG}" ]]; then
     "${METRICS_LOG}" \
     "${LOSS_CURVE}" \
     --keys "${LOSS_KEYS:-loss_generator,loss_guidance,generator/loss_dm,guidance/loss_fake_mean}" \
-    --title "${RUN_NAME} loss"
+    --title "${RUN_NAME} loss" \
+    --split
 else
   echo "skip loss curve; metric log not found: ${METRICS_LOG}"
 fi

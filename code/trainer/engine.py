@@ -78,6 +78,19 @@ def loss_dict_to_float(loss_dict):
     return {name: as_float(value) for name, value in loss_dict.items()}
 
 
+def scalar_log_dict(log_dict):
+    logs = {}
+    for name, value in log_dict.items():
+        if isinstance(value, (int, float)):
+            logs[name] = float(value)
+        elif isinstance(value, jt.Var):
+            shape = tuple(value.shape)
+            size = int(np.prod(shape)) if shape else 1
+            if size == 1:
+                logs[name] = as_float(value)
+    return logs
+
+
 def infer_batch_shape(batch):
     image = batch["image"]
     return int(image.shape[0]), int(image.shape[1]), int(image.shape[2])
@@ -293,6 +306,10 @@ class DMD2DebugEngine:
             logs[f"generator/{name}"] = value
         for name, value in loss_dict_to_float(guidance_losses).items():
             logs[f"guidance/{name}"] = value
+        for name, value in scalar_log_dict(gen_logs).items():
+            logs[name] = value
+        for name, value in scalar_log_dict(guidance_logs).items():
+            logs[name] = value
 
         return {
             "loss_generator": gen_total,
