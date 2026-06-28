@@ -1,13 +1,30 @@
 """U-Net blocks for the Jittor DMD2/EDM implementation."""
 
+import os
 import numpy as np
 import jittor as jt
 from jittor import nn
 
 try:
-    from .modules import Linear, Conv2d, GroupNorm, PositionalEmbedding, FourierEmbedding, AttentionOp
+    from .modules import (
+        Linear,
+        Conv2d,
+        GroupNorm,
+        PositionalEmbedding,
+        FourierEmbedding,
+        AttentionOp,
+        AttentionValueOp,
+    )
 except ImportError:
-    from modules import Linear, Conv2d, GroupNorm, PositionalEmbedding, FourierEmbedding, AttentionOp
+    from modules import (
+        Linear,
+        Conv2d,
+        GroupNorm,
+        PositionalEmbedding,
+        FourierEmbedding,
+        AttentionOp,
+        AttentionValueOp,
+    )
 
 try:
     from .modules import silu
@@ -44,6 +61,30 @@ def _dropout(x, p, training):
             return nn.dropout(x, p=p, training=training)
         except TypeError:
             return nn.dropout(x, p=p)
+
+
+class SafeChannelConcat(jt.Function):
+    # Avoid Jittor concat's default backward scatter/setitem path on large feature maps.
+    def execute(self, left, right):
+        self.left_channels = int(left.shape[1])
+        self.right_channels = int(right.shape[1])
+        return jt.concat([left, right], dim=1)
+
+    def grad(self, grad_output):
+        if grad_output is None:
+            return None, None
+        left_grad = grad_output[:, : self.left_channels]
+        right_grad = grad_output[
+            :,
+            self.left_channels : self.left_channels + self.right_channels,
+        ]
+        return left_grad, right_grad
+
+
+def concat_skip_features(x, skip):
+    if os.environ.get("DMD2_SAFE_CONCAT", "1") == "0":
+        return jt.concat([x, skip], dim=1)
+    return SafeChannelConcat.apply(x, skip)
 
 
 class UNetBlock(nn.Module):
@@ -182,7 +223,7 @@ class UNetBlock(nn.Module):
         v = qkv[:, :, 2, :]
 
         weights = AttentionOp.apply(q, k)
-        attn = jt.matmul(v, weights.transpose(0, 2, 1))
+        attn = AttentionValueOp.apply(v, weights)
         attn = attn.reshape(x.shape)
 
         x = (self.proj(attn) + x) * self.skip_scale
@@ -441,7 +482,7 @@ class DhariwalUNet(nn.Module):
             block = getattr(self, attr_name)
 
             if x.shape[1] != block.in_channels:
-                x = jt.concat([x, skips.pop()], dim=1)
+                x = concat_skip_features(x, skips.pop())
 
             x = block(x, emb)
 
@@ -773,7 +814,7 @@ class SongUNet(nn.Module):
                 aux = tmp if aux is None else tmp + aux
             else:
                 if x.shape[1] != block.in_channels:
-                    x = jt.concat([x, skips.pop()], dim=1)
+                    x = concat_skip_features(x, skips.pop())
                 x = block(x, emb)
 
         return aux

@@ -1,5 +1,6 @@
 """Training step engine for image DMD2 Jittor experiments."""
 
+import os
 import time
 
 import numpy as np
@@ -57,16 +58,33 @@ def sum_loss_dict(loss_dict, weights=None):
 def optimizer_step(optimizer, loss, max_grad_norm=None):
     # Use manual backward only when gradient clipping is requested.
     if max_grad_norm is None or not hasattr(optimizer, "backward"):
-        optimizer.step(loss)
+        if os.environ.get("DMD2_SYNC_DEBUG", "0") == "0":
+            optimizer.step(loss)
+        else:
+            optimizer.zero_grad()
+            optimizer.backward(loss)
+            sync_debug("optimizer_backward_grad")
+            optimizer.step()
+            sync_debug("optimizer_step")
         return None
 
     if hasattr(optimizer, "zero_grad"):
         optimizer.zero_grad()
     optimizer.backward(loss)
+    sync_debug("optimizer_backward_grad")
     if hasattr(optimizer, "clip_grad_norm"):
         optimizer.clip_grad_norm(float(max_grad_norm))
+        sync_debug("optimizer_clip_grad_norm")
     optimizer.step()
+    sync_debug("optimizer_step")
     return None
+
+
+def sync_debug(name):
+    if os.environ.get("DMD2_SYNC_DEBUG", "0") == "0":
+        return
+    print(f"[sync] {name}", flush=True)
+    jt.sync_all()
 
 
 def scheduler_step(scheduler):
@@ -244,6 +262,7 @@ class ImageDMD2TrainEngine:
             batch=batch,
             compute_generator_gradient=compute_generator_gradient,
         )
+        sync_debug("generator_forward")
 
         if compute_generator_gradient:
             total_loss = sum_loss_dict(loss_dict, self.generator_loss_weights)
@@ -252,13 +271,16 @@ class ImageDMD2TrainEngine:
                 loss=total_loss,
                 max_grad_norm=self.max_grad_norm,
             )
+            sync_debug("generator_backward")
         else:
             total_loss = jt.array(0.0).float32()
 
         scheduler_step(self.generator_scheduler)
+        sync_debug("generator_scheduler")
 
         if compute_generator_gradient and self.ema is not None:
             self.ema.update(self.model.feedforward_model)
+            sync_debug("generator_ema")
         return total_loss, loss_dict, log_dict
 
     def guidance_step(self, guidance_data_dict):
@@ -270,13 +292,16 @@ class ImageDMD2TrainEngine:
             guidance_turn=True,
             guidance_data_dict=guidance_data_dict,
         )
+        sync_debug("guidance_forward")
         total_loss = sum_loss_dict(loss_dict, self.guidance_loss_weights)
         optimizer_step(
             optimizer=self.guidance_optimizer,
             loss=total_loss,
             max_grad_norm=self.max_grad_norm,
         )
+        sync_debug("guidance_backward")
         scheduler_step(self.guidance_scheduler)
+        sync_debug("guidance_scheduler")
         return total_loss, loss_dict, log_dict
 
     def train_step(self, batch):
