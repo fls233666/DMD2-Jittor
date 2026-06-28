@@ -3,7 +3,7 @@
 # REAL_UNET_CHECKPOINT is set.
 
 name: tiny_imagenet64_dmd2
-script: scripts/train_tiny_imagenet64_debug.sh
+script: scripts/train_image_dmd2.sh
 purpose: planned_main_presentation_experiment
 status: runnable
 

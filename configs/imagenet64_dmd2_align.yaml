@@ -1,0 +1,78 @@
+# ImageNet-64 DMD2 Jittor training aligned to the PyTorch reference.
+
+name: imagenet64_dmd2_align
+script: scripts/train_imagenet64_align.sh
+base_script: scripts/train_image_dmd2.sh
+purpose: pytorch_jittor_precision_alignment_training
+status: runnable_with_imagenet64_lmdb_and_converted_teacher
+
+dataset:
+  name: imagenet
+  root: ../DMD2-pytorch/checkpoints/imagenet-64x64_lmdb
+  image_size: 64
+  num_classes: 1000
+  augment: false
+  format: pytorch_lmdb
+
+teacher:
+  convert_script: scripts/convert_imagenet64_teacher.sh
+  pytorch_source: ../DMD2-pytorch/checkpoints/edm-imagenet-64x64-cond-adm.pkl
+  jittor_converted: checkpoints/imagenet64_teacher/edm_imagenet64_teacher_jittor.pkl
+  config_name: imagenet
+  state_key: ""
+
+model:
+  dataset_name: imagenet
+  config_name: imagenet
+  resolution: 64
+  label_dim: 1000
+  sigma_data: 0.5
+  sigma_min: 0.002
+  sigma_max: 80.0
+  rho: 7.0
+  num_train_timesteps: 1000
+  min_step_percent: 0.02
+  max_step_percent: 0.98
+
+env:
+  CONDA_ENV: dmd2-jittor
+  USE_CUDA: "1"
+  RUN_NAME: imagenet64_dmd2_align_b16
+  DATASET_NAME: imagenet
+  DATA_ROOT: ../DMD2-pytorch/checkpoints/imagenet-64x64_lmdb
+  IMAGE_SIZE: "64"
+  LABEL_DIM: "1000"
+  SEED: "10"
+  MAX_STEPS: "1000"
+  BATCH_SIZE: "16"
+  MAX_SAMPLES: "-1"
+  LOG_INTERVAL: "100"
+  CHECKPOINT_INTERVAL: "0"
+  EVAL_INTERVAL: "500"
+  EVAL_BATCH_SIZE: "16"
+  NROW: "4"
+  NO_AUGMENT: "1"
+  TEACHER_CONFIG: imagenet
+  REAL_UNET_CHECKPOINT: checkpoints/imagenet64_teacher/edm_imagenet64_teacher_jittor.pkl
+  INIT_FAKE_FROM_REAL: "1"
+  INIT_GENERATOR_FROM_REAL: "1"
+  SKIP_REAL_LINEAR_TRANSPOSE_CACHE: "1"
+  DFAKE_GEN_UPDATE_RATIO: "5"
+  GAN_CLASSIFIER: "0"
+  OPTIMIZER: adamw
+  LR_GENERATOR: "2e-6"
+  LR_GUIDANCE: "2e-6"
+  ADAM_BETA1: "0.9"
+  ADAM_BETA2: "0.999"
+  WEIGHT_DECAY: "0.01"
+  WARMUP_STEP: "500"
+  MAX_GRAD_NORM: "10"
+  SKIP_FINAL_CHECKPOINT: "1"
+
+records:
+  checkpoint_dir: checkpoints/imagenet64_dmd2_align_b16
+  sample_dir: outputs/samples/imagenet64_dmd2_align_b16
+  metrics_log: logs/imagenet64_dmd2_align_b16/train_metrics.jsonl
+  performance_log: logs/imagenet64_dmd2_align_b16/performance.jsonl
+  loss_curve_dir: outputs/curves/imagenet64_dmd2_align_b16_loss
+  performance_curve: outputs/curves/imagenet64_dmd2_align_b16_performance.svg

@@ -22,4 +22,4 @@ export DIFFUSION_GAN="${DIFFUSION_GAN:-0}"
 export DIFFUSION_GAN_MAX_TIMESTEP="${DIFFUSION_GAN_MAX_TIMESTEP:-1}"
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-"${SCRIPT_DIR}/train_cifar10_debug.sh" "$@"
+bash "${SCRIPT_DIR}/train_image_dmd2.sh" "$@"

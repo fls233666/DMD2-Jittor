@@ -1,4 +1,4 @@
-"""Training step engine for small DMD2 Jittor experiments."""
+"""Training step engine for image DMD2 Jittor experiments."""
 
 import time
 
@@ -142,8 +142,8 @@ def make_generator_inputs(
     return scaled_noise, sigma, noise
 
 
-class DMD2DebugEngine:
-    # Coordinates generator/guidance updates for CIFAR-10 debug training.
+class ImageDMD2TrainEngine:
+    # Coordinates generator/guidance updates for image DMD2 training.
     def __init__(
         self,
         model,
@@ -329,7 +329,7 @@ class DMD2DebugEngine:
             )
 
 
-class DMD2DebugEngineModule(nn.Module):
+class ImageDMD2EngineModule(nn.Module):
     # Lightweight nn.Module wrapper for code that expects a module-like engine.
     def __init__(self, engine):
         super().__init__()
@@ -337,3 +337,7 @@ class DMD2DebugEngineModule(nn.Module):
 
     def execute(self, batch):
         return self.engine.train_step(batch)
+
+
+DMD2DebugEngine = ImageDMD2TrainEngine
+DMD2DebugEngineModule = ImageDMD2EngineModule

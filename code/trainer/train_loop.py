@@ -1,4 +1,4 @@
-"""Simple train loop utilities for CIFAR-10 DMD2 debug runs."""
+"""Simple train loop utilities for image DMD2 runs."""
 
 import os
 
@@ -55,7 +55,7 @@ def cycle(loader):
             yield batch
 
 
-def train_debug(
+def train_image_dmd2(
     engine,
     train_loader,
     max_steps=1000,
@@ -69,7 +69,7 @@ def train_debug(
     performance_logger=None,
     print_fn=print,
 ):
-    # Run a compact CIFAR-10 debug training loop.
+    # Run a compact image DMD2 training loop.
     os.makedirs(output_dir, exist_ok=True) if output_dir else None
     data_iter = cycle(train_loader)
     averager = MetricAverager()
@@ -122,8 +122,13 @@ def train_debug(
                 model=engine.model,
                 generator_optimizer=engine.generator_optimizer,
                 guidance_optimizer=engine.guidance_optimizer,
+                generator_scheduler=engine.generator_scheduler,
+                guidance_scheduler=engine.guidance_scheduler,
                 ema=engine.ema,
                 step=step + 1,
             )
 
     return history
+
+
+train_debug = train_image_dmd2

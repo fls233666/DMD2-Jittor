@@ -1,7 +1,6 @@
 """Backward-compatible entry point for the image DMD2 trainer.
 
-Use tools/train_image_dmd2.py for new runs. This file is kept so older
-CIFAR-10 scripts and configs continue to work.
+Use tools/train_image_dmd2.py for new runs.
 """
 
 from train_image_dmd2 import main

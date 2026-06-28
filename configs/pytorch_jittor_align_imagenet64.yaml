@@ -1,4 +1,4 @@
-# PyTorch-to-Jittor checkpoint conversion and key/shape alignment.
+# PyTorch-to-Jittor checkpoint conversion, key/shape alignment, and forward alignment.
 
 name: pytorch_jittor_align_imagenet64
 script: scripts/align_pytorch_jittor.sh
@@ -40,3 +40,30 @@ model:
 records:
   generator_log: logs/pytorch_jittor_align_generator.log
   guidance_log: logs/pytorch_jittor_align_guidance.log
+
+forward_env:
+  script: scripts/align_imagenet64_forward.sh
+  JITTOR_CONDA_ENV: dmd2-jittor
+  PYTORCH_CONDA_ENV: dmd2
+  USE_CUDA: "0"
+  PYTORCH_USE_CUDA: "0"
+  PYTORCH_ROOT: ../DMD2-pytorch
+  PYTORCH_CKPT: ../DMD2-pytorch/checkpoints/imagenet_fid151/pytorch_model.bin
+  CONVERTED_CKPT: checkpoints/imagenet64_demo/generator_jittor.pkl
+  OUTPUT_DIR: outputs/alignment/imagenet64_forward
+  INPUT_NPZ: outputs/alignment/imagenet64_forward/input.npz
+  PYTORCH_OUTPUT_NPZ: outputs/alignment/imagenet64_forward/pytorch_output.npz
+  JITTOR_OUTPUT_NPZ: outputs/alignment/imagenet64_forward/jittor_output.npz
+  REPORT_JSON: outputs/alignment/imagenet64_forward/report.json
+  LOG_PATH: logs/imagenet64_forward_alignment.log
+  BATCH_SIZE: "2"
+  SEED: "10"
+  RTOL: "1e-4"
+  ATOL: "2e-4"
+
+forward_records:
+  input: outputs/alignment/imagenet64_forward/input.npz
+  pytorch_output: outputs/alignment/imagenet64_forward/pytorch_output.npz
+  jittor_output: outputs/alignment/imagenet64_forward/jittor_output.npz
+  report: outputs/alignment/imagenet64_forward/report.json
+  log: logs/imagenet64_forward_alignment.log

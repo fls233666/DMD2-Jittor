@@ -19,6 +19,14 @@ from .tiny_imagenet import (
     build_tiny_imagenet_loader,
     default_tiny_imagenet_root,
 )
+from .imagenet64_lmdb import (
+    IMAGENET64_LMDB_DIRNAME,
+    IMAGENET64_NUM_CLASSES,
+    ImageNet64LMDBDataset,
+    build_imagenet64_lmdb_dataset,
+    build_imagenet64_lmdb_loader,
+    default_imagenet64_lmdb_root,
+)
 from .transforms import (
     CIFAR10Transform,
     ImageClassificationTransform,
@@ -39,6 +47,9 @@ __all__ = [
     "CIFAR10DebugDataset",
     "CIFAR10Transform",
     "ImageClassificationTransform",
+    "IMAGENET64_LMDB_DIRNAME",
+    "IMAGENET64_NUM_CLASSES",
+    "ImageNet64LMDBDataset",
     "TINY_IMAGENET_ARCHIVE",
     "TINY_IMAGENET_DIRNAME",
     "TINY_IMAGENET_NUM_CLASSES",
@@ -47,9 +58,12 @@ __all__ = [
     "build_cifar10_debug_dataset",
     "build_cifar10_debug_loader",
     "build_debug_indices",
+    "build_imagenet64_lmdb_dataset",
+    "build_imagenet64_lmdb_loader",
     "build_tiny_imagenet_dataset",
     "build_tiny_imagenet_loader",
     "default_cifar10_root",
+    "default_imagenet64_lmdb_root",
     "default_tiny_imagenet_root",
     "image_to_nchw_float",
     "make_cifar10_transform",

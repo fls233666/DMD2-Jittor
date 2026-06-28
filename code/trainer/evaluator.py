@@ -1,4 +1,4 @@
-"""Evaluation helpers for CIFAR-10 DMD2 debug runs."""
+"""Evaluation helpers for image DMD2 runs."""
 
 import os
 
@@ -49,8 +49,8 @@ def save_image_grid(images, path, nrow=4):
     return _save_image_grid(images, path=path, nrow=nrow)
 
 
-class DebugSamplerEvaluator:
-    # Save one-step sample grids during debug training.
+class ImageDMD2SamplerEvaluator:
+    # Save one-step sample grids during image DMD2 training.
     def __init__(
         self,
         output_dir,
@@ -171,3 +171,6 @@ class DebugSamplerEvaluator:
             "random": random_path,
             "legacy": legacy_path,
         }
+
+
+DebugSamplerEvaluator = ImageDMD2SamplerEvaluator

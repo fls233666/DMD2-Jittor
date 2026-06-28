@@ -2,5 +2,4 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-export RUN_NAME="${RUN_NAME:-cifar10_debug}"
 bash "${SCRIPT_DIR}/train_image_dmd2.sh" "$@"

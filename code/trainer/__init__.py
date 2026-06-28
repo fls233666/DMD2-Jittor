@@ -1,9 +1,11 @@
-"""Trainer entry points for DMD2 Jittor debug runs."""
+"""Trainer entry points for DMD2 Jittor image runs."""
 
 from .checkpoint import checkpoint_state, load_checkpoint, save_checkpoint
 from .engine import (
     DMD2DebugEngine,
     DMD2DebugEngineModule,
+    ImageDMD2EngineModule,
+    ImageDMD2TrainEngine,
     as_float,
     infer_label_dim,
     loss_dict_to_float,
@@ -13,14 +15,22 @@ from .engine import (
     scheduler_step,
     sum_loss_dict,
 )
-from .evaluator import DebugSamplerEvaluator, make_image_grid, save_image_grid
-from .train_loop import MetricAverager, cycle, format_log, train_debug
+from .evaluator import (
+    DebugSamplerEvaluator,
+    ImageDMD2SamplerEvaluator,
+    make_image_grid,
+    save_image_grid,
+)
+from .train_loop import MetricAverager, cycle, format_log, train_debug, train_image_dmd2
 
 
 __all__ = [
     "DMD2DebugEngine",
     "DMD2DebugEngineModule",
     "DebugSamplerEvaluator",
+    "ImageDMD2EngineModule",
+    "ImageDMD2SamplerEvaluator",
+    "ImageDMD2TrainEngine",
     "MetricAverager",
     "as_float",
     "checkpoint_state",
@@ -38,4 +48,5 @@ __all__ = [
     "scheduler_step",
     "sum_loss_dict",
     "train_debug",
+    "train_image_dmd2",
 ]
