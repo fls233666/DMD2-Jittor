@@ -8,6 +8,14 @@ except ImportError:
     from checkpoint import save_checkpoint
 
 try:
+    from .evaluator import cleanup_jittor_memory
+except ImportError:
+    try:
+        from evaluator import cleanup_jittor_memory
+    except ImportError:
+        cleanup_jittor_memory = None
+
+try:
     from utils.logger import make_logger, scalar_logs
     from utils.metric import StepTimer, infer_batch_size, performance_record
 except ImportError:
@@ -114,7 +122,11 @@ def train_image_dmd2(
             averager = MetricAverager()
 
         if evaluator is not None and eval_interval and (step + 1) % int(eval_interval) == 0:
+            if cleanup_jittor_memory is not None:
+                cleanup_jittor_memory()
             evaluator.evaluate(engine.model, step=step + 1)
+            if cleanup_jittor_memory is not None:
+                cleanup_jittor_memory()
 
         if output_dir and checkpoint_interval and (step + 1) % int(checkpoint_interval) == 0:
             save_checkpoint(

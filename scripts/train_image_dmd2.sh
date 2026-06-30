@@ -31,6 +31,7 @@ LOG_INTERVAL="${LOG_INTERVAL:-10}"
 CHECKPOINT_INTERVAL="${CHECKPOINT_INTERVAL:-50}"
 EVAL_INTERVAL="${EVAL_INTERVAL:-50}"
 EVAL_BATCH_SIZE="${EVAL_BATCH_SIZE:-16}"
+EVAL_CHUNK_SIZE="${EVAL_CHUNK_SIZE:-}"
 NROW="${NROW:-4}"
 NO_AUGMENT="${NO_AUGMENT:-0}"
 USE_FP16="${USE_FP16:-0}"
@@ -96,6 +97,7 @@ export DMD2_SAFE_LEARNED_CONV_DW_CHUNK
 export DMD2_SAFE_LEARNED_CONV_DW_OUT_CHUNK
 export DMD2_SAFE_ATTENTION_VALUE
 export DMD2_SYNC_DEBUG
+export DMD2_EVAL_CHUNK_SIZE="${DMD2_EVAL_CHUNK_SIZE:-${EVAL_CHUNK_SIZE}}"
 
 ARGS=(
   --dataset-name "${DATASET_NAME}"
@@ -146,6 +148,9 @@ if [[ -n "${CLASS_SUBSET:-}" ]]; then
 fi
 if [[ -n "${MAX_GRAD_NORM}" ]]; then
   ARGS+=(--max-grad-norm "${MAX_GRAD_NORM}")
+fi
+if [[ -n "${EVAL_CHUNK_SIZE}" ]]; then
+  ARGS+=(--eval-chunk-size "${EVAL_CHUNK_SIZE}")
 fi
 if [[ -n "${REAL_UNET_CHECKPOINT}" ]]; then
   ARGS+=(--real-unet-checkpoint "${REAL_UNET_CHECKPOINT}")

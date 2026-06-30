@@ -307,6 +307,7 @@ def create_argparser():
     parser.add_argument("--checkpoint-interval", type=int, default=50)
     parser.add_argument("--eval-interval", type=int, default=50)
     parser.add_argument("--eval-batch-size", type=int, default=16)
+    parser.add_argument("--eval-chunk-size", type=int, default=None)
     parser.add_argument("--nrow", type=int, default=4)
     parser.add_argument("--conditioning-sigma", type=float, default=80.0)
     parser.add_argument("--dfake-gen-update-ratio", type=int, default=1)
@@ -516,6 +517,7 @@ def main(argv=None):
             img_channels=3,
             img_resolution=args.image_size,
             label_dim=args.label_dim,
+            chunk_size=args.eval_chunk_size,
         )
 
     engine = ImageDMD2TrainEngine(
