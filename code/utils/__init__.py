@@ -30,10 +30,12 @@ from .metric import (
     performance_record,
     save_feature_stats,
 )
+from .performance_monitor import NvidiaSmiMonitor
 
 __all__ = [
     "CSVLogger",
     "JSONLLogger",
+    "NvidiaSmiMonitor",
     "StepTimer",
     "append_jsonl",
     "append_text",

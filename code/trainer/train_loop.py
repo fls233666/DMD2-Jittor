@@ -75,6 +75,7 @@ def train_image_dmd2(
     eval_interval=None,
     metrics_logger=None,
     performance_logger=None,
+    performance_monitor=None,
     print_fn=print,
 ):
     # Run a compact image DMD2 training loop.
@@ -103,11 +104,16 @@ def train_image_dmd2(
             step_time=step_time,
         )["samples_per_second"]
 
+        perf_extra = None
+        if performance_monitor is not None:
+            perf_extra = performance_monitor.collect_since_last()
+
         perf_logs = performance_record(
             step=step + 1,
             batch_size=infer_batch_size(batch),
             data_time=data_time,
             step_time=step_time,
+            extra=perf_extra,
         )
 
         averager.update(logs)
@@ -139,6 +145,8 @@ def train_image_dmd2(
                 ema=engine.ema,
                 step=step + 1,
             )
+
+        timer.reset_data_start()
 
     return history
 

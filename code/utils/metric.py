@@ -58,6 +58,9 @@ class StepTimer:
         self.data_start = now
         return step_time
 
+    def reset_data_start(self):
+        self.data_start = time.time()
+
 
 def compute_feature_stats(features):
     features = np.asarray(features, dtype=np.float64)

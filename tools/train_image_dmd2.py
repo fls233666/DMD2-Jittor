@@ -40,6 +40,7 @@ from trainer.checkpoint import load_checkpoint, save_checkpoint
 from trainer.engine import ImageDMD2TrainEngine
 from trainer.evaluator import ImageDMD2SamplerEvaluator
 from trainer.train_loop import train_image_dmd2
+from utils.performance_monitor import NvidiaSmiMonitor
 
 
 def parse_int_list(value):
@@ -384,6 +385,22 @@ def create_argparser():
     parser.add_argument("--final-checkpoint", default="")
     parser.add_argument("--skip-final-checkpoint", action="store_true")
     parser.add_argument("--skip-final-eval", action="store_true")
+    parser.add_argument(
+        "--enable-gpu-monitor",
+        action="store_true",
+        help="Sample GPU utilization, power, and nvidia-smi memory into performance.jsonl.",
+    )
+    parser.add_argument(
+        "--gpu-monitor-interval",
+        type=float,
+        default=0.5,
+        help="Seconds between background nvidia-smi samples. Use 0 for one query per logged step.",
+    )
+    parser.add_argument(
+        "--gpu-monitor-index",
+        default="",
+        help="GPU index or UUID for nvidia-smi. Defaults to DMD2_PERF_GPU_INDEX or first CUDA_VISIBLE_DEVICES entry.",
+    )
     return parser
 
 
@@ -564,19 +581,28 @@ def main(argv=None):
         print(f"resume model only: {int(args.resume_model_only)}")
         print(f"refreshed real teacher linear transpose cache: {cached_linear_count}")
 
-    history = train_image_dmd2(
-        engine=engine,
-        train_loader=loader,
-        max_steps=args.max_steps,
-        log_interval=args.log_interval,
-        checkpoint_interval=args.checkpoint_interval,
-        output_dir=args.checkpoint_dir,
-        evaluator=evaluator,
-        eval_interval=args.eval_interval,
-        metrics_logger=args.metrics_log,
-        performance_logger=args.performance_log,
-        start_step=start_step,
-    )
+    performance_monitor = NvidiaSmiMonitor(
+        enabled=args.enable_gpu_monitor,
+        interval=args.gpu_monitor_interval,
+        gpu_index=args.gpu_monitor_index,
+    ).start()
+    try:
+        history = train_image_dmd2(
+            engine=engine,
+            train_loader=loader,
+            max_steps=args.max_steps,
+            log_interval=args.log_interval,
+            checkpoint_interval=args.checkpoint_interval,
+            output_dir=args.checkpoint_dir,
+            evaluator=evaluator,
+            eval_interval=args.eval_interval,
+            metrics_logger=args.metrics_log,
+            performance_logger=args.performance_log,
+            performance_monitor=performance_monitor,
+            start_step=start_step,
+        )
+    finally:
+        performance_monitor.stop()
 
     final_step = history[-1]["step"] if history else start_step
     final_checkpoint = args.final_checkpoint

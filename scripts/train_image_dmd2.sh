@@ -20,6 +20,9 @@ LOSS_CURVE="${LOSS_CURVE:-outputs/curves/${RUN_NAME}_loss.svg}"
 PERF_CURVE="${PERF_CURVE:-outputs/curves/${RUN_NAME}_performance.svg}"
 LOSS_SUMMARY="${LOSS_SUMMARY:-outputs/curves/${RUN_NAME}_loss_summary.json}"
 PERF_SUMMARY="${PERF_SUMMARY:-outputs/curves/${RUN_NAME}_performance_summary.json}"
+ENABLE_GPU_MONITOR="${ENABLE_GPU_MONITOR:-0}"
+GPU_MONITOR_INTERVAL="${GPU_MONITOR_INTERVAL:-0.5}"
+GPU_MONITOR_INDEX="${GPU_MONITOR_INDEX:-${DMD2_PERF_GPU_INDEX:-}}"
 
 MAX_STEPS="${MAX_STEPS:-50}"
 BATCH_SIZE="${BATCH_SIZE:-8}"
@@ -191,6 +194,15 @@ fi
 if [[ "${SKIP_FINAL_EVAL}" == "1" ]]; then
   ARGS+=(--skip-final-eval)
 fi
+if [[ "${ENABLE_GPU_MONITOR}" == "1" ]]; then
+  ARGS+=(
+    --enable-gpu-monitor
+    --gpu-monitor-interval "${GPU_MONITOR_INTERVAL}"
+  )
+fi
+if [[ -n "${GPU_MONITOR_INDEX}" ]]; then
+  ARGS+=(--gpu-monitor-index "${GPU_MONITOR_INDEX}")
+fi
 
 "${RUN[@]}" tools/train_image_dmd2.py "${ARGS[@]}" "$@"
 
@@ -208,7 +220,7 @@ if [[ -f "${PERFORMANCE_LOG}" ]]; then
   "${RUN[@]}" tools/plot_metrics.py \
     "${PERFORMANCE_LOG}" \
     "${PERF_CURVE}" \
-    --keys "${PERF_KEYS:-samples_per_second,step_time,data_time}" \
+    --keys "${PERF_KEYS:-samples_per_second,step_time,data_time,total_time,gpu_utilization_percent,gpu_power_draw_w,gpu_memory_used_mb}" \
     --title "${RUN_NAME} performance" \
     --summary-json "${PERF_SUMMARY}"
 fi
@@ -216,5 +228,6 @@ fi
 echo "${DATASET_NAME} image DMD2 run finished."
 echo "metrics: ${METRICS_LOG}"
 echo "performance: ${PERFORMANCE_LOG}"
+echo "gpu monitor: ${ENABLE_GPU_MONITOR} interval=${GPU_MONITOR_INTERVAL} index=${GPU_MONITOR_INDEX:-auto}"
 echo "loss curves: ${LOSS_CURVE%.*}/"
 echo "performance curve: ${PERF_CURVE}"
