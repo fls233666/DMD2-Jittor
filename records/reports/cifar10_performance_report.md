@@ -1,8 +1,5 @@
 # CIFAR10 PyTorch-Jittor 性能测试报告
 
-生成日期：2026-07-11  
-图片与曲线来源：`/home/koishi/DMD2/DMD2-jittor/records`
-
 ## 结论摘要
 
 | 结论项 | 当前结果 | 说明 |

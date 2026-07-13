@@ -1,8 +1,5 @@
 # PyTorch-Jittor 精度对齐情况汇总
 
-生成日期：2026-07-10  
-图片与曲线来源：`/home/koishi/DMD2/DMD2-jittor/records`
-
 ## 总体结论
 
 | 结论项 | 当前判断 | 说明 |
@@ -72,17 +69,3 @@
 | GAN classifier loss | `DMD2-pytorch/main/edm/edm_guidance.py` | `DMD2-jittor/code/models/guidance.py` 与 `DMD2-jittor/code/loss/gan_loss.py` | 都是 `softplus(D(fake)) + softplus(-D(real))`，目标是真图 logit 变大、假图 logit 变小。 |
 | detach/freeze 语义 | generator loss forward 时冻结 guidance 梯度；guidance 训练时 detach fake image | Jittor 当前实现镜像该语义 | 避免 generator step 错误更新 guidance，也避免 guidance step 反向影响 generator。 |
 
-## 4. 当前证据支持的结论
-
-| 证据 | 支持的结论 | 可信度 |
-| --- | --- | --- |
-| CIFAR10 teacher forward MAE `2.2411025e-7` | teacher 模型转换和 EDM forward 数值路径基本正确 | 高 |
-| ImageNet64 generator forward MAE `5.81759195e-6` | generator checkpoint 转换和 forward 路径基本正确 | 高 |
-| `loss_generator` mean 相对差 `0.53%` | Generator 分支整体 loss 组合和更新强度对齐 | 较高 |
-| `generator/loss_dm` mean 相对差 `1.97%` | DMD loss 公式、符号和主梯度路径没有明显错位 | 较高 |
-| `loss_guidance` mean 相对差 `3.13%` | Guidance 分支 fake score 与 GAN classifier 的整体训练目标接近 | 较高 |
-| TTUR 与 loss 公式代码映射 | 控制流和公式实现与 PyTorch 参考设计一致 | 较高 |
-
-## 一句话结论
-
-当前记录支持这样的表述：Jittor 侧 DMD2 在 teacher/generator forward、核心 loss 公式、GAN loss、TTUR 更新节奏和 CIFAR10 5000 step 训练 loss 尺度上与 PyTorch 侧基本对齐。

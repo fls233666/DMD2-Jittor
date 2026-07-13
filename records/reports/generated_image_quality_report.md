@@ -1,9 +1,5 @@
 # 生成图片质量评估报告
 
-生成时间：2026-07-11 01:06:12  
-图片来源：`/home/koishi/DMD2/DMD2-jittor/records/samples`  
-指标来源：`/home/koishi/DMD2/DMD2-jittor/records/quality`
-
 ## 结论摘要
 
 - 当前报告使用 `records/samples` 中保存的 PyTorch/Jittor CIFAR10 采样图进行展示。
@@ -117,8 +113,3 @@ FID 结果 JSON：`../quality/fid_results.json`
 | Jittor fixed step 2500 | 2500 | 16 | 0.5138 | 0.2387 | 0.2520 | 7.7497 | 0.031368 | 0.3466 | 0.1289 | 4.4840 | 0.006449 | `../samples/jittor/jittor_fixed_step_002500.png` |
 | Jittor fixed step 5000 | 5000 | 16 | 0.4778 | 0.2443 | 0.2568 | 7.8079 | 0.032755 | 0.3554 | 0.1272 | 4.4016 | 0.005791 | `../samples/jittor/jittor_fixed_step_005000.png` |
 
-## 当前结果解读
-
-1. 当前 records 中 PyTorch 与 Jittor 都具备 step 0/2500/5000 的展示图，可直接对照训练过程中的视觉变化。
-2. 从本地 `Pixel-FID@8x8` 看，Jittor fixed step5000 的低维像素分布更接近 CIFAR10 train；PyTorch step5000 的数值高于 PyTorch step2500，说明这批 16 张图的低维分布距离更大。
-3. Jittor step0 图来自 teacher 初始化展示，step2500/5000 使用 fixed-grid，可用于观察同一固定输入随训练推进的变化。

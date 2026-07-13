@@ -1,8 +1,5 @@
 # CIFAR10 PyTorch-Jittor 精度对齐报告
 
-生成日期：2026-07-11  
-图片与曲线来源：`/home/koishi/DMD2/DMD2-jittor/records`
-
 ## 结论摘要
 
 | 对齐项 | 当前判断 | 依据 |
@@ -12,8 +9,6 @@
 | Generator / Guidance loss | 基本对齐 | 5000 step 记录中，核心 loss 的 mean 相对差约 `0.53%` 到 `6.57%`；`summary.json` 中各曲线状态均为 `ok`。 |
 | GAN 判别趋势 | 基本一致 | PyTorch / Jittor 的 `gan/real_prob_mean` 都约为 `0.78`，`gan/fake_prob_mean` 都约为 `0.21`。 |
 | 生成图质量 | 已有本地代理评估 | records 中包含 step 0/2500/5000 展示图，并保存 `Pixel-FID@8x8` 指标。 |
-
-一句话结论：当前 CIFAR10 证据支持“Jittor 侧 DMD2 在 teacher forward、训练调度、DMD/GAN/fake-score loss 尺度和训练趋势上与 PyTorch 侧基本对齐”。
 
 ## 数据来源
 
@@ -158,14 +153,3 @@
 | Fake score loss | `main/edm/edm_guidance.py` | `code/models/guidance.py` / `code/loss/regression_loss.py` | fake image detach 与 EDM 权重形式一致 |
 | GAN loss | `main/edm/edm_guidance.py` | `code/models/guidance.py` / `code/loss/gan_loss.py` | `softplus(-D(fake))` 与 classifier loss 语义一致 |
 
-## 8. 当前证据支持的结论
-
-| 证据 | 支持的结论 | 可信度 |
-| --- | --- | --- |
-| CIFAR10 teacher forward MAE `2.2411025e-7` | teacher 权重转换和 EDM forward 数值实现正确 | 高 |
-| `compute_generator_gradient` mean 均为 `0.2` | TTUR 中 generator 每 5 step 更新一次 | 高 |
-| `loss_generator` mean 相对差 `0.53%` | Generator 总训练目标尺度基本对齐 | 较高 |
-| `generator/loss_dm` mean 相对差 `1.97%` | DMD 主损失实现方向和尺度基本对齐 | 较高 |
-| `loss_guidance` mean 相对差 `3.13%` | Guidance/fake-score/classifier 总训练目标基本对齐 | 较高 |
-| GAN real/fake prob 均值接近 | GAN classifier 学到的判别趋势一致 | 中到较高 |
-| PyTorch/Jittor step 0/2500/5000 展示图与 Pixel-FID@8x8 | 可以做已有图片的质量 sanity check | 中 |
