@@ -1,0 +1,78 @@
+{
+  "metric_name": "Pixel-FID@8x8",
+  "reference": "CIFAR10 train split, 50000 images, average-pooled to 8x8 RGB pixel features",
+  "feature_dim": 192,
+  "official_inception_fid": false,
+  "ref_stats": "DMD2-records/generated_image_quality_fid/cifar10_train_pixel8_stats.npz",
+  "final_grid_results": [
+    {
+      "name": "pytorch_step5000",
+      "source": "PyTorch supplemented-grid",
+      "step": 5000,
+      "fid_pixel8": 5.77976067988582,
+      "num_generated_tiles": 16,
+      "tiles_dir": "DMD2-records/generated_image_quality_fid/tiles/pytorch_step5000",
+      "source_grid": "DMD2-records/sample_steps_0_2500_5000/pytorch/pytorch_step_005000.png"
+    },
+    {
+      "name": "jittor_fixed_step5000",
+      "source": "Jittor fixed-grid",
+      "step": 5000,
+      "fid_pixel8": 4.401588767888613,
+      "num_generated_tiles": 16,
+      "tiles_dir": "DMD2-records/generated_image_quality_fid/tiles/jittor_fixed_step5000",
+      "source_grid": "DMD2-jittor/outputs/samples/cifar10_dmd2_5000/fixed_step_005000.png"
+    },
+    {
+      "name": "jittor_random_step5000",
+      "source": "Jittor random-grid",
+      "step": 5000,
+      "fid_pixel8": 5.415390394599127,
+      "num_generated_tiles": 16,
+      "tiles_dir": "DMD2-records/generated_image_quality_fid/tiles/jittor_random_step5000",
+      "source_grid": "DMD2-jittor/outputs/samples/cifar10_dmd2_5000/random_step_005000.png"
+    },
+    {
+      "name": "pytorch_step2500",
+      "source": "PyTorch local-record",
+      "step": 2500,
+      "fid_pixel8": 4.582267053922083,
+      "num_generated_tiles": 16,
+      "tiles_dir": "DMD2-records/generated_image_quality_fid/tiles/pytorch_step2500",
+      "source_grid": "DMD2-pytorch/records/cifar10_dmd2_gan_5000_ckpt/samples/generated_step_002500.png"
+    },
+    {
+      "name": "jittor_fixed_step2500",
+      "source": "Jittor fixed-grid",
+      "step": 2500,
+      "fid_pixel8": 4.484004473539587,
+      "num_generated_tiles": 16,
+      "tiles_dir": "DMD2-records/generated_image_quality_fid/tiles/jittor_fixed_step2500",
+      "source_grid": "DMD2-jittor/outputs/samples/cifar10_dmd2_5000/fixed_step_002500.png"
+    }
+  ],
+  "aggregate_display_results": [
+    {
+      "name": "pytorch_display_0_2500_5000",
+      "fid_pixel8": 2.176893866884393,
+      "num_generated_tiles": 48,
+      "tiles_dir": "DMD2-records/generated_image_quality_fid/tiles/pytorch_display_0_2500_5000",
+      "source_grids": [
+        "DMD2-pytorch/records/cifar10_dmd2_gan_5000_ckpt/samples/generated_step_000000.png",
+        "DMD2-pytorch/records/cifar10_dmd2_gan_5000_ckpt/samples/generated_step_002500.png",
+        "DMD2-records/sample_steps_0_2500_5000/pytorch/pytorch_step_005000.png"
+      ]
+    },
+    {
+      "name": "jittor_display_0_2500_5000",
+      "fid_pixel8": 2.894788869094131,
+      "num_generated_tiles": 48,
+      "tiles_dir": "DMD2-records/generated_image_quality_fid/tiles/jittor_display_0_2500_5000",
+      "source_grids": [
+        "DMD2-records/sample_steps_0_2500_5000/jittor/jittor_step_000000_from_teacher.png",
+        "DMD2-jittor/outputs/samples/cifar10_dmd2_5000/fixed_step_002500.png",
+        "DMD2-jittor/outputs/samples/cifar10_dmd2_5000/fixed_step_005000.png"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,160 @@
+===== Time / Host =====
+Mon 06 Jul 2026 01:45:12 AM CST
+autodl-container-c84e4aa9b7-8af35914
+root
+===== OS =====
+Linux autodl-container-c84e4aa9b7-8af35914 5.4.0-155-generic #172-Ubuntu SMP Fri Jul 7 16:10:02 UTC 2023 x86_64 x86_64 x86_64 GNU/Linux
+NAME="Ubuntu"
+VERSION="20.04.5 LTS (Focal Fossa)"
+ID=ubuntu
+ID_LIKE=debian
+PRETTY_NAME="Ubuntu 20.04.5 LTS"
+VERSION_ID="20.04"
+HOME_URL="https://www.ubuntu.com/"
+SUPPORT_URL="https://help.ubuntu.com/"
+BUG_REPORT_URL="https://bugs.launchpad.net/ubuntu/"
+PRIVACY_POLICY_URL="https://www.ubuntu.com/legal/terms-and-policies/privacy-policy"
+VERSION_CODENAME=focal
+UBUNTU_CODENAME=focal
+===== CPU =====
+Architecture:                    x86_64
+CPU op-mode(s):                  32-bit, 64-bit
+Byte Order:                      Little Endian
+Address sizes:                   46 bits physical, 57 bits virtual
+CPU(s):                          128
+On-line CPU(s) list:             0-127
+Thread(s) per core:              2
+Core(s) per socket:              32
+Socket(s):                       2
+NUMA node(s):                    2
+Vendor ID:                       GenuineIntel
+CPU family:                      6
+Model:                           106
+Model name:                      Intel(R) Xeon(R) Platinum 8352V CPU @ 2.10GHz
+Stepping:                        6
+Frequency boost:                 enabled
+CPU MHz:                         932.017
+CPU max MHz:                     2001.0000
+CPU min MHz:                     800.0000
+BogoMIPS:                        4000.00
+Virtualization:                  VT-x
+L1d cache:                       3 MiB
+L1i cache:                       2 MiB
+L2 cache:                        80 MiB
+L3 cache:                        108 MiB
+NUMA node0 CPU(s):               0-31,64-95
+NUMA node1 CPU(s):               32-63,96-127
+Vulnerability Itlb multihit:     Not affected
+Vulnerability L1tf:              Not affected
+Vulnerability Mds:               Not affected
+Vulnerability Meltdown:          Not affected
+Vulnerability Mmio stale data:   Mitigation; Clear CPU buffers; SMT vulnerable
+Vulnerability Retbleed:          Not affected
+Vulnerability Spec store bypass: Mitigation; Speculative Store Bypass disabled via prctl and seccomp
+Vulnerability Spectre v1:        Mitigation; usercopy/swapgs barriers and __user pointer sanitization
+Vulnerability Spectre v2:        Mitigation; Enhanced IBRS, IBPB conditional, RSB filling, PBRSB-eIBRS SW sequence
+Vulnerability Srbds:             Not affected
+Vulnerability Tsx async abort:   Not affected
+Flags:                           fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx pdpe1gb rdtscp lm constant_tsc art arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc cpuid aperfmperf pni pclmulqdq dtes64 monitor ds_cpl vmx smx est tm2 ssse3 sdbg fma cx16 xtpr pdcm pcid dca sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand lahf_lm abm 3dnowprefetch cpuid_fault epb cat_l3 invpcid_single ssbd mba ibrs ibpb stibp ibrs_enhanced tpr_shadow vnmi flexpriority ept vpid ept_ad fsgsbase tsc_adjust bmi1 avx2 smep bmi2 erms invpcid cqm rdt_a avx512f avx512dq rdseed adx smap avx512ifma clflushopt clwb intel_pt avx512cd sha_ni avx512bw avx512vl xsaveopt xsavec xgetbv1 xsaves cqm_llc cqm_occup_llc cqm_mbm_total cqm_mbm_local wbnoinvd dtherm ida arat pln pts avx512vbmi umip pku ospke avx512_vbmi2 gfni vaes vpclmulqdq avx512_vnni avx512_bitalg tme avx512_vpopcntdq rdpid md_clear pconfig flush_l1d arch_capabilities
+===== Memory =====
+              total        used        free      shared  buff/cache   available
+Mem:          1.0Ti        34Gi       194Gi       4.1Gi       777Gi       964Gi
+Swap:            0B          0B          0B
+===== Disk =====
+Filesystem       Size  Used Avail Use% Mounted on
+overlay           30G   14G   17G  45% /
+tmpfs             64M     0   64M   0% /dev
+tmpfs            504G     0  504G   0% /sys/fs/cgroup
+shm               45G     0   45G   0% /dev/shm
+/dev/md0         7.0T  5.3T  1.7T  76% /autodl-pub
+AutoFS:fswestb1   20T  1.6T   18T   9% /autodl-pub/data
+tmpfs            504G   12K  504G   1% /proc/driver/nvidia
+tmpfs            504G  4.0K  504G   1% /etc/nvidia/nvidia-application-profiles-rc.d
+/dev/sda2        439G   17G  400G   4% /usr/bin/nvidia-smi
+udev             504G     0  504G   0% /dev/nvidia1
+tmpfs            504G     0  504G   0% /proc/asound
+tmpfs            504G     0  504G   0% /proc/acpi
+tmpfs            504G     0  504G   0% /proc/scsi
+tmpfs            504G     0  504G   0% /sys/firmware
+===== GPU =====
+Mon Jul  6 01:45:12 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 580.76.05              Driver Version: 580.76.05      CUDA Version: 13.0     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA vGPU-32GB               On  |   00000000:18:00.0 Off |                  N/A |
+| 30%   32C    P8              4W /  320W |       0MiB /  32760MiB |      0%      Default |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+index, name, driver_version, memory.total [MiB], memory.used [MiB], utilization.gpu [%], power.draw [W], power.limit [W]
+0, NVIDIA vGPU-32GB, 580.76.05, 32760 MiB, 0 MiB, 0 %, 4.31 W, 320.00 W
+===== CUDA / NVCC =====
+/usr/local/cuda/bin/nvcc
+nvcc: NVIDIA (R) Cuda compiler driver
+Copyright (c) 2005-2022 NVIDIA Corporation
+Built on Wed_Sep_21_10:33:58_PDT_2022
+Cuda compilation tools, release 11.8, V11.8.89
+Build cuda_11.8.r11.8/compiler.31833905_0
+===== Python / Conda =====
+/root/miniconda3/bin/python
+Python 3.8.10
+/root/miniconda3/bin/conda
+
+     active environment : base
+    active env location : /root/miniconda3
+            shell level : 2
+       user config file : /root/.condarc
+ populated config files : /root/.condarc
+          conda version : 4.10.3
+    conda-build version : not installed
+         python version : 3.8.10.final.0
+       virtual packages : __cuda=13.0=0
+                          __linux=5.4.0=0
+                          __glibc=2.31=0
+                          __unix=0=0
+                          __archspec=1=x86_64
+       base environment : /root/miniconda3  (writable)
+      conda av data dir : /root/miniconda3/etc/conda
+  conda av metadata url : None
+           channel URLs : https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/main/linux-64
+                          https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/main/noarch
+                          https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/free/linux-64
+                          https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/free/noarch
+                          https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/pytorch/linux-64
+                          https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/pytorch/noarch
+                          https://repo.anaconda.com/pkgs/main/linux-64
+                          https://repo.anaconda.com/pkgs/main/noarch
+                          https://repo.anaconda.com/pkgs/r/linux-64
+                          https://repo.anaconda.com/pkgs/r/noarch
+          package cache : /root/miniconda3/pkgs
+                          /root/.conda/pkgs
+       envs directories : /root/miniconda3/envs
+                          /root/.conda/envs
+               platform : linux-64
+             user-agent : conda/4.10.3 requests/2.28.2 CPython/3.8.10 Linux/5.4.0-155-generic ubuntu/20.04.5 glibc/2.31
+                UID:GID : 0:0
+             netrc file : None
+           offline mode : False
+
+# conda environments:
+#
+base                  *  /root/miniconda3
+dmd2                     /root/miniconda3/envs/dmd2
+dmd2-jittor              /root/miniconda3/envs/dmd2-jittor
+
+===== Key Env Vars =====
+CUDA_VISIBLE_DEVICES=
+CONDA_DEFAULT_ENV=base
+JITTOR_HOME=
+JITTOR_CACHE_ROOT=

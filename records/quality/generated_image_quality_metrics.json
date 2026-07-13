@@ -1,0 +1,2843 @@
+{
+  "created_at": "2026-07-11T01:06:12",
+  "reference": {
+    "cifar10_train": {
+      "num_images": 50000,
+      "pixel_mean": 0.4733630004850874,
+      "pixel_std": 0.25156892506322026,
+      "luminance_mean": 0.4808600138803598,
+      "luminance_std": 0.23918484941534024,
+      "rgb_mean": [
+        0.4913996786152028,
+        0.4821584083946074,
+        0.4465309144454644
+      ],
+      "rgb_std": [
+        0.24703223246328238,
+        0.2434851280000556,
+        0.26158784172796423
+      ],
+      "saturation_mean": 0.2737660586521119,
+      "entropy_bits": 7.873374489964972,
+      "laplacian_var_mean": 0.034072215146140304,
+      "pairwise_rmse_mean": 0.3415793381654728,
+      "pairwise_rmse_min": 0.13105611644665893,
+      "unique_exact_images": null,
+      "duplicate_exact_images": null
+    },
+    "cifar10_test": {
+      "num_images": 10000,
+      "pixel_mean": 0.47658492059844665,
+      "pixel_std": 0.2512194906784146,
+      "luminance_mean": 0.48388883165402824,
+      "luminance_std": 0.23872921151828028,
+      "rgb_mean": [
+        0.4942142800245094,
+        0.4851313890165443,
+        0.45040909275428964
+      ],
+      "rgb_std": [
+        0.24665251509498,
+        0.24289226346005385,
+        0.26159237802202384
+      ],
+      "saturation_mean": 0.2724870634271218,
+      "entropy_bits": 7.872189146392803,
+      "laplacian_var_mean": 0.03401350924544726,
+      "pairwise_rmse_mean": 0.34277005129340277,
+      "pairwise_rmse_min": 0.11403895798747753,
+      "unique_exact_images": null,
+      "duplicate_exact_images": null
+    },
+    "test_to_train_nearest_real_rmse_8x8_1000_mean": 0.12182825814773773,
+    "test_to_train_nearest_real_rmse_8x8_1000_min": 0.02306412782487314,
+    "test_to_train_nearest_real_rmse_8x8_1000_max": 0.23552445040819794
+  },
+  "fid": {
+    "metric_name": "Pixel-FID@8x8",
+    "reference": "CIFAR10 train split, 50000 images, average-pooled to 8x8 RGB pixel features",
+    "feature_dim": 192,
+    "official_inception_fid": false,
+    "ref_stats": "DMD2-records/generated_image_quality_fid/cifar10_train_pixel8_stats.npz",
+    "final_grid_results": [
+      {
+        "name": "pytorch_step5000",
+        "source": "PyTorch supplemented-grid",
+        "step": 5000,
+        "fid_pixel8": 5.77976067988582,
+        "num_generated_tiles": 16,
+        "tiles_dir": "DMD2-records/generated_image_quality_fid/tiles/pytorch_step5000",
+        "source_grid": "DMD2-records/sample_steps_0_2500_5000/pytorch/pytorch_step_005000.png"
+      },
+      {
+        "name": "jittor_fixed_step5000",
+        "source": "Jittor fixed-grid",
+        "step": 5000,
+        "fid_pixel8": 4.401588767888613,
+        "num_generated_tiles": 16,
+        "tiles_dir": "DMD2-records/generated_image_quality_fid/tiles/jittor_fixed_step5000",
+        "source_grid": "DMD2-jittor/outputs/samples/cifar10_dmd2_5000/fixed_step_005000.png"
+      },
+      {
+        "name": "jittor_random_step5000",
+        "source": "Jittor random-grid",
+        "step": 5000,
+        "fid_pixel8": 5.415390394599127,
+        "num_generated_tiles": 16,
+        "tiles_dir": "DMD2-records/generated_image_quality_fid/tiles/jittor_random_step5000",
+        "source_grid": "DMD2-jittor/outputs/samples/cifar10_dmd2_5000/random_step_005000.png"
+      },
+      {
+        "name": "pytorch_step2500",
+        "source": "PyTorch local-record",
+        "step": 2500,
+        "fid_pixel8": 4.582267053922083,
+        "num_generated_tiles": 16,
+        "tiles_dir": "DMD2-records/generated_image_quality_fid/tiles/pytorch_step2500",
+        "source_grid": "DMD2-pytorch/records/cifar10_dmd2_gan_5000_ckpt/samples/generated_step_002500.png"
+      },
+      {
+        "name": "jittor_fixed_step2500",
+        "source": "Jittor fixed-grid",
+        "step": 2500,
+        "fid_pixel8": 4.484004473539587,
+        "num_generated_tiles": 16,
+        "tiles_dir": "DMD2-records/generated_image_quality_fid/tiles/jittor_fixed_step2500",
+        "source_grid": "DMD2-jittor/outputs/samples/cifar10_dmd2_5000/fixed_step_002500.png"
+      }
+    ],
+    "aggregate_display_results": [
+      {
+        "name": "pytorch_display_0_2500_5000",
+        "fid_pixel8": 2.176893866884393,
+        "num_generated_tiles": 48,
+        "tiles_dir": "DMD2-records/generated_image_quality_fid/tiles/pytorch_display_0_2500_5000",
+        "source_grids": [
+          "DMD2-pytorch/records/cifar10_dmd2_gan_5000_ckpt/samples/generated_step_000000.png",
+          "DMD2-pytorch/records/cifar10_dmd2_gan_5000_ckpt/samples/generated_step_002500.png",
+          "DMD2-records/sample_steps_0_2500_5000/pytorch/pytorch_step_005000.png"
+        ]
+      },
+      {
+        "name": "jittor_display_0_2500_5000",
+        "fid_pixel8": 2.894788869094131,
+        "num_generated_tiles": 48,
+        "tiles_dir": "DMD2-records/generated_image_quality_fid/tiles/jittor_display_0_2500_5000",
+        "source_grids": [
+          "DMD2-records/sample_steps_0_2500_5000/jittor/jittor_step_000000_from_teacher.png",
+          "DMD2-jittor/outputs/samples/cifar10_dmd2_5000/fixed_step_002500.png",
+          "DMD2-jittor/outputs/samples/cifar10_dmd2_5000/fixed_step_005000.png"
+        ]
+      }
+    ]
+  },
+  "formal_fid_prerequisites": {
+    "npz_files_found": [
+      "DMD2-records/generated_image_quality_fid/cifar10_train_pixel8_stats.npz"
+    ],
+    "inception_weight_files_found": [],
+    "num_grid_records_evaluated": 71,
+    "formal_cifar10_fid_minimum_generated_images": 50000,
+    "formal_inception_fid_completed": false
+  },
+  "records": [
+    {
+      "num_images": 16,
+      "pixel_mean": 0.5002421460120506,
+      "pixel_std": 0.24671526211608966,
+      "luminance_mean": 0.5071381500842524,
+      "luminance_std": 0.24151189248430005,
+      "rgb_mean": [
+        0.5219350777420418,
+        0.5063368853400848,
+        0.4724544749540467
+      ],
+      "rgb_std": [
+        0.24043474665224948,
+        0.24403593960407652,
+        0.252909016584054
+      ],
+      "saturation_mean": 0.21650902378034004,
+      "entropy_bits": 7.840876783480676,
+      "laplacian_var_mean": 0.012826453866057375,
+      "pairwise_rmse_mean": 0.33644550544073176,
+      "pairwise_rmse_min": 0.17668432386027438,
+      "unique_exact_images": 16,
+      "duplicate_exact_images": 0,
+      "source": "Jittor fixed-grid",
+      "step": 500,
+      "path": "DMD2-jittor/outputs/samples/cifar10_dmd2_5000/fixed_step_000500.png",
+      "grid_shape": [
+        128,
+        128,
+        3
+      ],
+      "fid_pixel8": 4.124146638510924,
+      "proxy_fd_downsample8": 4.124146638510924,
+      "proxy_fd_color_moment": 0.006984348063271477,
+      "nearest_real_rmse_8x8_mean": 0.12115558539518695,
+      "nearest_real_rmse_8x8_min": 0.06060494437745381,
+      "nearest_real_rmse_8x8_max": 0.1745503882806765
+    },
+    {
+      "num_images": 16,
+      "pixel_mean": 0.4889961990655638,
+      "pixel_std": 0.2589129194960188,
+      "luminance_mean": 0.49268577282475484,
+      "luminance_std": 0.24987550922856583,
+      "rgb_mean": [
+        0.4836667528339157,
+        0.49888102213540025,
+        0.4844408222273433
+      ],
+      "rgb_std": [
+        0.2568041535533971,
+        0.25221699525595687,
+        0.2672060057057752
+      ],
+      "saturation_mean": 0.2638696307659082,
+      "entropy_bits": 7.7951593020572325,
+      "laplacian_var_mean": 0.0239117053051204,
+      "pairwise_rmse_mean": 0.35608589620088743,
+      "pairwise_rmse_min": 0.16709250613123242,
+      "unique_exact_images": 16,
+      "duplicate_exact_images": 0,
+      "source": "Jittor fixed-grid",
+      "step": 1000,
+      "path": "DMD2-jittor/outputs/samples/cifar10_dmd2_5000/fixed_step_001000.png",
+      "grid_shape": [
+        128,
+        128,
+        3
+      ],
+      "fid_pixel8": 4.548505555548184,
+      "proxy_fd_downsample8": 4.548505555548184,
+      "proxy_fd_color_moment": 0.007432353944878267,
+      "nearest_real_rmse_8x8_mean": 0.1278581595396897,
+      "nearest_real_rmse_8x8_min": 0.051086407550913336,
+      "nearest_real_rmse_8x8_max": 0.18366450103080417
+    },
+    {
+      "num_images": 16,
+      "pixel_mean": 0.49248493668300647,
+      "pixel_std": 0.241039252773833,
+      "luminance_mean": 0.5022192674823835,
+      "luminance_std": 0.2288219429466433,
+      "rgb_mean": [
+        0.49678045534618287,
+        0.5113848517922573,
+        0.4692895029105321
+      ],
+      "rgb_std": [
+        0.2430805812382026,
+        0.22918810821700458,
+        0.2485371597779545
+      ],
+      "saturation_mean": 0.27115237492723493,
+      "entropy_bits": 7.727589340434794,
+      "laplacian_var_mean": 0.01939819217546286,
+      "pairwise_rmse_mean": 0.3319557412573096,
+      "pairwise_rmse_min": 0.1599767656871479,
+      "unique_exact_images": 16,
+      "duplicate_exact_images": 0,
+      "source": "Jittor fixed-grid",
+      "step": 1500,
+      "path": "DMD2-jittor/outputs/samples/cifar10_dmd2_5000/fixed_step_001500.png",
+      "grid_shape": [
+        128,
+        128,
+        3
+      ],
+      "fid_pixel8": 4.056045230851697,
+      "proxy_fd_downsample8": 4.056045230851697,
+      "proxy_fd_color_moment": 0.005310604297086189,
+      "nearest_real_rmse_8x8_mean": 0.1218996212055009,
+      "nearest_real_rmse_8x8_min": 0.06166860317774493,
+      "nearest_real_rmse_8x8_max": 0.16052642353228996
+    },
+    {
+      "num_images": 16,
+      "pixel_mean": 0.4915072571997549,
+      "pixel_std": 0.2514470575648995,
+      "luminance_mean": 0.5014528887580423,
+      "luminance_std": 0.239620601346061,
+      "rgb_mean": [
+        0.49102495978860183,
+        0.5127225988051416,
+        0.47077421300553285
+      ],
+      "rgb_std": [
+        0.25344571121551523,
+        0.2401397689596672,
+        0.2586403848064186
+      ],
+      "saturation_mean": 0.28303527586450056,
+      "entropy_bits": 7.825402000357553,
+      "laplacian_var_mean": 0.02665887006047666,
+      "pairwise_rmse_mean": 0.346129369243943,
+      "pairwise_rmse_min": 0.17200872883490304,
+      "unique_exact_images": 16,
+      "duplicate_exact_images": 0,
+      "source": "Jittor fixed-grid",
+      "step": 2000,
+      "path": "DMD2-jittor/outputs/samples/cifar10_dmd2_5000/fixed_step_002000.png",
+      "grid_shape": [
+        128,
+        128,
+        3
+      ],
+      "fid_pixel8": 4.6073615727917,
+      "proxy_fd_downsample8": 4.6073615727917,
+      "proxy_fd_color_moment": 0.004288841920014166,
+      "nearest_real_rmse_8x8_mean": 0.1303334314282615,
+      "nearest_real_rmse_8x8_min": 0.05687238697714703,
+      "nearest_real_rmse_8x8_max": 0.20696234906075833
+    },
+    {
+      "num_images": 16,
+      "pixel_mean": 0.5063182157628677,
+      "pixel_std": 0.25200612504456493,
+      "luminance_mean": 0.5137765928979013,
+      "luminance_std": 0.23871955881637733,
+      "rgb_mean": [
+        0.5219891716452086,
+        0.515957222732823,
+        0.4810082529105378
+      ],
+      "rgb_std": [
+        0.24771649069492668,
+        0.24177949050719844,
+        0.26404809382872385
+      ],
+      "saturation_mean": 0.26534981060084273,
+      "entropy_bits": 7.749706658573029,
+      "laplacian_var_mean": 0.03136806184790142,
+      "pairwise_rmse_mean": 0.34657618222231007,
+      "pairwise_rmse_min": 0.18152498121103128,
+      "unique_exact_images": 16,
+      "duplicate_exact_images": 0,
+      "source": "Jittor fixed-grid",
+      "step": 2500,
+      "path": "DMD2-jittor/outputs/samples/cifar10_dmd2_5000/fixed_step_002500.png",
+      "grid_shape": [
+        128,
+        128,
+        3
+      ],
+      "fid_pixel8": 4.484004473539587,
+      "proxy_fd_downsample8": 4.484004473539587,
+      "proxy_fd_color_moment": 0.006448777410150835,
+      "nearest_real_rmse_8x8_mean": 0.12887312816759888,
+      "nearest_real_rmse_8x8_min": 0.058962276958208895,
+      "nearest_real_rmse_8x8_max": 0.17039918181050565
+    },
+    {
+      "num_images": 16,
+      "pixel_mean": 0.49174134497549016,
+      "pixel_std": 0.256652976092424,
+      "luminance_mean": 0.504605373726639,
+      "luminance_std": 0.24360871773041218,
+      "rgb_mean": [
+        0.4895593979779322,
+        0.5197914273130954,
+        0.46587320963541257
+      ],
+      "rgb_std": [
+        0.2594241614034321,
+        0.2447145976085673,
+        0.26261262759220355
+      ],
+      "saturation_mean": 0.2820464445516285,
+      "entropy_bits": 7.816296037437338,
+      "laplacian_var_mean": 0.028430898350938483,
+      "pairwise_rmse_mean": 0.35482692467687293,
+      "pairwise_rmse_min": 0.18460124155583268,
+      "unique_exact_images": 16,
+      "duplicate_exact_images": 0,
+      "source": "Jittor fixed-grid",
+      "step": 3000,
+      "path": "DMD2-jittor/outputs/samples/cifar10_dmd2_5000/fixed_step_003000.png",
+      "grid_shape": [
+        128,
+        128,
+        3
+      ],
+      "fid_pixel8": 4.364444884644765,
+      "proxy_fd_downsample8": 4.364444884644765,
+      "proxy_fd_color_moment": 0.0065087691316001745,
+      "nearest_real_rmse_8x8_mean": 0.12641273510520604,
+      "nearest_real_rmse_8x8_min": 0.0530411596021297,
+      "nearest_real_rmse_8x8_max": 0.17259950633156604
+    },
+    {
+      "num_images": 16,
+      "pixel_mean": 0.5079929725796569,
+      "pixel_std": 0.2713123897625894,
+      "luminance_mean": 0.5184942289464614,
+      "luminance_std": 0.25970784863393437,
+      "rgb_mean": [
+        0.5169201420802666,
+        0.5267027611826044,
+        0.48035601447608484
+      ],
+      "rgb_std": [
+        0.2751751596368457,
+        0.2580351812233121,
+        0.2780902071053108
+      ],
+      "saturation_mean": 0.2696873923851648,
+      "entropy_bits": 7.692466204003248,
+      "laplacian_var_mean": 0.03548606348883242,
+      "pairwise_rmse_mean": 0.3751752378039356,
+      "pairwise_rmse_min": 0.19723772638210316,
+      "unique_exact_images": 16,
+      "duplicate_exact_images": 0,
+      "source": "Jittor fixed-grid",
+      "step": 3500,
+      "path": "DMD2-jittor/outputs/samples/cifar10_dmd2_5000/fixed_step_003500.png",
+      "grid_shape": [
+        128,
+        128,
+        3
+      ],
+      "fid_pixel8": 5.086121899230966,
+      "proxy_fd_downsample8": 5.086121899230966,
+      "proxy_fd_color_moment": 0.010201077325400118,
+      "nearest_real_rmse_8x8_mean": 0.13584185812685984,
+      "nearest_real_rmse_8x8_min": 0.06250115855454483,
+      "nearest_real_rmse_8x8_max": 0.18962275393029018
+    },
+    {
+      "num_images": 16,
+      "pixel_mean": 0.5146592881944444,
+      "pixel_std": 0.26213847426986076,
+      "luminance_mean": 0.5196322854434743,
+      "luminance_std": 0.25004280455186695,
+      "rgb_mean": [
+        0.5145294787836959,
+        0.5252237955729329,
+        0.5042245902267415
+      ],
+      "rgb_std": [
+        0.2610318899681218,
+        0.25252337542218223,
+        0.2720726516472013
+      ],
+      "saturation_mean": 0.2627188123972436,
+      "entropy_bits": 7.760513087104572,
+      "laplacian_var_mean": 0.03117800050716296,
+      "pairwise_rmse_mean": 0.35909468304528275,
+      "pairwise_rmse_min": 0.1736044452776452,
+      "unique_exact_images": 16,
+      "duplicate_exact_images": 0,
+      "source": "Jittor fixed-grid",
+      "step": 4000,
+      "path": "DMD2-jittor/outputs/samples/cifar10_dmd2_5000/fixed_step_004000.png",
+      "grid_shape": [
+        128,
+        128,
+        3
+      ],
+      "fid_pixel8": 4.970655143007731,
+      "proxy_fd_downsample8": 4.970655143007731,
+      "proxy_fd_color_moment": 0.009057074232855098,
+      "nearest_real_rmse_8x8_mean": 0.13146954108062808,
+      "nearest_real_rmse_8x8_min": 0.04527406141182005,
+      "nearest_real_rmse_8x8_max": 0.18095200763776073
+    },
+    {
+      "num_images": 16,
+      "pixel_mean": 0.5118367513020833,
+      "pixel_std": 0.2522914795834858,
+      "luminance_mean": 0.5180883382161459,
+      "luminance_std": 0.2411439579282833,
+      "rgb_mean": [
+        0.5122278550091981,
+        0.5249006682751521,
+        0.49838173062196706
+      ],
+      "rgb_std": [
+        0.24956828674473164,
+        0.24235707091616904,
+        0.2637799006164356
+      ],
+      "saturation_mean": 0.24653991410842882,
+      "entropy_bits": 7.783586929389676,
+      "laplacian_var_mean": 0.026648690388794645,
+      "pairwise_rmse_mean": 0.3452551118655292,
+      "pairwise_rmse_min": 0.17745103681434846,
+      "unique_exact_images": 16,
+      "duplicate_exact_images": 0,
+      "source": "Jittor fixed-grid",
+      "step": 4500,
+      "path": "DMD2-jittor/outputs/samples/cifar10_dmd2_5000/fixed_step_004500.png",
+      "grid_shape": [
+        128,
+        128,
+        3
+      ],
+      "fid_pixel8": 4.481546805215715,
+      "proxy_fd_downsample8": 4.481546805215715,
+      "proxy_fd_color_moment": 0.008006264181069679,
+      "nearest_real_rmse_8x8_mean": 0.125874505468854,
+      "nearest_real_rmse_8x8_min": 0.050811893588989535,
+      "nearest_real_rmse_8x8_max": 0.17710977361606456
+    },
+    {
+      "num_images": 16,
+      "pixel_mean": 0.4711227915645424,
+      "pixel_std": 0.25678207254192303,
+      "luminance_mean": 0.4777639114679075,
+      "luminance_std": 0.24430551820568439,
+      "rgb_mean": [
+        0.46488444010415103,
+        0.4876031613817268,
+        0.4608807732077003
+      ],
+      "rgb_std": [
+        0.26019340565365595,
+        0.24278176788234362,
+        0.26599264015527735
+      ],
+      "saturation_mean": 0.272516610440489,
+      "entropy_bits": 7.807861498329962,
+      "laplacian_var_mean": 0.03275525349960989,
+      "pairwise_rmse_mean": 0.35536634414050666,
+      "pairwise_rmse_min": 0.19628326208995925,
+      "unique_exact_images": 16,
+      "duplicate_exact_images": 0,
+      "source": "Jittor fixed-grid",
+      "step": 5000,
+      "path": "DMD2-jittor/outputs/samples/cifar10_dmd2_5000/fixed_step_005000.png",
+      "grid_shape": [
+        128,
+        128,
+        3
+      ],
+      "fid_pixel8": 4.401588767888613,
+      "proxy_fd_downsample8": 4.401588767888613,
+      "proxy_fd_color_moment": 0.005790978072907042,
+      "nearest_real_rmse_8x8_mean": 0.12722002712761982,
+      "nearest_real_rmse_8x8_min": 0.050991749967483756,
+      "nearest_real_rmse_8x8_max": 0.18589330757118475
+    },
+    {
+      "num_images": 16,
+      "pixel_mean": 0.46624907449959146,
+      "pixel_std": 0.24472548064281544,
+      "luminance_mean": 0.4750405843098958,
+      "luminance_std": 0.2351476171737371,
+      "rgb_mean": [
+        0.5020835726868857,
+        0.47082016888785294,
+        0.4258434819239906
+      ],
+      "rgb_std": [
+        0.22921366410160557,
+        0.23794169863033357,
+        0.2599594368242374
+      ],
+      "saturation_mean": 0.2703915116803297,
+      "entropy_bits": 7.7721191165989465,
+      "laplacian_var_mean": 0.012521629932870244,
+      "pairwise_rmse_mean": 0.33955301410231875,
+      "pairwise_rmse_min": 0.1551509791810237,
+      "unique_exact_images": 16,
+      "duplicate_exact_images": 0,
+      "source": "Jittor random-grid",
+      "step": 500,
+      "path": "DMD2-jittor/outputs/samples/cifar10_dmd2_5000/random_step_000500.png",
+      "grid_shape": [
+        128,
+        128,
+        3
+      ],
+      "fid_pixel8": 4.324091024653621,
+      "proxy_fd_downsample8": 4.324091024653621,
+      "proxy_fd_color_moment": 0.007543349032622404,
+      "nearest_real_rmse_8x8_mean": 0.12676191365193423,
+      "nearest_real_rmse_8x8_min": 0.06225927567925707,
+      "nearest_real_rmse_8x8_max": 0.16932267837797083
+    },
+    {
+      "num_images": 16,
+      "pixel_mean": 0.44650495940563717,
+      "pixel_std": 0.25695754056962095,
+      "luminance_mean": 0.45369454130284925,
+      "luminance_std": 0.2365317947637538,
+      "rgb_mean": [
+        0.4604781805299953,
+        0.4562397077971567,
+        0.4227969898897011
+      ],
+      "rgb_std": [
+        0.2388317535922706,
+        0.2387421184463934,
+        0.2884285756805745
+      ],
+      "saturation_mean": 0.35694579064467746,
+      "entropy_bits": 7.761496872442909,
+      "laplacian_var_mean": 0.022317665142780496,
+      "pairwise_rmse_mean": 0.3543983899065901,
+      "pairwise_rmse_min": 0.1997525336681453,
+      "unique_exact_images": 16,
+      "duplicate_exact_images": 0,
+      "source": "Jittor random-grid",
+      "step": 1000,
+      "path": "DMD2-jittor/outputs/samples/cifar10_dmd2_5000/random_step_001000.png",
+      "grid_shape": [
+        128,
+        128,
+        3
+      ],
+      "fid_pixel8": 5.078293266383078,
+      "proxy_fd_downsample8": 5.078293266383078,
+      "proxy_fd_color_moment": 0.013775105582151245,
+      "nearest_real_rmse_8x8_mean": 0.11766753913108494,
+      "nearest_real_rmse_8x8_min": 0.06500479823751484,
+      "nearest_real_rmse_8x8_max": 0.18254386735531575
+    },
+    {
+      "num_images": 16,
+      "pixel_mean": 0.47878968481924017,
+      "pixel_std": 0.23246893753391848,
+      "luminance_mean": 0.49376433081533394,
+      "luminance_std": 0.2201650387539544,
+      "rgb_mean": [
+        0.5242848115809016,
+        0.49265447878370716,
+        0.4194297640930927
+      ],
+      "rgb_std": [
+        0.22524466479445673,
+        0.22450382562917656,
+        0.23495245211445778
+      ],
+      "saturation_mean": 0.28438505378490475,
+      "entropy_bits": 7.770483183971757,
+      "laplacian_var_mean": 0.017432419090494037,
+      "pairwise_rmse_mean": 0.3129701340283655,
+      "pairwise_rmse_min": 0.17488331926525869,
+      "unique_exact_images": 16,
+      "duplicate_exact_images": 0,
+      "source": "Jittor random-grid",
+      "step": 1500,
+      "path": "DMD2-jittor/outputs/samples/cifar10_dmd2_5000/random_step_001500.png",
+      "grid_shape": [
+        128,
+        128,
+        3
+      ],
+      "fid_pixel8": 4.394898059964022,
+      "proxy_fd_downsample8": 4.394898059964022,
+      "proxy_fd_color_moment": 0.009454987503143693,
+      "nearest_real_rmse_8x8_mean": 0.11910125200077547,
+      "nearest_real_rmse_8x8_min": 0.06512210916593945,
+      "nearest_real_rmse_8x8_max": 0.16376480273140515
+    },
+    {
+      "num_images": 16,
+      "pixel_mean": 0.45525412964665035,
+      "pixel_std": 0.2728250109917296,
+      "luminance_mean": 0.4637727491191789,
+      "luminance_std": 0.26144242734049417,
+      "rgb_mean": [
+        0.4630651137407999,
+        0.47020885991114125,
+        0.4324884152879819
+      ],
+      "rgb_std": [
+        0.2774639506757486,
+        0.2608280769592874,
+        0.27835228943368234
+      ],
+      "saturation_mean": 0.28718364584516953,
+      "entropy_bits": 7.783237325056673,
+      "laplacian_var_mean": 0.027946387218300575,
+      "pairwise_rmse_mean": 0.3747540723014809,
+      "pairwise_rmse_min": 0.17805260604751816,
+      "unique_exact_images": 16,
+      "duplicate_exact_images": 0,
+      "source": "Jittor random-grid",
+      "step": 2000,
+      "path": "DMD2-jittor/outputs/samples/cifar10_dmd2_5000/random_step_002000.png",
+      "grid_shape": [
+        128,
+        128,
+        3
+      ],
+      "fid_pixel8": 4.821405900620546,
+      "proxy_fd_downsample8": 4.821405900620546,
+      "proxy_fd_color_moment": 0.00892829684785079,
+      "nearest_real_rmse_8x8_mean": 0.12621649414136293,
+      "nearest_real_rmse_8x8_min": 0.07509677177077002,
+      "nearest_real_rmse_8x8_max": 0.17924480222271275
+    },
+    {
+      "num_images": 16,
+      "pixel_mean": 0.46280038871017165,
+      "pixel_std": 0.2665388231184005,
+      "luminance_mean": 0.46983033016429226,
+      "luminance_std": 0.2629848832887169,
+      "rgb_mean": [
+        0.488814051011018,
+        0.4674883674172537,
+        0.43209874770217227
+      ],
+      "rgb_std": [
+        0.26254980431503044,
+        0.26896677919482154,
+        0.2649755198135962
+      ],
+      "saturation_mean": 0.2332260624190694,
+      "entropy_bits": 7.923769110998843,
+      "laplacian_var_mean": 0.03660886426849424,
+      "pairwise_rmse_mean": 0.3683487496023235,
+      "pairwise_rmse_min": 0.2108279969744978,
+      "unique_exact_images": 16,
+      "duplicate_exact_images": 0,
+      "source": "Jittor random-grid",
+      "step": 2500,
+      "path": "DMD2-jittor/outputs/samples/cifar10_dmd2_5000/random_step_002500.png",
+      "grid_shape": [
+        128,
+        128,
+        3
+      ],
+      "fid_pixel8": 4.878721421672245,
+      "proxy_fd_downsample8": 4.878721421672245,
+      "proxy_fd_color_moment": 0.007066649137554279,
+      "nearest_real_rmse_8x8_mean": 0.13597038298741207,
+      "nearest_real_rmse_8x8_min": 0.09550685121485446,
+      "nearest_real_rmse_8x8_max": 0.17640217680067802
+    },
+    {
+      "num_images": 16,
+      "pixel_mean": 0.47310894735498366,
+      "pixel_std": 0.24684236573132518,
+      "luminance_mean": 0.4863310824525122,
+      "luminance_std": 0.23820361401132437,
+      "rgb_mean": [
+        0.4757587507659171,
+        0.500026328890932,
+        0.44354176240806725
+      ],
+      "rgb_std": [
+        0.23619694287289508,
+        0.25135678371713405,
+        0.2494362577971331
+      ],
+      "saturation_mean": 0.30985086437421544,
+      "entropy_bits": 7.822871212999481,
+      "laplacian_var_mean": 0.03416827905888248,
+      "pairwise_rmse_mean": 0.3434034976017681,
+      "pairwise_rmse_min": 0.1644749532435175,
+      "unique_exact_images": 16,
+      "duplicate_exact_images": 0,
+      "source": "Jittor random-grid",
+      "step": 3000,
+      "path": "DMD2-jittor/outputs/samples/cifar10_dmd2_5000/random_step_003000.png",
+      "grid_shape": [
+        128,
+        128,
+        3
+      ],
+      "fid_pixel8": 4.580936468019409,
+      "proxy_fd_downsample8": 4.580936468019409,
+      "proxy_fd_color_moment": 0.005654360859073706,
+      "nearest_real_rmse_8x8_mean": 0.13060428095261759,
+      "nearest_real_rmse_8x8_min": 0.06747278481663735,
+      "nearest_real_rmse_8x8_max": 0.16690539173483362
+    },
+    {
+      "num_images": 16,
+      "pixel_mean": 0.5146247414981618,
+      "pixel_std": 0.25298297049224927,
+      "luminance_mean": 0.5235797906613817,
+      "luminance_std": 0.24343179856939218,
+      "rgb_mean": [
+        0.5332440544577126,
+        0.5262747970281949,
+        0.4843553730085788
+      ],
+      "rgb_std": [
+        0.25817034074828,
+        0.24542808308500513,
+        0.2524195792538404
+      ],
+      "saturation_mean": 0.25887214587600704,
+      "entropy_bits": 7.866206378237197,
+      "laplacian_var_mean": 0.037184126829749975,
+      "pairwise_rmse_mean": 0.35565598752009875,
+      "pairwise_rmse_min": 0.18845465351171128,
+      "unique_exact_images": 16,
+      "duplicate_exact_images": 0,
+      "source": "Jittor random-grid",
+      "step": 3500,
+      "path": "DMD2-jittor/outputs/samples/cifar10_dmd2_5000/random_step_003500.png",
+      "grid_shape": [
+        128,
+        128,
+        3
+      ],
+      "fid_pixel8": 5.659055451458892,
+      "proxy_fd_downsample8": 5.659055451458892,
+      "proxy_fd_color_moment": 0.01735248888671987,
+      "nearest_real_rmse_8x8_mean": 0.1378008538224847,
+      "nearest_real_rmse_8x8_min": 0.07296507227776236,
+      "nearest_real_rmse_8x8_max": 0.18160992024456438
+    },
+    {
+      "num_images": 16,
+      "pixel_mean": 0.5019689223345588,
+      "pixel_std": 0.2624838416334793,
+      "luminance_mean": 0.5045314338235294,
+      "luminance_std": 0.2518791794224083,
+      "rgb_mean": [
+        0.5352436140471823,
+        0.4943720798866146,
+        0.4762910730698421
+      ],
+      "rgb_std": [
+        0.25206610633123694,
+        0.2607923868918199,
+        0.2707748903936134
+      ],
+      "saturation_mean": 0.28336230580174293,
+      "entropy_bits": 7.902602077051035,
+      "laplacian_var_mean": 0.030759213750917988,
+      "pairwise_rmse_mean": 0.3675628067273004,
+      "pairwise_rmse_min": 0.21616146406497344,
+      "unique_exact_images": 16,
+      "duplicate_exact_images": 0,
+      "source": "Jittor random-grid",
+      "step": 4000,
+      "path": "DMD2-jittor/outputs/samples/cifar10_dmd2_5000/random_step_004000.png",
+      "grid_shape": [
+        128,
+        128,
+        3
+      ],
+      "fid_pixel8": 4.90666716605617,
+      "proxy_fd_downsample8": 4.90666716605617,
+      "proxy_fd_color_moment": 0.008574327519557392,
+      "nearest_real_rmse_8x8_mean": 0.13942672655094493,
+      "nearest_real_rmse_8x8_min": 0.1105775797227991,
+      "nearest_real_rmse_8x8_max": 0.18569547826022997
+    },
+    {
+      "num_images": 16,
+      "pixel_mean": 0.450457643995098,
+      "pixel_std": 0.23654727275990006,
+      "luminance_mean": 0.4525776917700674,
+      "luminance_std": 0.22825544901333156,
+      "rgb_mean": [
+        0.45104573567707956,
+        0.45470975988049883,
+        0.4456174364276751
+      ],
+      "rgb_std": [
+        0.2326955770562057,
+        0.23032875029491948,
+        0.2462182324806115
+      ],
+      "saturation_mean": 0.2246113088072372,
+      "entropy_bits": 7.7753752756170265,
+      "laplacian_var_mean": 0.02287322353766242,
+      "pairwise_rmse_mean": 0.32068250142737953,
+      "pairwise_rmse_min": 0.17430822172545932,
+      "unique_exact_images": 16,
+      "duplicate_exact_images": 0,
+      "source": "Jittor random-grid",
+      "step": 4500,
+      "path": "DMD2-jittor/outputs/samples/cifar10_dmd2_5000/random_step_004500.png",
+      "grid_shape": [
+        128,
+        128,
+        3
+      ],
+      "fid_pixel8": 4.044070039793684,
+      "proxy_fd_downsample8": 4.044070039793684,
+      "proxy_fd_color_moment": 0.008558336593177902,
+      "nearest_real_rmse_8x8_mean": 0.11419851490098985,
+      "nearest_real_rmse_8x8_min": 0.07288974203840386,
+      "nearest_real_rmse_8x8_max": 0.16262604634558975
+    },
+    {
+      "num_images": 16,
+      "pixel_mean": 0.4352672302645017,
+      "pixel_std": 0.2738224389980045,
+      "luminance_mean": 0.4416486297009038,
+      "luminance_std": 0.2698649081274582,
+      "rgb_mean": [
+        0.4443558038449411,
+        0.4452038334864994,
+        0.41624205346198284
+      ],
+      "rgb_std": [
+        0.26542323884384733,
+        0.27534506372839074,
+        0.27951473816743894
+      ],
+      "saturation_mean": 0.22497961929922433,
+      "entropy_bits": 7.897493415303107,
+      "laplacian_var_mean": 0.037011798839784796,
+      "pairwise_rmse_mean": 0.3752589281484465,
+      "pairwise_rmse_min": 0.24084983601926901,
+      "unique_exact_images": 16,
+      "duplicate_exact_images": 0,
+      "source": "Jittor random-grid",
+      "step": 5000,
+      "path": "DMD2-jittor/outputs/samples/cifar10_dmd2_5000/random_step_005000.png",
+      "grid_shape": [
+        128,
+        128,
+        3
+      ],
+      "fid_pixel8": 5.415390394599127,
+      "proxy_fd_downsample8": 5.415390394599127,
+      "proxy_fd_color_moment": 0.01332892852297353,
+      "nearest_real_rmse_8x8_mean": 0.1390201057257399,
+      "nearest_real_rmse_8x8_min": 0.0914764238855444,
+      "nearest_real_rmse_8x8_max": 0.199259370514687
+    },
+    {
+      "num_images": 16,
+      "pixel_mean": 0.48373113893995096,
+      "pixel_std": 0.0696885993955074,
+      "luminance_mean": 0.49055358120787373,
+      "luminance_std": 0.056617239044696434,
+      "rgb_mean": [
+        0.49884392233451874,
+        0.4922439874386353,
+        0.46010550704646946
+      ],
+      "rgb_std": [
+        0.048549562764752086,
+        0.059809005952490384,
+        0.08818327577036078
+      ],
+      "saturation_mean": 0.144030129696854,
+      "entropy_bits": 5.803211234602411,
+      "laplacian_var_mean": 0.00031365186732754515,
+      "pairwise_rmse_mean": 0.08311223365480544,
+      "pairwise_rmse_min": 0.020652812666171284,
+      "unique_exact_images": 16,
+      "duplicate_exact_images": 0,
+      "source": "PyTorch local-record",
+      "step": 0,
+      "path": "DMD2-pytorch/records/cifar10_dmd2_gan_5000_ckpt/samples/generated_step_000000.png",
+      "grid_shape": [
+        128,
+        128,
+        3
+      ],
+      "fid_pixel8": 6.3843539344087175,
+      "proxy_fd_downsample8": 6.3843539344087175,
+      "proxy_fd_color_moment": 0.11538464119530414,
+      "nearest_real_rmse_8x8_mean": 0.04600203687359307,
+      "nearest_real_rmse_8x8_min": 0.03296590132010788,
+      "nearest_real_rmse_8x8_max": 0.052044425776746235
+    },
+    {
+      "num_images": 16,
+      "pixel_mean": 0.4825881459354575,
+      "pixel_std": 0.1220524036703495,
+      "luminance_mean": 0.4928173816157322,
+      "luminance_std": 0.11449175879967126,
+      "rgb_mean": [
+        0.5065128102021883,
+        0.4948570101868493,
+        0.44639461741720254
+      ],
+      "rgb_std": [
+        0.11122550024184397,
+        0.1167510519528188,
+        0.12905642793792999
+      ],
+      "saturation_mean": 0.1681905301358668,
+      "entropy_bits": 6.768694422251256,
+      "laplacian_var_mean": 0.0005869230934372445,
+      "pairwise_rmse_mean": 0.15329973079954579,
+      "pairwise_rmse_min": 0.05704894891589194,
+      "unique_exact_images": 16,
+      "duplicate_exact_images": 0,
+      "source": "PyTorch local-record",
+      "step": 100,
+      "path": "DMD2-pytorch/records/cifar10_dmd2_gan_5000_ckpt/samples/generated_step_000100.png",
+      "grid_shape": [
+        128,
+        128,
+        3
+      ],
+      "fid_pixel8": 4.139675405287682,
+      "proxy_fd_downsample8": 4.139675405287682,
+      "proxy_fd_color_moment": 0.062065488274623645,
+      "nearest_real_rmse_8x8_mean": 0.06434237217788064,
+      "nearest_real_rmse_8x8_min": 0.04919216113335626,
+      "nearest_real_rmse_8x8_max": 0.08607559866477509
+    },
+    {
+      "num_images": 16,
+      "pixel_mean": 0.497622421364379,
+      "pixel_std": 0.1833287482517004,
+      "luminance_mean": 0.5023213596717984,
+      "luminance_std": 0.17517701047442752,
+      "rgb_mean": [
+        0.49787118949140213,
+        0.5074594535079512,
+        0.4875366210937247
+      ],
+      "rgb_std": [
+        0.1733737538155063,
+        0.17592194861845217,
+        0.19905463278893998
+      ],
+      "saturation_mean": 0.18444301293100604,
+      "entropy_bits": 7.500016674120343,
+      "laplacian_var_mean": 0.006056832923954278,
+      "pairwise_rmse_mean": 0.25131122959605073,
+      "pairwise_rmse_min": 0.13917447090812565,
+      "unique_exact_images": 16,
+      "duplicate_exact_images": 0,
+      "source": "PyTorch local-record",
+      "step": 200,
+      "path": "DMD2-pytorch/records/cifar10_dmd2_gan_5000_ckpt/samples/generated_step_000200.png",
+      "grid_shape": [
+        128,
+        128,
+        3
+      ],
+      "fid_pixel8": 4.051305416444162,
+      "proxy_fd_downsample8": 4.051305416444162,
+      "proxy_fd_color_moment": 0.021991696881324487,
+      "nearest_real_rmse_8x8_mean": 0.09881906366132605,
+      "nearest_real_rmse_8x8_min": 0.0796875295685732,
+      "nearest_real_rmse_8x8_max": 0.13718115403046297
+    },
+    {
+      "num_images": 16,
+      "pixel_mean": 0.48365949244281053,
+      "pixel_std": 0.23972336578187134,
+      "luminance_mean": 0.4880475777420343,
+      "luminance_std": 0.23204310636222245,
+      "rgb_mean": [
+        0.501130466835211,
+        0.48610337201289316,
+        0.4637446384803975
+      ],
+      "rgb_std": [
+        0.2366914603046391,
+        0.23172594590896373,
+        0.24894639184953776
+      ],
+      "saturation_mean": 0.2249680389637756,
+      "entropy_bits": 7.806091739199962,
+      "laplacian_var_mean": 0.015314715818587274,
+      "pairwise_rmse_mean": 0.32572379751840164,
+      "pairwise_rmse_min": 0.1347433390308197,
+      "unique_exact_images": 16,
+      "duplicate_exact_images": 0,
+      "source": "PyTorch local-record",
+      "step": 300,
+      "path": "DMD2-pytorch/records/cifar10_dmd2_gan_5000_ckpt/samples/generated_step_000300.png",
+      "grid_shape": [
+        128,
+        128,
+        3
+      ],
+      "fid_pixel8": 3.904830501928388,
+      "proxy_fd_downsample8": 3.904830501928388,
+      "proxy_fd_color_moment": 0.006391289480687846,
+      "nearest_real_rmse_8x8_mean": 0.11152822879190098,
+      "nearest_real_rmse_8x8_min": 0.07552480036357323,
+      "nearest_real_rmse_8x8_max": 0.14541933710898952
+    },
+    {
+      "num_images": 16,
+      "pixel_mean": 0.515237486596201,
+      "pixel_std": 0.24256215728530806,
+      "luminance_mean": 0.5183996313955269,
+      "luminance_std": 0.23711410330933594,
+      "rgb_mean": [
+        0.5324182846966947,
+        0.5152030196844568,
+        0.4980911554074979
+      ],
+      "rgb_std": [
+        0.24048905012760008,
+        0.23768733663590375,
+        0.24817286219043364
+      ],
+      "saturation_mean": 0.1972716099596173,
+      "entropy_bits": 7.849291572750324,
+      "laplacian_var_mean": 0.01556592068125841,
+      "pairwise_rmse_mean": 0.3369610167914953,
+      "pairwise_rmse_min": 0.1905844513034146,
+      "unique_exact_images": 16,
+      "duplicate_exact_images": 0,
+      "source": "PyTorch local-record",
+      "step": 400,
+      "path": "DMD2-pytorch/records/cifar10_dmd2_gan_5000_ckpt/samples/generated_step_000400.png",
+      "grid_shape": [
+        128,
+        128,
+        3
+      ],
+      "fid_pixel8": 4.385080461038157,
+      "proxy_fd_downsample8": 4.385080461038157,
+      "proxy_fd_color_moment": 0.01139198356698768,
+      "nearest_real_rmse_8x8_mean": 0.11482143096188498,
+      "nearest_real_rmse_8x8_min": 0.08232868573885975,
+      "nearest_real_rmse_8x8_max": 0.1528671273101596
+    },
+    {
+      "num_images": 16,
+      "pixel_mean": 0.49796166513480394,
+      "pixel_std": 0.2600456524106714,
+      "luminance_mean": 0.5045103786094516,
+      "luminance_std": 0.25446135797902797,
+      "rgb_mean": [
+        0.5278083352481828,
+        0.5001330805759946,
+        0.4659435795802565
+      ],
+      "rgb_std": [
+        0.251013888105356,
+        0.2578007329354734,
+        0.2673599400149294
+      ],
+      "saturation_mean": 0.21168878114189507,
+      "entropy_bits": 7.817301429180221,
+      "laplacian_var_mean": 0.027808337118269563,
+      "pairwise_rmse_mean": 0.34804156798348557,
+      "pairwise_rmse_min": 0.15231968935736234,
+      "unique_exact_images": 16,
+      "duplicate_exact_images": 0,
+      "source": "PyTorch local-record",
+      "step": 500,
+      "path": "DMD2-pytorch/records/cifar10_dmd2_gan_5000_ckpt/samples/generated_step_000500.png",
+      "grid_shape": [
+        128,
+        128,
+        3
+      ],
+      "fid_pixel8": 5.126717720901163,
+      "proxy_fd_downsample8": 5.126717720901163,
+      "proxy_fd_color_moment": 0.010939482204644937,
+      "nearest_real_rmse_8x8_mean": 0.12322534007267667,
+      "nearest_real_rmse_8x8_min": 0.06854533039258784,
+      "nearest_real_rmse_8x8_max": 0.16073555382242255
+    },
+    {
+      "num_images": 16,
+      "pixel_mean": 0.4723671906913807,
+      "pixel_std": 0.2880517890233808,
+      "luminance_mean": 0.47961289684819236,
+      "luminance_std": 0.27971264099678267,
+      "rgb_mean": [
+        0.46751445695463745,
+        0.489583812040419,
+        0.460003303079006
+      ],
+      "rgb_std": [
+        0.27764641058595996,
+        0.28351065891050137,
+        0.30163363482756617
+      ],
+      "saturation_mean": 0.2695241167067498,
+      "entropy_bits": 7.926200423173812,
+      "laplacian_var_mean": 0.03491464402557197,
+      "pairwise_rmse_mean": 0.4039263180506316,
+      "pairwise_rmse_min": 0.21192791166509228,
+      "unique_exact_images": 16,
+      "duplicate_exact_images": 0,
+      "source": "PyTorch local-record",
+      "step": 600,
+      "path": "DMD2-pytorch/records/cifar10_dmd2_gan_5000_ckpt/samples/generated_step_000600.png",
+      "grid_shape": [
+        128,
+        128,
+        3
+      ],
+      "fid_pixel8": 6.081209077900885,
+      "proxy_fd_downsample8": 6.081209077900885,
+      "proxy_fd_color_moment": 0.012079353353535067,
+      "nearest_real_rmse_8x8_mean": 0.15068912506127596,
+      "nearest_real_rmse_8x8_min": 0.09592658832016515,
+      "nearest_real_rmse_8x8_max": 0.20822063715934183
+    },
+    {
+      "num_images": 16,
+      "pixel_mean": 0.464202840967116,
+      "pixel_std": 0.2729438697021412,
+      "luminance_mean": 0.4727828227922028,
+      "luminance_std": 0.2670972648890028,
+      "rgb_mean": [
+        0.47625660615808474,
+        0.47762786266850227,
+        0.43872405407474374
+      ],
+      "rgb_std": [
+        0.26582655203979216,
+        0.2704868156588545,
+        0.28052362068965897
+      ],
+      "saturation_mean": 0.2524564051171055,
+      "entropy_bits": 7.926230403373456,
+      "laplacian_var_mean": 0.034657024047584986,
+      "pairwise_rmse_mean": 0.37191179435991834,
+      "pairwise_rmse_min": 0.22180654847017528,
+      "unique_exact_images": 16,
+      "duplicate_exact_images": 0,
+      "source": "PyTorch local-record",
+      "step": 700,
+      "path": "DMD2-pytorch/records/cifar10_dmd2_gan_5000_ckpt/samples/generated_step_000700.png",
+      "grid_shape": [
+        128,
+        128,
+        3
+      ],
+      "fid_pixel8": 5.815142835562629,
+      "proxy_fd_downsample8": 5.815142835562629,
+      "proxy_fd_color_moment": 0.011736940181407324,
+      "nearest_real_rmse_8x8_mean": 0.14891996685595282,
+      "nearest_real_rmse_8x8_min": 0.08532789063574293,
+      "nearest_real_rmse_8x8_max": 0.2589188592127514
+    },
+    {
+      "num_images": 16,
+      "pixel_mean": 0.46315463196997547,
+      "pixel_std": 0.26829651115541714,
+      "luminance_mean": 0.4705737871955423,
+      "luminance_std": 0.26202559641734957,
+      "rgb_mean": [
+        0.4693220549938835,
+        0.47642774394915055,
+        0.44371409696690584
+      ],
+      "rgb_std": [
+        0.25869588257353804,
+        0.2652969223045991,
+        0.2793758938064277
+      ],
+      "saturation_mean": 0.22404869693267265,
+      "entropy_bits": 7.896855859570149,
+      "laplacian_var_mean": 0.02914492367483547,
+      "pairwise_rmse_mean": 0.37066284288136964,
+      "pairwise_rmse_min": 0.20478188082043347,
+      "unique_exact_images": 16,
+      "duplicate_exact_images": 0,
+      "source": "PyTorch local-record",
+      "step": 800,
+      "path": "DMD2-pytorch/records/cifar10_dmd2_gan_5000_ckpt/samples/generated_step_000800.png",
+      "grid_shape": [
+        128,
+        128,
+        3
+      ],
+      "fid_pixel8": 5.090586004538693,
+      "proxy_fd_downsample8": 5.090586004538693,
+      "proxy_fd_color_moment": 0.010648874801226924,
+      "nearest_real_rmse_8x8_mean": 0.13336283648317987,
+      "nearest_real_rmse_8x8_min": 0.09164089281704818,
+      "nearest_real_rmse_8x8_max": 0.1682178679284914
+    },
+    {
+      "num_images": 16,
+      "pixel_mean": 0.4732688355290032,
+      "pixel_std": 0.2573239921958982,
+      "luminance_mean": 0.47895601495481005,
+      "luminance_std": 0.24759280868580927,
+      "rgb_mean": [
+        0.489246802236504,
+        0.479043160232837,
+        0.4515165441176393
+      ],
+      "rgb_std": [
+        0.25904199596082944,
+        0.24832969696403542,
+        0.26289677895658753
+      ],
+      "saturation_mean": 0.28391382935694676,
+      "entropy_bits": 7.871544698298365,
+      "laplacian_var_mean": 0.018451630065421425,
+      "pairwise_rmse_mean": 0.35928776994085776,
+      "pairwise_rmse_min": 0.1485381914886072,
+      "unique_exact_images": 16,
+      "duplicate_exact_images": 0,
+      "source": "PyTorch local-record",
+      "step": 900,
+      "path": "DMD2-pytorch/records/cifar10_dmd2_gan_5000_ckpt/samples/generated_step_000900.png",
+      "grid_shape": [
+        128,
+        128,
+        3
+      ],
+      "fid_pixel8": 4.756476269754454,
+      "proxy_fd_downsample8": 4.756476269754454,
+      "proxy_fd_color_moment": 0.004892950335204649,
+      "nearest_real_rmse_8x8_mean": 0.13756013387939647,
+      "nearest_real_rmse_8x8_min": 0.08271484566410427,
+      "nearest_real_rmse_8x8_max": 0.20015387687795008
+    },
+    {
+      "num_images": 16,
+      "pixel_mean": 0.45610391454758986,
+      "pixel_std": 0.27818659145701446,
+      "luminance_mean": 0.4611235904469209,
+      "luminance_std": 0.27081453793924654,
+      "rgb_mean": [
+        0.48605215035230476,
+        0.4550029679840555,
+        0.42725662530634295
+      ],
+      "rgb_std": [
+        0.26720973896759653,
+        0.2743440410831806,
+        0.2894259257819139
+      ],
+      "saturation_mean": 0.26297103728252946,
+      "entropy_bits": 7.885635298352678,
+      "laplacian_var_mean": 0.03689054701570234,
+      "pairwise_rmse_mean": 0.3780310354275208,
+      "pairwise_rmse_min": 0.20345708653140784,
+      "unique_exact_images": 16,
+      "duplicate_exact_images": 0,
+      "source": "PyTorch local-record",
+      "step": 1000,
+      "path": "DMD2-pytorch/records/cifar10_dmd2_gan_5000_ckpt/samples/generated_step_001000.png",
+      "grid_shape": [
+        128,
+        128,
+        3
+      ],
+      "fid_pixel8": 5.433419553626743,
+      "proxy_fd_downsample8": 5.433419553626743,
+      "proxy_fd_color_moment": 0.010210415203068129,
+      "nearest_real_rmse_8x8_mean": 0.1385697134475939,
+      "nearest_real_rmse_8x8_min": 0.06476346353989584,
+      "nearest_real_rmse_8x8_max": 0.19689832617310768
+    },
+    {
+      "num_images": 16,
+      "pixel_mean": 0.4928644716350082,
+      "pixel_std": 0.25217365614153764,
+      "luminance_mean": 0.4983711131376378,
+      "luminance_std": 0.24183995790273488,
+      "rgb_mean": [
+        0.5286618700214462,
+        0.4905053232230243,
+        0.459426221660502
+      ],
+      "rgb_std": [
+        0.24178557020180128,
+        0.246699543579524,
+        0.2627709952056972
+      ],
+      "saturation_mean": 0.26174830999533294,
+      "entropy_bits": 7.864486466243502,
+      "laplacian_var_mean": 0.036425073259073654,
+      "pairwise_rmse_mean": 0.35439378233902663,
+      "pairwise_rmse_min": 0.22176218346389415,
+      "unique_exact_images": 16,
+      "duplicate_exact_images": 0,
+      "source": "PyTorch local-record",
+      "step": 1100,
+      "path": "DMD2-pytorch/records/cifar10_dmd2_gan_5000_ckpt/samples/generated_step_001100.png",
+      "grid_shape": [
+        128,
+        128,
+        3
+      ],
+      "fid_pixel8": 4.3828887911499494,
+      "proxy_fd_downsample8": 4.3828887911499494,
+      "proxy_fd_color_moment": 0.004813673906326657,
+      "nearest_real_rmse_8x8_mean": 0.13012489820786055,
+      "nearest_real_rmse_8x8_min": 0.08826492135352747,
+      "nearest_real_rmse_8x8_max": 0.1897082626316948
+    },
+    {
+      "num_images": 16,
+      "pixel_mean": 0.4616981655943628,
+      "pixel_std": 0.2428647943676057,
+      "luminance_mean": 0.4627302485447304,
+      "luminance_std": 0.23523535701217524,
+      "rgb_mean": [
+        0.4709549249387111,
+        0.4602596507352762,
+        0.45387992110904996
+      ],
+      "rgb_std": [
+        0.24365681649317078,
+        0.23546031539431173,
+        0.2489795951781827
+      ],
+      "saturation_mean": 0.2485059726379404,
+      "entropy_bits": 7.784550709892234,
+      "laplacian_var_mean": 0.027214974945547532,
+      "pairwise_rmse_mean": 0.3414764158979075,
+      "pairwise_rmse_min": 0.20921771391306007,
+      "unique_exact_images": 16,
+      "duplicate_exact_images": 0,
+      "source": "PyTorch local-record",
+      "step": 1200,
+      "path": "DMD2-pytorch/records/cifar10_dmd2_gan_5000_ckpt/samples/generated_step_001200.png",
+      "grid_shape": [
+        128,
+        128,
+        3
+      ],
+      "fid_pixel8": 3.9201410689688263,
+      "proxy_fd_downsample8": 3.9201410689688263,
+      "proxy_fd_color_moment": 0.004133903918725274,
+      "nearest_real_rmse_8x8_mean": 0.12348633241538806,
+      "nearest_real_rmse_8x8_min": 0.07472698406473466,
+      "nearest_real_rmse_8x8_max": 0.16231865759631697
+    },
+    {
+      "num_images": 16,
+      "pixel_mean": 0.5241405611723856,
+      "pixel_std": 0.25316086838752483,
+      "luminance_mean": 0.5292785852768842,
+      "luminance_std": 0.24439698669862897,
+      "rgb_mean": [
+        0.5314276003370171,
+        0.5321530809589315,
+        0.508841002221172
+      ],
+      "rgb_std": [
+        0.24552623207080979,
+        0.24662415682773198,
+        0.26610767100007027
+      ],
+      "saturation_mean": 0.21084518842916894,
+      "entropy_bits": 7.8651391087325155,
+      "laplacian_var_mean": 0.03368242929639817,
+      "pairwise_rmse_mean": 0.3484231990656546,
+      "pairwise_rmse_min": 0.20371415842140936,
+      "unique_exact_images": 16,
+      "duplicate_exact_images": 0,
+      "source": "PyTorch local-record",
+      "step": 1300,
+      "path": "DMD2-pytorch/records/cifar10_dmd2_gan_5000_ckpt/samples/generated_step_001300.png",
+      "grid_shape": [
+        128,
+        128,
+        3
+      ],
+      "fid_pixel8": 5.853502326587868,
+      "proxy_fd_downsample8": 5.853502326587868,
+      "proxy_fd_color_moment": 0.015977589648289645,
+      "nearest_real_rmse_8x8_mean": 0.12349665401758679,
+      "nearest_real_rmse_8x8_min": 0.07952464247218899,
+      "nearest_real_rmse_8x8_max": 0.20464545429616246
+    },
+    {
+      "num_images": 16,
+      "pixel_mean": 0.4166202320772059,
+      "pixel_std": 0.25374859239075476,
+      "luminance_mean": 0.4201100401635263,
+      "luminance_std": 0.2506565835423304,
+      "rgb_mean": [
+        0.4263669481464606,
+        0.42018612132352495,
+        0.403307626761611
+      ],
+      "rgb_std": [
+        0.2737071157591047,
+        0.2538423417641253,
+        0.23136245423764282
+      ],
+      "saturation_mean": 0.31850153628623085,
+      "entropy_bits": 7.855138894986412,
+      "laplacian_var_mean": 0.03770401301798737,
+      "pairwise_rmse_mean": 0.3558421417998303,
+      "pairwise_rmse_min": 0.23324550287833928,
+      "unique_exact_images": 16,
+      "duplicate_exact_images": 0,
+      "source": "PyTorch local-record",
+      "step": 1400,
+      "path": "DMD2-pytorch/records/cifar10_dmd2_gan_5000_ckpt/samples/generated_step_001400.png",
+      "grid_shape": [
+        128,
+        128,
+        3
+      ],
+      "fid_pixel8": 6.5350449448878765,
+      "proxy_fd_downsample8": 6.5350449448878765,
+      "proxy_fd_color_moment": 0.01973451595322051,
+      "nearest_real_rmse_8x8_mean": 0.13471560858161394,
+      "nearest_real_rmse_8x8_min": 0.08950054918885227,
+      "nearest_real_rmse_8x8_max": 0.18134761064618204
+    },
+    {
+      "num_images": 16,
+      "pixel_mean": 0.46616561989379085,
+      "pixel_std": 0.25053823182225265,
+      "luminance_mean": 0.48226331978592213,
+      "luminance_std": 0.2423373274281512,
+      "rgb_mean": [
+        0.5110392252604105,
+        0.4826478247548943,
+        0.4048098096660299
+      ],
+      "rgb_std": [
+        0.25971524133727547,
+        0.24423085207378284,
+        0.23485668426066006
+      ],
+      "saturation_mean": 0.2903391849887095,
+      "entropy_bits": 7.858485503046678,
+      "laplacian_var_mean": 0.03133488465020966,
+      "pairwise_rmse_mean": 0.3416814125185385,
+      "pairwise_rmse_min": 0.17755820659925742,
+      "unique_exact_images": 16,
+      "duplicate_exact_images": 0,
+      "source": "PyTorch local-record",
+      "step": 1500,
+      "path": "DMD2-pytorch/records/cifar10_dmd2_gan_5000_ckpt/samples/generated_step_001500.png",
+      "grid_shape": [
+        128,
+        128,
+        3
+      ],
+      "fid_pixel8": 4.919420309522719,
+      "proxy_fd_downsample8": 4.919420309522719,
+      "proxy_fd_color_moment": 0.009320632789058602,
+      "nearest_real_rmse_8x8_mean": 0.12916086607806265,
+      "nearest_real_rmse_8x8_min": 0.07224714197459044,
+      "nearest_real_rmse_8x8_max": 0.22607668222358115
+    },
+    {
+      "num_images": 16,
+      "pixel_mean": 0.45171632455065364,
+      "pixel_std": 0.22397577409467473,
+      "luminance_mean": 0.46540441224341295,
+      "luminance_std": 0.21246886550609584,
+      "rgb_mean": [
+        0.4843048694086797,
+        0.4679091509650214,
+        0.40293495327813483
+      ],
+      "rgb_std": [
+        0.2113883912253258,
+        0.22251574870046414,
+        0.22933226705566892
+      ],
+      "saturation_mean": 0.30195244273068006,
+      "entropy_bits": 7.685274867120373,
+      "laplacian_var_mean": 0.02737592971141282,
+      "pairwise_rmse_mean": 0.3051848961280115,
+      "pairwise_rmse_min": 0.16158798093146381,
+      "unique_exact_images": 16,
+      "duplicate_exact_images": 0,
+      "source": "PyTorch local-record",
+      "step": 1600,
+      "path": "DMD2-pytorch/records/cifar10_dmd2_gan_5000_ckpt/samples/generated_step_001600.png",
+      "grid_shape": [
+        128,
+        128,
+        3
+      ],
+      "fid_pixel8": 4.344887722522793,
+      "proxy_fd_downsample8": 4.344887722522793,
+      "proxy_fd_color_moment": 0.009509402254979003,
+      "nearest_real_rmse_8x8_mean": 0.11611758600338917,
+      "nearest_real_rmse_8x8_min": 0.06613272193749271,
+      "nearest_real_rmse_8x8_max": 0.16318785743462388
+    },
+    {
+      "num_images": 16,
+      "pixel_mean": 0.46562372344771247,
+      "pixel_std": 0.23565870938781738,
+      "luminance_mean": 0.4778136000689338,
+      "luminance_std": 0.22380643292478564,
+      "rgb_mean": [
+        0.5024339862898234,
+        0.4769978841145573,
+        0.41743929993866985
+      ],
+      "rgb_std": [
+        0.22710003697193712,
+        0.2266838953756411,
+        0.24462003406382998
+      ],
+      "saturation_mean": 0.2819020239659058,
+      "entropy_bits": 7.694036300761645,
+      "laplacian_var_mean": 0.022465862725664407,
+      "pairwise_rmse_mean": 0.3230419342862431,
+      "pairwise_rmse_min": 0.1619170158381812,
+      "unique_exact_images": 16,
+      "duplicate_exact_images": 0,
+      "source": "PyTorch local-record",
+      "step": 1700,
+      "path": "DMD2-pytorch/records/cifar10_dmd2_gan_5000_ckpt/samples/generated_step_001700.png",
+      "grid_shape": [
+        128,
+        128,
+        3
+      ],
+      "fid_pixel8": 4.465247112792608,
+      "proxy_fd_downsample8": 4.465247112792608,
+      "proxy_fd_color_moment": 0.007069360667512516,
+      "nearest_real_rmse_8x8_mean": 0.12029108673050526,
+      "nearest_real_rmse_8x8_min": 0.0733593670933387,
+      "nearest_real_rmse_8x8_max": 0.18871626163995533
+    },
+    {
+      "num_images": 16,
+      "pixel_mean": 0.44437200010212413,
+      "pixel_std": 0.2466502252479708,
+      "luminance_mean": 0.44162818076937804,
+      "luminance_std": 0.22448705742641564,
+      "rgb_mean": [
+        0.42146785960473265,
+        0.44752939261640967,
+        0.46411874808515796
+      ],
+      "rgb_std": [
+        0.2448650991382525,
+        0.22810340578144464,
+        0.26380753875548274
+      ],
+      "saturation_mean": 0.3213707990372454,
+      "entropy_bits": 7.767458903570402,
+      "laplacian_var_mean": 0.027676812518671448,
+      "pairwise_rmse_mean": 0.3391686624839642,
+      "pairwise_rmse_min": 0.1740766010647454,
+      "unique_exact_images": 16,
+      "duplicate_exact_images": 0,
+      "source": "PyTorch local-record",
+      "step": 1800,
+      "path": "DMD2-pytorch/records/cifar10_dmd2_gan_5000_ckpt/samples/generated_step_001800.png",
+      "grid_shape": [
+        128,
+        128,
+        3
+      ],
+      "fid_pixel8": 5.408198869034121,
+      "proxy_fd_downsample8": 5.408198869034121,
+      "proxy_fd_color_moment": 0.015443559041836568,
+      "nearest_real_rmse_8x8_mean": 0.13433673346952046,
+      "nearest_real_rmse_8x8_min": 0.07297303335761038,
+      "nearest_real_rmse_8x8_max": 0.1957048195253514
+    },
+    {
+      "num_images": 16,
+      "pixel_mean": 0.4604320650786356,
+      "pixel_std": 0.25587801545710176,
+      "luminance_mean": 0.4671817947686887,
+      "luminance_std": 0.24108645125593406,
+      "rgb_mean": [
+        0.46474609375000103,
+        0.47301480162376913,
+        0.44353529986211293
+      ],
+      "rgb_std": [
+        0.24185106901467945,
+        0.24258708607432777,
+        0.2803886689794971
+      ],
+      "saturation_mean": 0.2612236152579335,
+      "entropy_bits": 7.795315710782082,
+      "laplacian_var_mean": 0.028597528291554403,
+      "pairwise_rmse_mean": 0.35219438007530474,
+      "pairwise_rmse_min": 0.1326362217445125,
+      "unique_exact_images": 16,
+      "duplicate_exact_images": 0,
+      "source": "PyTorch local-record",
+      "step": 1900,
+      "path": "DMD2-pytorch/records/cifar10_dmd2_gan_5000_ckpt/samples/generated_step_001900.png",
+      "grid_shape": [
+        128,
+        128,
+        3
+      ],
+      "fid_pixel8": 4.5389211088114685,
+      "proxy_fd_downsample8": 4.5389211088114685,
+      "proxy_fd_color_moment": 0.007577004013149169,
+      "nearest_real_rmse_8x8_mean": 0.12161992375850542,
+      "nearest_real_rmse_8x8_min": 0.07111634927536625,
+      "nearest_real_rmse_8x8_max": 0.20393259638269642
+    },
+    {
+      "num_images": 16,
+      "pixel_mean": 0.5359207452512256,
+      "pixel_std": 0.2659432901088585,
+      "luminance_mean": 0.5470407262465533,
+      "luminance_std": 0.2564669488220944,
+      "rgb_mean": [
+        0.5629169538909453,
+        0.5488714479932746,
+        0.49597383386945587
+      ],
+      "rgb_std": [
+        0.26675931653750756,
+        0.25628088376969743,
+        0.26989776695087203
+      ],
+      "saturation_mean": 0.21363418049883318,
+      "entropy_bits": 7.892182440686248,
+      "laplacian_var_mean": 0.031589354375707736,
+      "pairwise_rmse_mean": 0.3613451628267166,
+      "pairwise_rmse_min": 0.20165333497387888,
+      "unique_exact_images": 16,
+      "duplicate_exact_images": 0,
+      "source": "PyTorch local-record",
+      "step": 2000,
+      "path": "DMD2-pytorch/records/cifar10_dmd2_gan_5000_ckpt/samples/generated_step_002000.png",
+      "grid_shape": [
+        128,
+        128,
+        3
+      ],
+      "fid_pixel8": 5.443286579129701,
+      "proxy_fd_downsample8": 5.443286579129701,
+      "proxy_fd_color_moment": 0.019120800833905303,
+      "nearest_real_rmse_8x8_mean": 0.1272304675528905,
+      "nearest_real_rmse_8x8_min": 0.08943208422014814,
+      "nearest_real_rmse_8x8_max": 0.17161160031351727
+    },
+    {
+      "num_images": 16,
+      "pixel_mean": 0.4525657105290033,
+      "pixel_std": 0.2823635087869585,
+      "luminance_mean": 0.45915167906518073,
+      "luminance_std": 0.2721744348811706,
+      "rgb_mean": [
+        0.47747587316176865,
+        0.4567466586243629,
+        0.4234745998008338
+      ],
+      "rgb_std": [
+        0.28031299387745157,
+        0.27466050339490405,
+        0.2892911982224925
+      ],
+      "saturation_mean": 0.2883132911716592,
+      "entropy_bits": 7.879294243739724,
+      "laplacian_var_mean": 0.031632244532860704,
+      "pairwise_rmse_mean": 0.3827313024316492,
+      "pairwise_rmse_min": 0.17396963173566743,
+      "unique_exact_images": 16,
+      "duplicate_exact_images": 0,
+      "source": "PyTorch local-record",
+      "step": 2100,
+      "path": "DMD2-pytorch/records/cifar10_dmd2_gan_5000_ckpt/samples/generated_step_002100.png",
+      "grid_shape": [
+        128,
+        128,
+        3
+      ],
+      "fid_pixel8": 4.590817875360499,
+      "proxy_fd_downsample8": 4.590817875360499,
+      "proxy_fd_color_moment": 0.009718462425400818,
+      "nearest_real_rmse_8x8_mean": 0.13115268116101064,
+      "nearest_real_rmse_8x8_min": 0.0898681431288152,
+      "nearest_real_rmse_8x8_max": 0.19860517221373183
+    },
+    {
+      "num_images": 16,
+      "pixel_mean": 0.45255470026552286,
+      "pixel_std": 0.23252208649276526,
+      "luminance_mean": 0.45220591059666054,
+      "luminance_std": 0.22466825402022378,
+      "rgb_mean": [
+        0.4468704522824404,
+        0.4540405273437326,
+        0.4567531211703275
+      ],
+      "rgb_std": [
+        0.22604401531007115,
+        0.22795274014276445,
+        0.24308243134668997
+      ],
+      "saturation_mean": 0.21849959718372985,
+      "entropy_bits": 7.798503261624372,
+      "laplacian_var_mean": 0.03113214993745269,
+      "pairwise_rmse_mean": 0.3156642499127359,
+      "pairwise_rmse_min": 0.17412996765258926,
+      "unique_exact_images": 16,
+      "duplicate_exact_images": 0,
+      "source": "PyTorch local-record",
+      "step": 2200,
+      "path": "DMD2-pytorch/records/cifar10_dmd2_gan_5000_ckpt/samples/generated_step_002200.png",
+      "grid_shape": [
+        128,
+        128,
+        3
+      ],
+      "fid_pixel8": 5.393186607063058,
+      "proxy_fd_downsample8": 5.393186607063058,
+      "proxy_fd_color_moment": 0.013440041468095775,
+      "nearest_real_rmse_8x8_mean": 0.12771162867038835,
+      "nearest_real_rmse_8x8_min": 0.08168771597137592,
+      "nearest_real_rmse_8x8_max": 0.16183574402116446
+    },
+    {
+      "num_images": 16,
+      "pixel_mean": 0.523819189133987,
+      "pixel_std": 0.27277490194498527,
+      "luminance_mean": 0.5300763068704044,
+      "luminance_std": 0.2624612406927285,
+      "rgb_mean": [
+        0.5340063955269525,
+        0.5330633425244916,
+        0.5043878293504775
+      ],
+      "rgb_std": [
+        0.2607547534591672,
+        0.2666950537893198,
+        0.2890196134123308
+      ],
+      "saturation_mean": 0.2184044894788939,
+      "entropy_bits": 7.861418337937679,
+      "laplacian_var_mean": 0.03221509974635657,
+      "pairwise_rmse_mean": 0.3778366982513444,
+      "pairwise_rmse_min": 0.20676069254217616,
+      "unique_exact_images": 16,
+      "duplicate_exact_images": 0,
+      "source": "PyTorch local-record",
+      "step": 2300,
+      "path": "DMD2-pytorch/records/cifar10_dmd2_gan_5000_ckpt/samples/generated_step_002300.png",
+      "grid_shape": [
+        128,
+        128,
+        3
+      ],
+      "fid_pixel8": 5.2556445813011665,
+      "proxy_fd_downsample8": 5.2556445813011665,
+      "proxy_fd_color_moment": 0.015837372608380813,
+      "nearest_real_rmse_8x8_mean": 0.1267562202424703,
+      "nearest_real_rmse_8x8_min": 0.06555029442998929,
+      "nearest_real_rmse_8x8_max": 0.16784654651983355
+    },
+    {
+      "num_images": 16,
+      "pixel_mean": 0.47893281824448525,
+      "pixel_std": 0.27126170549401535,
+      "luminance_mean": 0.4850983118393842,
+      "luminance_std": 0.26398522475140695,
+      "rgb_mean": [
+        0.4909431008731618,
+        0.4872702205882359,
+        0.4585851332720395
+      ],
+      "rgb_std": [
+        0.2666098994751807,
+        0.2669932753330281,
+        0.27884530403243607
+      ],
+      "saturation_mean": 0.23338103580525174,
+      "entropy_bits": 7.921573655969622,
+      "laplacian_var_mean": 0.031580773316285726,
+      "pairwise_rmse_mean": 0.37610772128518755,
+      "pairwise_rmse_min": 0.19453904506578365,
+      "unique_exact_images": 16,
+      "duplicate_exact_images": 0,
+      "source": "PyTorch local-record",
+      "step": 2400,
+      "path": "DMD2-pytorch/records/cifar10_dmd2_gan_5000_ckpt/samples/generated_step_002400.png",
+      "grid_shape": [
+        128,
+        128,
+        3
+      ],
+      "fid_pixel8": 5.350325096415507,
+      "proxy_fd_downsample8": 5.350325096415507,
+      "proxy_fd_color_moment": 0.01035580682668466,
+      "nearest_real_rmse_8x8_mean": 0.1432349622979368,
+      "nearest_real_rmse_8x8_min": 0.1035536210484741,
+      "nearest_real_rmse_8x8_max": 0.18351236528056858
+    },
+    {
+      "num_images": 16,
+      "pixel_mean": 0.5042299357894199,
+      "pixel_std": 0.24091571062707723,
+      "luminance_mean": 0.5099339384191176,
+      "luminance_std": 0.22836261798125143,
+      "rgb_mean": [
+        0.4974681181066242,
+        0.5189338235294335,
+        0.4962878657322285
+      ],
+      "rgb_std": [
+        0.23340071375268337,
+        0.22839040962772195,
+        0.25914872857266125
+      ],
+      "saturation_mean": 0.2271902663874628,
+      "entropy_bits": 7.730554518398643,
+      "laplacian_var_mean": 0.021646657572558854,
+      "pairwise_rmse_mean": 0.3302320626671598,
+      "pairwise_rmse_min": 0.14991933023991527,
+      "unique_exact_images": 16,
+      "duplicate_exact_images": 0,
+      "source": "PyTorch local-record",
+      "step": 2500,
+      "path": "DMD2-pytorch/records/cifar10_dmd2_gan_5000_ckpt/samples/generated_step_002500.png",
+      "grid_shape": [
+        128,
+        128,
+        3
+      ],
+      "fid_pixel8": 4.582267053922083,
+      "proxy_fd_downsample8": 4.582267053922083,
+      "proxy_fd_color_moment": 0.009579874816966833,
+      "nearest_real_rmse_8x8_mean": 0.10895668771642586,
+      "nearest_real_rmse_8x8_min": 0.0697549162577564,
+      "nearest_real_rmse_8x8_max": 0.18039470904234486
+    },
+    {
+      "num_images": 16,
+      "pixel_mean": 0.4480579650479984,
+      "pixel_std": 0.30100031963042617,
+      "luminance_mean": 0.45266281068091296,
+      "luminance_std": 0.286996338450909,
+      "rgb_mean": [
+        0.46342270795036583,
+        0.451783902037372,
+        0.4289672851562383
+      ],
+      "rgb_std": [
+        0.29116415906108545,
+        0.2908818815061308,
+        0.3190616378584687
+      ],
+      "saturation_mean": 0.3239899277207653,
+      "entropy_bits": 7.8428900665191845,
+      "laplacian_var_mean": 0.033755456709393616,
+      "pairwise_rmse_mean": 0.4153975329146317,
+      "pairwise_rmse_min": 0.21473524687652318,
+      "unique_exact_images": 16,
+      "duplicate_exact_images": 0,
+      "source": "PyTorch local-record",
+      "step": 2600,
+      "path": "DMD2-pytorch/records/cifar10_dmd2_gan_5000_ckpt/samples/generated_step_002600.png",
+      "grid_shape": [
+        128,
+        128,
+        3
+      ],
+      "fid_pixel8": 5.738380811755426,
+      "proxy_fd_downsample8": 5.738380811755426,
+      "proxy_fd_color_moment": 0.02073718792502046,
+      "nearest_real_rmse_8x8_mean": 0.13630803705199962,
+      "nearest_real_rmse_8x8_min": 0.06691316011090931,
+      "nearest_real_rmse_8x8_max": 0.17559210879945014
+    },
+    {
+      "num_images": 16,
+      "pixel_mean": 0.4958911771088643,
+      "pixel_std": 0.2795632223797911,
+      "luminance_mean": 0.4958229262408088,
+      "luminance_std": 0.27119158542672644,
+      "rgb_mean": [
+        0.5225049785539454,
+        0.48533767999385996,
+        0.47983087277876657
+      ],
+      "rgb_std": [
+        0.27998973056131293,
+        0.2730556218323051,
+        0.28361163584064314
+      ],
+      "saturation_mean": 0.26676389442805243,
+      "entropy_bits": 7.909430178600569,
+      "laplacian_var_mean": 0.027699614152098952,
+      "pairwise_rmse_mean": 0.38552624252598033,
+      "pairwise_rmse_min": 0.21639191241603054,
+      "unique_exact_images": 16,
+      "duplicate_exact_images": 0,
+      "source": "PyTorch local-record",
+      "step": 2700,
+      "path": "DMD2-pytorch/records/cifar10_dmd2_gan_5000_ckpt/samples/generated_step_002700.png",
+      "grid_shape": [
+        128,
+        128,
+        3
+      ],
+      "fid_pixel8": 5.026180328537338,
+      "proxy_fd_downsample8": 5.026180328537338,
+      "proxy_fd_color_moment": 0.011524164012739292,
+      "nearest_real_rmse_8x8_mean": 0.1284035771159361,
+      "nearest_real_rmse_8x8_min": 0.0724992230647074,
+      "nearest_real_rmse_8x8_max": 0.20859284132855982
+    },
+    {
+      "num_images": 16,
+      "pixel_mean": 0.4364583333333334,
+      "pixel_std": 0.22151374867596055,
+      "luminance_mean": 0.450234015490962,
+      "luminance_std": 0.21010690883136726,
+      "rgb_mean": [
+        0.4764119466145615,
+        0.4499557195925163,
+        0.383007333792851
+      ],
+      "rgb_std": [
+        0.23774017142355364,
+        0.2076013498102529,
+        0.20724582747057668
+      ],
+      "saturation_mean": 0.3139052516763341,
+      "entropy_bits": 7.701890757892501,
+      "laplacian_var_mean": 0.03050416357837505,
+      "pairwise_rmse_mean": 0.3029640969537393,
+      "pairwise_rmse_min": 0.19103227709045056,
+      "unique_exact_images": 16,
+      "duplicate_exact_images": 0,
+      "source": "PyTorch local-record",
+      "step": 2800,
+      "path": "DMD2-pytorch/records/cifar10_dmd2_gan_5000_ckpt/samples/generated_step_002800.png",
+      "grid_shape": [
+        128,
+        128,
+        3
+      ],
+      "fid_pixel8": 4.333766438963528,
+      "proxy_fd_downsample8": 4.333766438963528,
+      "proxy_fd_color_moment": 0.011851606484570908,
+      "nearest_real_rmse_8x8_mean": 0.11814998514978185,
+      "nearest_real_rmse_8x8_min": 0.07345181031502089,
+      "nearest_real_rmse_8x8_max": 0.15219782295896023
+    },
+    {
+      "num_images": 16,
+      "pixel_mean": 0.4520841311785131,
+      "pixel_std": 0.24422356918625798,
+      "luminance_mean": 0.4623810781441483,
+      "luminance_std": 0.22668086598656653,
+      "rgb_mean": [
+        0.48041298062191123,
+        0.4627735811120847,
+        0.41306583180143863
+      ],
+      "rgb_std": [
+        0.23493754084860122,
+        0.23098382495644457,
+        0.26066657631882995
+      ],
+      "saturation_mean": 0.3139766424237389,
+      "entropy_bits": 7.7474557733717635,
+      "laplacian_var_mean": 0.02461921464441448,
+      "pairwise_rmse_mean": 0.34020395361758643,
+      "pairwise_rmse_min": 0.20752947085469148,
+      "unique_exact_images": 16,
+      "duplicate_exact_images": 0,
+      "source": "PyTorch local-record",
+      "step": 2900,
+      "path": "DMD2-pytorch/records/cifar10_dmd2_gan_5000_ckpt/samples/generated_step_002900.png",
+      "grid_shape": [
+        128,
+        128,
+        3
+      ],
+      "fid_pixel8": 4.849144092367883,
+      "proxy_fd_downsample8": 4.849144092367883,
+      "proxy_fd_color_moment": 0.00674409459888428,
+      "nearest_real_rmse_8x8_mean": 0.13257545658293496,
+      "nearest_real_rmse_8x8_min": 0.08250920101265612,
+      "nearest_real_rmse_8x8_max": 0.19099462779900797
+    },
+    {
+      "num_images": 16,
+      "pixel_mean": 0.454299986596201,
+      "pixel_std": 0.26663199617229705,
+      "luminance_mean": 0.4602292609719669,
+      "luminance_std": 0.25728619114989854,
+      "rgb_mean": [
+        0.45136814491420385,
+        0.46798215379901315,
+        0.44354966107534793
+      ],
+      "rgb_std": [
+        0.26690895103501133,
+        0.2587849550222769,
+        0.2734162690224609
+      ],
+      "saturation_mean": 0.311151672917592,
+      "entropy_bits": 7.891143338689011,
+      "laplacian_var_mean": 0.030943120283449047,
+      "pairwise_rmse_mean": 0.3635440878695742,
+      "pairwise_rmse_min": 0.22070120110349406,
+      "unique_exact_images": 16,
+      "duplicate_exact_images": 0,
+      "source": "PyTorch local-record",
+      "step": 3000,
+      "path": "DMD2-pytorch/records/cifar10_dmd2_gan_5000_ckpt/samples/generated_step_003000.png",
+      "grid_shape": [
+        128,
+        128,
+        3
+      ],
+      "fid_pixel8": 5.383724041325,
+      "proxy_fd_downsample8": 5.383724041325,
+      "proxy_fd_color_moment": 0.012870107968552938,
+      "nearest_real_rmse_8x8_mean": 0.12695754655362151,
+      "nearest_real_rmse_8x8_min": 0.07813820429318849,
+      "nearest_real_rmse_8x8_max": 0.2028592829242407
+    },
+    {
+      "num_images": 16,
+      "pixel_mean": 0.49580030254289215,
+      "pixel_std": 0.2505356611728599,
+      "luminance_mean": 0.4970997443704044,
+      "luminance_std": 0.2457788319199994,
+      "rgb_mean": [
+        0.49706384995403524,
+        0.4980533375459456,
+        0.49228372012866206
+      ],
+      "rgb_std": [
+        0.2463414833188321,
+        0.24798578165283064,
+        0.25710744676422426
+      ],
+      "saturation_mean": 0.16558661381801457,
+      "entropy_bits": 7.816865469530747,
+      "laplacian_var_mean": 0.031221253749707144,
+      "pairwise_rmse_mean": 0.3442416912090079,
+      "pairwise_rmse_min": 0.20409649173754682,
+      "unique_exact_images": 16,
+      "duplicate_exact_images": 0,
+      "source": "PyTorch local-record",
+      "step": 3100,
+      "path": "DMD2-pytorch/records/cifar10_dmd2_gan_5000_ckpt/samples/generated_step_003100.png",
+      "grid_shape": [
+        128,
+        128,
+        3
+      ],
+      "fid_pixel8": 4.7336024029167625,
+      "proxy_fd_downsample8": 4.7336024029167625,
+      "proxy_fd_color_moment": 0.013425997191970022,
+      "nearest_real_rmse_8x8_mean": 0.11768884555782538,
+      "nearest_real_rmse_8x8_min": 0.06983203444054384,
+      "nearest_real_rmse_8x8_max": 0.15956689394367132
+    },
+    {
+      "num_images": 16,
+      "pixel_mean": 0.43033359502655233,
+      "pixel_std": 0.24824384639104988,
+      "luminance_mean": 0.43681106100643385,
+      "luminance_std": 0.24300523369163107,
+      "rgb_mean": [
+        0.44923215379899956,
+        0.43663641237742706,
+        0.4051322189031488
+      ],
+      "rgb_std": [
+        0.25523037404951654,
+        0.245021952162156,
+        0.2422080315462582
+      ],
+      "saturation_mean": 0.2793828341515582,
+      "entropy_bits": 7.777392511071006,
+      "laplacian_var_mean": 0.029485730828446768,
+      "pairwise_rmse_mean": 0.3498580170323922,
+      "pairwise_rmse_min": 0.2517427919740823,
+      "unique_exact_images": 16,
+      "duplicate_exact_images": 0,
+      "source": "PyTorch local-record",
+      "step": 3200,
+      "path": "DMD2-pytorch/records/cifar10_dmd2_gan_5000_ckpt/samples/generated_step_003200.png",
+      "grid_shape": [
+        128,
+        128,
+        3
+      ],
+      "fid_pixel8": 5.097893804606778,
+      "proxy_fd_downsample8": 5.097893804606778,
+      "proxy_fd_color_moment": 0.011211543115391059,
+      "nearest_real_rmse_8x8_mean": 0.13299861705611254,
+      "nearest_real_rmse_8x8_min": 0.08632008236752457,
+      "nearest_real_rmse_8x8_max": 0.19417006156236036
+    },
+    {
+      "num_images": 16,
+      "pixel_mean": 0.4598036822150735,
+      "pixel_std": 0.2708230597805859,
+      "luminance_mean": 0.46590514514399506,
+      "luminance_std": 0.26183904367765554,
+      "rgb_mean": [
+        0.4684814453124983,
+        0.46930912990196055,
+        0.4416204714307465
+      ],
+      "rgb_std": [
+        0.2693790446713194,
+        0.2624358694385336,
+        0.2794663621766248
+      ],
+      "saturation_mean": 0.24396073709676996,
+      "entropy_bits": 7.919028693974692,
+      "laplacian_var_mean": 0.03645250502051307,
+      "pairwise_rmse_mean": 0.37893898708116214,
+      "pairwise_rmse_min": 0.2287234997945328,
+      "unique_exact_images": 16,
+      "duplicate_exact_images": 0,
+      "source": "PyTorch local-record",
+      "step": 3300,
+      "path": "DMD2-pytorch/records/cifar10_dmd2_gan_5000_ckpt/samples/generated_step_003300.png",
+      "grid_shape": [
+        128,
+        128,
+        3
+      ],
+      "fid_pixel8": 5.084117237252205,
+      "proxy_fd_downsample8": 5.084117237252205,
+      "proxy_fd_color_moment": 0.007024296889001934,
+      "nearest_real_rmse_8x8_mean": 0.1364696466135204,
+      "nearest_real_rmse_8x8_min": 0.08409948278656043,
+      "nearest_real_rmse_8x8_max": 0.19687946216128377
+    },
+    {
+      "num_images": 16,
+      "pixel_mean": 0.4736039305044934,
+      "pixel_std": 0.2348607074551382,
+      "luminance_mean": 0.4885224604587929,
+      "luminance_std": 0.22456577880954554,
+      "rgb_mean": [
+        0.4986395143995093,
+        0.4953522326899647,
+        0.42682004442398386
+      ],
+      "rgb_std": [
+        0.22127514678879895,
+        0.23568920631744758,
+        0.24016257421239745
+      ],
+      "saturation_mean": 0.27012413692496623,
+      "entropy_bits": 7.744111773253384,
+      "laplacian_var_mean": 0.023954760311548216,
+      "pairwise_rmse_mean": 0.31536827235393905,
+      "pairwise_rmse_min": 0.1513436399561736,
+      "unique_exact_images": 16,
+      "duplicate_exact_images": 0,
+      "source": "PyTorch local-record",
+      "step": 3400,
+      "path": "DMD2-pytorch/records/cifar10_dmd2_gan_5000_ckpt/samples/generated_step_003400.png",
+      "grid_shape": [
+        128,
+        128,
+        3
+      ],
+      "fid_pixel8": 4.633934640023305,
+      "proxy_fd_downsample8": 4.633934640023305,
+      "proxy_fd_color_moment": 0.011246525487273812,
+      "nearest_real_rmse_8x8_mean": 0.11952947031325754,
+      "nearest_real_rmse_8x8_min": 0.06265009425905683,
+      "nearest_real_rmse_8x8_max": 0.18006489347226307
+    },
+    {
+      "num_images": 16,
+      "pixel_mean": 0.5204761380463644,
+      "pixel_std": 0.2556498869121317,
+      "luminance_mean": 0.5206836203182446,
+      "luminance_std": 0.24543514538075376,
+      "rgb_mean": [
+        0.5196085611979074,
+        0.5212541168811178,
+        0.5205657360600431
+      ],
+      "rgb_std": [
+        0.25042595677531604,
+        0.2562619312131405,
+        0.2601651222784756
+      ],
+      "saturation_mean": 0.2697624088376189,
+      "entropy_bits": 7.808646580107229,
+      "laplacian_var_mean": 0.03718542043609841,
+      "pairwise_rmse_mean": 0.34830387168108773,
+      "pairwise_rmse_min": 0.2021650161714844,
+      "unique_exact_images": 16,
+      "duplicate_exact_images": 0,
+      "source": "PyTorch local-record",
+      "step": 3500,
+      "path": "DMD2-pytorch/records/cifar10_dmd2_gan_5000_ckpt/samples/generated_step_003500.png",
+      "grid_shape": [
+        128,
+        128,
+        3
+      ],
+      "fid_pixel8": 5.3954196394447385,
+      "proxy_fd_downsample8": 5.3954196394447385,
+      "proxy_fd_color_moment": 0.014672032150950351,
+      "nearest_real_rmse_8x8_mean": 0.13292996832716558,
+      "nearest_real_rmse_8x8_min": 0.08244817515286723,
+      "nearest_real_rmse_8x8_max": 0.221756598284651
+    },
+    {
+      "num_images": 16,
+      "pixel_mean": 0.5535512886795343,
+      "pixel_std": 0.2693383706106848,
+      "luminance_mean": 0.554745912320006,
+      "luminance_std": 0.2569021974257627,
+      "rgb_mean": [
+        0.5441899318321123,
+        0.5597383386948802,
+        0.5567255955116811
+      ],
+      "rgb_std": [
+        0.2635671016859801,
+        0.2597051345237624,
+        0.283864595972662
+      ],
+      "saturation_mean": 0.24303865039910189,
+      "entropy_bits": 7.87714051558593,
+      "laplacian_var_mean": 0.04294926815903326,
+      "pairwise_rmse_mean": 0.3770589407064862,
+      "pairwise_rmse_min": 0.23030087887302683,
+      "unique_exact_images": 16,
+      "duplicate_exact_images": 0,
+      "source": "PyTorch local-record",
+      "step": 3600,
+      "path": "DMD2-pytorch/records/cifar10_dmd2_gan_5000_ckpt/samples/generated_step_003600.png",
+      "grid_shape": [
+        128,
+        128,
+        3
+      ],
+      "fid_pixel8": 5.920207779820233,
+      "proxy_fd_downsample8": 5.920207779820233,
+      "proxy_fd_color_moment": 0.027066193850043985,
+      "nearest_real_rmse_8x8_mean": 0.1391059679083233,
+      "nearest_real_rmse_8x8_min": 0.07175122324240576,
+      "nearest_real_rmse_8x8_max": 0.20119421566363635
+    },
+    {
+      "num_images": 16,
+      "pixel_mean": 0.4736982358047386,
+      "pixel_std": 0.22807513865621354,
+      "luminance_mean": 0.482926946662454,
+      "luminance_std": 0.21691415374756465,
+      "rgb_mean": [
+        0.490714518229148,
+        0.4865538354013219,
+        0.443826353783683
+      ],
+      "rgb_std": [
+        0.21715576409361018,
+        0.21837165860300026,
+        0.244672944591413
+      ],
+      "saturation_mean": 0.22310881401103866,
+      "entropy_bits": 7.721423083350221,
+      "laplacian_var_mean": 0.01989075125158067,
+      "pairwise_rmse_mean": 0.3085052121161976,
+      "pairwise_rmse_min": 0.14047252313596248,
+      "unique_exact_images": 16,
+      "duplicate_exact_images": 0,
+      "source": "PyTorch local-record",
+      "step": 3700,
+      "path": "DMD2-pytorch/records/cifar10_dmd2_gan_5000_ckpt/samples/generated_step_003700.png",
+      "grid_shape": [
+        128,
+        128,
+        3
+      ],
+      "fid_pixel8": 4.2982635002698775,
+      "proxy_fd_downsample8": 4.2982635002698775,
+      "proxy_fd_color_moment": 0.008248858116503433,
+      "nearest_real_rmse_8x8_mean": 0.10776755691215822,
+      "nearest_real_rmse_8x8_min": 0.05039644937713996,
+      "nearest_real_rmse_8x8_max": 0.15948441363394267
+    },
+    {
+      "num_images": 16,
+      "pixel_mean": 0.46340555427900326,
+      "pixel_std": 0.23406474285645248,
+      "luminance_mean": 0.4757101672602635,
+      "luminance_std": 0.21246232837084525,
+      "rgb_mean": [
+        0.486485140931344,
+        0.48039263556986617,
+        0.42333888633576744
+      ],
+      "rgb_std": [
+        0.23778895883247383,
+        0.214025823795925,
+        0.24409363617333119
+      ],
+      "saturation_mean": 0.326380148297554,
+      "entropy_bits": 7.703151885337322,
+      "laplacian_var_mean": 0.02132685192366292,
+      "pairwise_rmse_mean": 0.32336051536794763,
+      "pairwise_rmse_min": 0.20737841030095608,
+      "unique_exact_images": 16,
+      "duplicate_exact_images": 0,
+      "source": "PyTorch local-record",
+      "step": 3800,
+      "path": "DMD2-pytorch/records/cifar10_dmd2_gan_5000_ckpt/samples/generated_step_003800.png",
+      "grid_shape": [
+        128,
+        128,
+        3
+      ],
+      "fid_pixel8": 4.702186618108519,
+      "proxy_fd_downsample8": 4.702186618108519,
+      "proxy_fd_color_moment": 0.012147228631263631,
+      "nearest_real_rmse_8x8_mean": 0.12213785949501282,
+      "nearest_real_rmse_8x8_min": 0.06511772570876763,
+      "nearest_real_rmse_8x8_max": 0.20428309968563502
+    },
+    {
+      "num_images": 16,
+      "pixel_mean": 0.48280236736621734,
+      "pixel_std": 0.24637311272212725,
+      "luminance_mean": 0.4937773334577971,
+      "luminance_std": 0.22959051711786604,
+      "rgb_mean": [
+        0.5009181602328598,
+        0.49891979741117143,
+        0.4485691444546474
+      ],
+      "rgb_std": [
+        0.23825125023872482,
+        0.23561604115077103,
+        0.26088443394718497
+      ],
+      "saturation_mean": 0.27666315701647587,
+      "entropy_bits": 7.8336080218538084,
+      "laplacian_var_mean": 0.03141652553389546,
+      "pairwise_rmse_mean": 0.33869446430205613,
+      "pairwise_rmse_min": 0.18522477910380555,
+      "unique_exact_images": 16,
+      "duplicate_exact_images": 0,
+      "source": "PyTorch local-record",
+      "step": 3900,
+      "path": "DMD2-pytorch/records/cifar10_dmd2_gan_5000_ckpt/samples/generated_step_003900.png",
+      "grid_shape": [
+        128,
+        128,
+        3
+      ],
+      "fid_pixel8": 4.61512110305718,
+      "proxy_fd_downsample8": 4.61512110305718,
+      "proxy_fd_color_moment": 0.004050142362016869,
+      "nearest_real_rmse_8x8_mean": 0.12708639860920154,
+      "nearest_real_rmse_8x8_min": 0.084119654533097,
+      "nearest_real_rmse_8x8_max": 0.17612455011524222
+    },
+    {
+      "num_images": 16,
+      "pixel_mean": 0.4597294028288399,
+      "pixel_std": 0.2256177342418084,
+      "luminance_mean": 0.4759722558115042,
+      "luminance_std": 0.20717698592055178,
+      "rgb_mean": [
+        0.4964216643688568,
+        0.47971837660842664,
+        0.40304816750915334
+      ],
+      "rgb_std": [
+        0.22683864596287084,
+        0.2081197776014371,
+        0.23017782107543303
+      ],
+      "saturation_mean": 0.3224384751585033,
+      "entropy_bits": 7.696850887673849,
+      "laplacian_var_mean": 0.031183559851972496,
+      "pairwise_rmse_mean": 0.311787589438137,
+      "pairwise_rmse_min": 0.16872441139097527,
+      "unique_exact_images": 16,
+      "duplicate_exact_images": 0,
+      "source": "PyTorch local-record",
+      "step": 4000,
+      "path": "DMD2-pytorch/records/cifar10_dmd2_gan_5000_ckpt/samples/generated_step_004000.png",
+      "grid_shape": [
+        128,
+        128,
+        3
+      ],
+      "fid_pixel8": 4.396001619577144,
+      "proxy_fd_downsample8": 4.396001619577144,
+      "proxy_fd_color_moment": 0.011220180080469965,
+      "nearest_real_rmse_8x8_mean": 0.11364218323533452,
+      "nearest_real_rmse_8x8_min": 0.07276759242931982,
+      "nearest_real_rmse_8x8_max": 0.14937493803110793
+    },
+    {
+      "num_images": 16,
+      "pixel_mean": 0.46119767731311273,
+      "pixel_std": 0.28048347567219334,
+      "luminance_mean": 0.46888373472924316,
+      "luminance_std": 0.2691306245041006,
+      "rgb_mean": [
+        0.48941770067406276,
+        0.4664098403033461,
+        0.42776549096201116
+      ],
+      "rgb_std": [
+        0.2691627211399787,
+        0.27323449741947253,
+        0.29490003712813045
+      ],
+      "saturation_mean": 0.2967458650798884,
+      "entropy_bits": 7.9160739529485635,
+      "laplacian_var_mean": 0.033680322463785335,
+      "pairwise_rmse_mean": 0.389185600903638,
+      "pairwise_rmse_min": 0.20180009788868186,
+      "unique_exact_images": 16,
+      "duplicate_exact_images": 0,
+      "source": "PyTorch local-record",
+      "step": 4100,
+      "path": "DMD2-pytorch/records/cifar10_dmd2_gan_5000_ckpt/samples/generated_step_004100.png",
+      "grid_shape": [
+        128,
+        128,
+        3
+      ],
+      "fid_pixel8": 5.513183228947516,
+      "proxy_fd_downsample8": 5.513183228947516,
+      "proxy_fd_color_moment": 0.014048714542582465,
+      "nearest_real_rmse_8x8_mean": 0.13022198051656175,
+      "nearest_real_rmse_8x8_min": 0.06384286461088771,
+      "nearest_real_rmse_8x8_max": 0.19535839495260116
+    },
+    {
+      "num_images": 16,
+      "pixel_mean": 0.4563333748212826,
+      "pixel_std": 0.25304045738207354,
+      "luminance_mean": 0.4641209599513634,
+      "luminance_std": 0.23743648402043738,
+      "rgb_mean": [
+        0.46437318091297913,
+        0.4696530809589181,
+        0.4349738625918767
+      ],
+      "rgb_std": [
+        0.25427568708470855,
+        0.23597310018295498,
+        0.2665533874250438
+      ],
+      "saturation_mean": 0.2869183413624527,
+      "entropy_bits": 7.771007243726472,
+      "laplacian_var_mean": 0.020303020382513262,
+      "pairwise_rmse_mean": 0.35067847572253635,
+      "pairwise_rmse_min": 0.20814624192466524,
+      "unique_exact_images": 16,
+      "duplicate_exact_images": 0,
+      "source": "PyTorch local-record",
+      "step": 4200,
+      "path": "DMD2-pytorch/records/cifar10_dmd2_gan_5000_ckpt/samples/generated_step_004200.png",
+      "grid_shape": [
+        128,
+        128,
+        3
+      ],
+      "fid_pixel8": 4.757616292359622,
+      "proxy_fd_downsample8": 4.757616292359622,
+      "proxy_fd_color_moment": 0.008910630032711434,
+      "nearest_real_rmse_8x8_mean": 0.12119230763171522,
+      "nearest_real_rmse_8x8_min": 0.06783563044165627,
+      "nearest_real_rmse_8x8_max": 0.19433118344726835
+    },
+    {
+      "num_images": 16,
+      "pixel_mean": 0.46958709916258173,
+      "pixel_std": 0.26423415337648626,
+      "luminance_mean": 0.48322992637484674,
+      "luminance_std": 0.24674454553916875,
+      "rgb_mean": [
+        0.47724274280025275,
+        0.49543600643380686,
+        0.4360825482536364
+      ],
+      "rgb_std": [
+        0.2521049192418628,
+        0.2539936903260365,
+        0.2820284534974227
+      ],
+      "saturation_mean": 0.304385844750514,
+      "entropy_bits": 7.8088421099149325,
+      "laplacian_var_mean": 0.030831652689461007,
+      "pairwise_rmse_mean": 0.36436450431189554,
+      "pairwise_rmse_min": 0.19871919638504604,
+      "unique_exact_images": 16,
+      "duplicate_exact_images": 0,
+      "source": "PyTorch local-record",
+      "step": 4300,
+      "path": "DMD2-pytorch/records/cifar10_dmd2_gan_5000_ckpt/samples/generated_step_004300.png",
+      "grid_shape": [
+        128,
+        128,
+        3
+      ],
+      "fid_pixel8": 4.793250640156509,
+      "proxy_fd_downsample8": 4.793250640156509,
+      "proxy_fd_color_moment": 0.006340546038795802,
+      "nearest_real_rmse_8x8_mean": 0.13108572082958897,
+      "nearest_real_rmse_8x8_min": 0.07543306724902304,
+      "nearest_real_rmse_8x8_max": 0.17218463814844304
+    },
+    {
+      "num_images": 16,
+      "pixel_mean": 0.5043098000919118,
+      "pixel_std": 0.22048168713894623,
+      "luminance_mean": 0.5067505210726868,
+      "luminance_std": 0.2025752053033705,
+      "rgb_mean": [
+        0.5209029852175201,
+        0.5029799517462984,
+        0.4890464633118314
+      ],
+      "rgb_std": [
+        0.20088853635988313,
+        0.20719881353515385,
+        0.24907609074502146
+      ],
+      "saturation_mean": 0.27616175891913086,
+      "entropy_bits": 7.678919242274368,
+      "laplacian_var_mean": 0.027355237261337283,
+      "pairwise_rmse_mean": 0.2993449815765096,
+      "pairwise_rmse_min": 0.1474164191206721,
+      "unique_exact_images": 16,
+      "duplicate_exact_images": 0,
+      "source": "PyTorch local-record",
+      "step": 4400,
+      "path": "DMD2-pytorch/records/cifar10_dmd2_gan_5000_ckpt/samples/generated_step_004400.png",
+      "grid_shape": [
+        128,
+        128,
+        3
+      ],
+      "fid_pixel8": 4.628866830984183,
+      "proxy_fd_downsample8": 4.628866830984183,
+      "proxy_fd_color_moment": 0.014000730277193545,
+      "nearest_real_rmse_8x8_mean": 0.11232585072738283,
+      "nearest_real_rmse_8x8_min": 0.06251825498179787,
+      "nearest_real_rmse_8x8_max": 0.15337056958134943
+    },
+    {
+      "num_images": 16,
+      "pixel_mean": 0.42775886884701797,
+      "pixel_std": 0.2511418166441908,
+      "luminance_mean": 0.4278470523609834,
+      "luminance_std": 0.23573172320651728,
+      "rgb_mean": [
+        0.4319161209405455,
+        0.426319316789197,
+        0.4250411688112566
+      ],
+      "rgb_std": [
+        0.24625391549432715,
+        0.2434885297161339,
+        0.2631772031423625
+      ],
+      "saturation_mean": 0.3035246490144289,
+      "entropy_bits": 7.806194803252669,
+      "laplacian_var_mean": 0.04208412038037316,
+      "pairwise_rmse_mean": 0.35204916396533115,
+      "pairwise_rmse_min": 0.19607358041385012,
+      "unique_exact_images": 16,
+      "duplicate_exact_images": 0,
+      "source": "PyTorch local-record",
+      "step": 4500,
+      "path": "DMD2-pytorch/records/cifar10_dmd2_gan_5000_ckpt/samples/generated_step_004500.png",
+      "grid_shape": [
+        128,
+        128,
+        3
+      ],
+      "fid_pixel8": 5.264917259677465,
+      "proxy_fd_downsample8": 5.264917259677465,
+      "proxy_fd_color_moment": 0.014762307351872488,
+      "nearest_real_rmse_8x8_mean": 0.13577089667837605,
+      "nearest_real_rmse_8x8_min": 0.07618410978116577,
+      "nearest_real_rmse_8x8_max": 0.1731285419170653
+    },
+    {
+      "num_images": 16,
+      "pixel_mean": 0.4903275633169935,
+      "pixel_std": 0.2383182324286487,
+      "luminance_mean": 0.5035171482460172,
+      "luminance_std": 0.22697231718597627,
+      "rgb_mean": [
+        0.5186044730391998,
+        0.5071528416053864,
+        0.4452253753063052
+      ],
+      "rgb_std": [
+        0.22235041608239756,
+        0.23308480094604872,
+        0.2519952911929207
+      ],
+      "saturation_mean": 0.2555619484576541,
+      "entropy_bits": 7.7474733784305725,
+      "laplacian_var_mean": 0.02686529048113631,
+      "pairwise_rmse_mean": 0.32267945495011596,
+      "pairwise_rmse_min": 0.1711553437332681,
+      "unique_exact_images": 16,
+      "duplicate_exact_images": 0,
+      "source": "PyTorch local-record",
+      "step": 4600,
+      "path": "DMD2-pytorch/records/cifar10_dmd2_gan_5000_ckpt/samples/generated_step_004600.png",
+      "grid_shape": [
+        128,
+        128,
+        3
+      ],
+      "fid_pixel8": 4.723330030734953,
+      "proxy_fd_downsample8": 4.723330030734953,
+      "proxy_fd_color_moment": 0.006383244200546202,
+      "nearest_real_rmse_8x8_mean": 0.12558042594214974,
+      "nearest_real_rmse_8x8_min": 0.0646639504216822,
+      "nearest_real_rmse_8x8_max": 0.20144328539651157
+    },
+    {
+      "num_images": 16,
+      "pixel_mean": 0.5164316214767157,
+      "pixel_std": 0.2634368138426773,
+      "luminance_mean": 0.5229635390337776,
+      "luminance_std": 0.2505356239211067,
+      "rgb_mean": [
+        0.5376835841758579,
+        0.5219290939032084,
+        0.4896821863510984
+      ],
+      "rgb_std": [
+        0.26077297067348654,
+        0.2553677730049722,
+        0.27163251377212466
+      ],
+      "saturation_mean": 0.2864466244700818,
+      "entropy_bits": 7.8478095553164255,
+      "laplacian_var_mean": 0.02827881140872238,
+      "pairwise_rmse_mean": 0.367277899838179,
+      "pairwise_rmse_min": 0.17421231447721156,
+      "unique_exact_images": 16,
+      "duplicate_exact_images": 0,
+      "source": "PyTorch local-record",
+      "step": 4700,
+      "path": "DMD2-pytorch/records/cifar10_dmd2_gan_5000_ckpt/samples/generated_step_004700.png",
+      "grid_shape": [
+        128,
+        128,
+        3
+      ],
+      "fid_pixel8": 4.988027464383042,
+      "proxy_fd_downsample8": 4.988027464383042,
+      "proxy_fd_color_moment": 0.01266109317212603,
+      "nearest_real_rmse_8x8_mean": 0.13585804332595225,
+      "nearest_real_rmse_8x8_min": 0.06373645690038987,
+      "nearest_real_rmse_8x8_max": 0.19946633642948589
+    },
+    {
+      "num_images": 16,
+      "pixel_mean": 0.47616030624489386,
+      "pixel_std": 0.2355972832191976,
+      "luminance_mean": 0.4794500315946691,
+      "luminance_std": 0.22338465464110457,
+      "rgb_mean": [
+        0.4894964479932364,
+        0.47789928959860806,
+        0.4610851811427098
+      ],
+      "rgb_std": [
+        0.22731423853075278,
+        0.22789980291088402,
+        0.25000004047695784
+      ],
+      "saturation_mean": 0.26793089412049065,
+      "entropy_bits": 7.752407391332099,
+      "laplacian_var_mean": 0.023429799725464287,
+      "pairwise_rmse_mean": 0.3148518639293574,
+      "pairwise_rmse_min": 0.11685837817952854,
+      "unique_exact_images": 16,
+      "duplicate_exact_images": 0,
+      "source": "PyTorch local-record",
+      "step": 4800,
+      "path": "DMD2-pytorch/records/cifar10_dmd2_gan_5000_ckpt/samples/generated_step_004800.png",
+      "grid_shape": [
+        128,
+        128,
+        3
+      ],
+      "fid_pixel8": 4.508002444135578,
+      "proxy_fd_downsample8": 4.508002444135578,
+      "proxy_fd_color_moment": 0.004090546703744148,
+      "nearest_real_rmse_8x8_mean": 0.11432086090036159,
+      "nearest_real_rmse_8x8_min": 0.05490302082066322,
+      "nearest_real_rmse_8x8_max": 0.18533354089753046
+    },
+    {
+      "num_images": 16,
+      "pixel_mean": 0.5330050998263889,
+      "pixel_std": 0.2704099874955798,
+      "luminance_mean": 0.5437850155101103,
+      "luminance_std": 0.2603856659166623,
+      "rgb_mean": [
+        0.5707296932444852,
+        0.5410407571231783,
+        0.4872448491115021
+      ],
+      "rgb_std": [
+        0.2655007163276837,
+        0.2664887876738588,
+        0.272536350609321
+      ],
+      "saturation_mean": 0.222258461700851,
+      "entropy_bits": 7.835694989216096,
+      "laplacian_var_mean": 0.0394594266362284,
+      "pairwise_rmse_mean": 0.3613145340144895,
+      "pairwise_rmse_min": 0.2244384728957778,
+      "unique_exact_images": 16,
+      "duplicate_exact_images": 0,
+      "source": "PyTorch local-record",
+      "step": 4900,
+      "path": "DMD2-pytorch/records/cifar10_dmd2_gan_5000_ckpt/samples/generated_step_004900.png",
+      "grid_shape": [
+        128,
+        128,
+        3
+      ],
+      "fid_pixel8": 6.28833170464557,
+      "proxy_fd_downsample8": 6.28833170464557,
+      "proxy_fd_color_moment": 0.01840188374976022,
+      "nearest_real_rmse_8x8_mean": 0.13387558352825524,
+      "nearest_real_rmse_8x8_min": 0.05558065598770543,
+      "nearest_real_rmse_8x8_max": 0.18049919234964262
+    },
+    {
+      "num_images": 16,
+      "pixel_mean": 0.4056327869689543,
+      "pixel_std": 0.2637412763428427,
+      "luminance_mean": 0.4055980894799326,
+      "luminance_std": 0.2472266453356202,
+      "rgb_mean": [
+        0.4140270756739804,
+        0.40227625229775027,
+        0.4005950329350552
+      ],
+      "rgb_std": [
+        0.24503123534409624,
+        0.2538326021903566,
+        0.289999960238454
+      ],
+      "saturation_mean": 0.36356325016617697,
+      "entropy_bits": 7.774761807610832,
+      "laplacian_var_mean": 0.03876698089956011,
+      "pairwise_rmse_mean": 0.36488607185884303,
+      "pairwise_rmse_min": 0.20087579974127492,
+      "unique_exact_images": 16,
+      "duplicate_exact_images": 0,
+      "source": "PyTorch supplemented-grid",
+      "step": 5000,
+      "path": "DMD2-records/sample_steps_0_2500_5000/pytorch/pytorch_step_005000.png",
+      "grid_shape": [
+        128,
+        128,
+        3
+      ],
+      "fid_pixel8": 5.77976067988582,
+      "proxy_fd_downsample8": 5.77976067988582,
+      "proxy_fd_color_moment": 0.021812275455816633,
+      "nearest_real_rmse_8x8_mean": 0.12950360001421743,
+      "nearest_real_rmse_8x8_min": 0.07380010146167837,
+      "nearest_real_rmse_8x8_max": 0.1958345208148936
+    }
+  ]
+}

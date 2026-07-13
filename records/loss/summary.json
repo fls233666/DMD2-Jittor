@@ -1,0 +1,152 @@
+{
+  "curves": {
+    "generator_gen_cls_loss": {
+      "filter_generator_step": false,
+      "jittor": {
+        "count": 1000,
+        "first_step": 0.0,
+        "last": 2.7874855995178223,
+        "last_step": 4995.0,
+        "max": 4.218869686126709,
+        "mean": 2.8846106404662133,
+        "min": 0.6417660117149353
+      },
+      "key": "generator/gen_cls_loss",
+      "plot": "/home/koishi/DMD2/DMD2-records/loss/generator_gen_cls_loss_ma20.svg",
+      "pytorch": {
+        "count": 1000,
+        "first_step": 0.0,
+        "last": 3.0910420417785645,
+        "last_step": 4995.0,
+        "max": 3.834604501724243,
+        "mean": 2.7068744119405745,
+        "min": 0.6008316278457642
+      },
+      "status": "ok"
+    },
+    "generator_loss_dm": {
+      "filter_generator_step": false,
+      "jittor": {
+        "count": 1000,
+        "first_step": 0.0,
+        "last": 0.036087118089199066,
+        "last_step": 4995.0,
+        "max": 0.40197527408599854,
+        "mean": 0.03914876763246944,
+        "min": 1.8663603995605627e-08
+      },
+      "key": "generator/loss_dm",
+      "plot": "/home/koishi/DMD2/DMD2-records/loss/generator_loss_dm_ma20.svg",
+      "pytorch": {
+        "count": 1000,
+        "first_step": 0.0,
+        "last": 0.03400528430938721,
+        "last_step": 4995.0,
+        "max": 0.379597544670105,
+        "mean": 0.03993573216348886,
+        "min": 0.0
+      },
+      "status": "ok"
+    },
+    "guidance_guidance_cls_loss": {
+      "filter_generator_step": false,
+      "jittor": {
+        "count": 5000,
+        "first_step": 0.0,
+        "last": 0.49301305413246155,
+        "last_step": 4999.0,
+        "max": 2.3721885681152344,
+        "mean": 0.626634618139267,
+        "min": 0.32204705476760864
+      },
+      "key": "guidance/guidance_cls_loss",
+      "plot": "/home/koishi/DMD2/DMD2-records/loss/guidance_guidance_cls_loss_ma20.svg",
+      "pytorch": {
+        "count": 5000,
+        "first_step": 0.0,
+        "last": 0.6733318567276001,
+        "last_step": 4999.0,
+        "max": 1.789583683013916,
+        "mean": 0.6478751480400562,
+        "min": 0.27565106749534607
+      },
+      "status": "ok"
+    },
+    "guidance_loss_fake_mean": {
+      "filter_generator_step": false,
+      "jittor": {
+        "count": 5000,
+        "first_step": 0.0,
+        "last": 0.46059247851371765,
+        "last_step": 4999.0,
+        "max": 0.8975579738616943,
+        "mean": 0.4856790088221431,
+        "min": 0.03899548575282097
+      },
+      "key": "guidance/loss_fake_mean",
+      "plot": "/home/koishi/DMD2/DMD2-records/loss/guidance_loss_fake_mean_ma20.svg",
+      "pytorch": {
+        "count": 5000,
+        "first_step": 0.0,
+        "last": 0.6531251668930054,
+        "last_step": 4999.0,
+        "max": 0.8495564460754395,
+        "mean": 0.5013468487799168,
+        "min": 0.03592308610677719
+      },
+      "status": "ok"
+    },
+    "loss_generator": {
+      "filter_generator_step": true,
+      "jittor": {
+        "count": 1000,
+        "first_step": 0.0,
+        "last": 0.0444495752453804,
+        "last_step": 4995.0,
+        "max": 0.40675637125968933,
+        "mean": 0.04780259967921302,
+        "min": 0.0021937224082648754
+      },
+      "key": "loss_generator",
+      "plot": "/home/koishi/DMD2/DMD2-records/loss/loss_generator_ma20.svg",
+      "pytorch": {
+        "count": 1000,
+        "first_step": 0.0,
+        "last": 0.04327841103076935,
+        "last_step": 4995.0,
+        "max": 0.38498416543006897,
+        "mean": 0.04805635553237517,
+        "min": 0.0018024948658421636
+      },
+      "status": "ok"
+    },
+    "loss_guidance": {
+      "filter_generator_step": false,
+      "jittor": {
+        "count": 5000,
+        "first_step": 0.0,
+        "last": 0.4655226171016693,
+        "last_step": 4999.0,
+        "max": 0.9057881236076355,
+        "mean": 0.49194535477533935,
+        "min": 0.04542786628007889
+      },
+      "key": "loss_guidance",
+      "plot": "/home/koishi/DMD2/DMD2-records/loss/loss_guidance_ma20.svg",
+      "pytorch": {
+        "count": 5000,
+        "first_step": 0.0,
+        "last": 0.6598584651947021,
+        "last_step": 4999.0,
+        "max": 0.8579397201538086,
+        "mean": 0.5078256006643176,
+        "min": 0.04169066622853279
+      },
+      "status": "ok"
+    }
+  },
+  "jittor_log": "/home/koishi/DMD2/DMD2-jittor/logs/cifar10_dmd2_5000/train_metrics.jsonl",
+  "jittor_step_offset": -1.0,
+  "pytorch_log": "/home/koishi/DMD2/DMD2-pytorch/records/cifar10_dmd2_gan_5000_ckpt/train_metrics.jsonl",
+  "smooth": 20
+}

@@ -1,0 +1,384 @@
+{
+  "inputs": {
+    "pytorch_performance": "DMD2-records/new-perf/pytorch_perf_5000/performance.jsonl",
+    "jittor_performance": "DMD2-records/new-perf/jittor_perf_5000_cudnn/performance.jsonl",
+    "pytorch_train_metrics": "DMD2-records/new-perf/pytorch_perf_5000/train_metrics.jsonl",
+    "jittor_train_metrics": "DMD2-records/new-perf/jittor_perf_5000_cudnn/train_metrics.jsonl",
+    "jittor_gpu_aligned": "DMD2-records/new-perf/gpu_curves/jittor_gpu_aligned_by_step.jsonl"
+  },
+  "curves": {
+    "samples_per_second_compare": "DMD2-records/new-perf/cifar10_performance_curves/samples_per_second_compare_ma50.svg",
+    "step_time_compare": "DMD2-records/new-perf/cifar10_performance_curves/step_time_compare_ma50.svg",
+    "total_time_compare": "DMD2-records/new-perf/cifar10_performance_curves/total_time_compare_ma50.svg",
+    "data_time_compare": "DMD2-records/new-perf/cifar10_performance_curves/data_time_compare_ma50.svg",
+    "step_time_distribution": "DMD2-records/new-perf/cifar10_performance_curves/step_time_distribution_box.svg",
+    "throughput_distribution": "DMD2-records/new-perf/cifar10_performance_curves/throughput_distribution_box.svg",
+    "pytorch_memory": "DMD2-records/new-perf/cifar10_performance_curves/pytorch_memory_ma50.svg",
+    "jittor_gpu_utilization": "DMD2-records/new-perf/cifar10_performance_curves/jittor_gpu_utilization_ma50.svg",
+    "jittor_gpu_memory_power": "DMD2-records/new-perf/cifar10_performance_curves/jittor_gpu_memory_power_ma50.svg",
+    "generator_vs_guidance": "DMD2-records/new-perf/cifar10_performance_curves/generator_vs_guidance_step_bars.svg"
+  },
+  "record_counts": {
+    "pytorch_performance": 5000,
+    "jittor_performance": 5000,
+    "pytorch_train_metrics": 5000,
+    "jittor_train_metrics": 5000,
+    "jittor_gpu_aligned": 4999
+  },
+  "step_ranges": {
+    "pytorch_performance": [
+      0,
+      4999
+    ],
+    "jittor_performance": [
+      1,
+      5000
+    ]
+  },
+  "all_steps": {
+    "pytorch": {
+      "step_time": {
+        "count": 5000,
+        "mean": 0.9116237296581269,
+        "median": 0.8526389598846436,
+        "p90": 1.418301892280579,
+        "p95": 1.643198263645172,
+        "min": 0.29631781578063965,
+        "max": 4.742083549499512,
+        "last": 1.1084372997283936
+      },
+      "total_time": {
+        "count": 5000,
+        "mean": 0.9186526730537414,
+        "median": 0.8596518039703369,
+        "p90": 1.4265653371810916,
+        "p95": 1.6498091101646424,
+        "min": 0.30528759956359863,
+        "max": 4.976769208908081,
+        "last": 1.1153466701507568
+      },
+      "data_time": {
+        "count": 5000,
+        "mean": 0.007028943395614624,
+        "median": 0.005826830863952637,
+        "p90": 0.010941815376281739,
+        "p95": 0.013342344760894777,
+        "min": 0.000583648681640625,
+        "max": 0.6834900379180908,
+        "last": 0.006909370422363281
+      },
+      "samples_per_second": {
+        "count": 5000,
+        "mean": 40.08818975996527,
+        "median": 37.22437616778062,
+        "p90": 60.40923245943277,
+        "p95": 66.30004336567914,
+        "min": 6.429874212917521,
+        "max": 104.8191935923478,
+        "last": 28.690631223810165
+      }
+    },
+    "jittor": {
+      "step_time": {
+        "count": 5000,
+        "mean": 0.7179696893692017,
+        "median": 0.6270678043365479,
+        "p90": 1.0824371814727782,
+        "p95": 1.0889257431030273,
+        "min": 0.609830379486084,
+        "max": 3.8065168857574463,
+        "last": 0.6266512870788574
+      },
+      "total_time": {
+        "count": 5000,
+        "mean": 0.7220431855678558,
+        "median": 0.6311475038528442,
+        "p90": 1.086495280265808,
+        "p95": 1.093031656742096,
+        "min": 0.6137588024139404,
+        "max": 3.828566551208496,
+        "last": 0.6308350563049316
+      },
+      "data_time": {
+        "count": 5000,
+        "mean": 0.004073496198654175,
+        "median": 0.004064321517944336,
+        "p90": 0.00417330265045166,
+        "p95": 0.0042033553123474125,
+        "min": 0.003744840621948242,
+        "max": 0.022049665451049805,
+        "last": 0.004183769226074219
+      },
+      "samples_per_second": {
+        "count": 5000,
+        "mean": 46.54216096837647,
+        "median": 50.70130168488225,
+        "p90": 51.548134356017364,
+        "p95": 51.70467302533083,
+        "min": 8.358219603078108,
+        "max": 52.137745111178184,
+        "last": 50.72641363249146
+      }
+    }
+  },
+  "post_warmup_100": {
+    "pytorch": {
+      "step_time": {
+        "count": 4900,
+        "mean": 0.9092354587632783,
+        "median": 0.8458899259567261,
+        "p90": 1.4164971828460695,
+        "p95": 1.6399134755134583,
+        "min": 0.29631781578063965,
+        "max": 2.1633195877075195,
+        "last": 1.1084372997283936
+      },
+      "total_time": {
+        "count": 4900,
+        "mean": 0.9162339739410245,
+        "median": 0.8559032678604126,
+        "p90": 1.424836397171021,
+        "p95": 1.6458922624588017,
+        "min": 0.30528759956359863,
+        "max": 2.1711597442626953,
+        "last": 1.1153466701507568
+      },
+      "data_time": {
+        "count": 4900,
+        "mean": 0.006998515177746209,
+        "median": 0.0058214664459228516,
+        "p90": 0.01095266342163086,
+        "p95": 0.013352084159851079,
+        "min": 0.000583648681640625,
+        "max": 0.6834900379180908,
+        "last": 0.006909370422363281
+      },
+      "samples_per_second": {
+        "count": 4900,
+        "mean": 40.163070401785944,
+        "median": 37.3874045379784,
+        "p90": 60.58424938692987,
+        "p95": 66.33690312470415,
+        "min": 14.738666781456418,
+        "max": 104.8191935923478,
+        "last": 28.690631223810165
+      }
+    },
+    "jittor": {
+      "step_time": {
+        "count": 4901,
+        "mean": 0.7173098563369599,
+        "median": 0.6271071434020996,
+        "p90": 1.0824975967407227,
+        "p95": 1.088923692703247,
+        "min": 0.609830379486084,
+        "max": 1.3113667964935303,
+        "last": 0.6266512870788574
+      },
+      "total_time": {
+        "count": 4901,
+        "mean": 0.7213802089060698,
+        "median": 0.6311910152435303,
+        "p90": 1.0866367816925049,
+        "p95": 1.093031406402588,
+        "min": 0.6137588024139404,
+        "max": 1.3184115886688232,
+        "last": 0.6308350563049316
+      },
+      "data_time": {
+        "count": 4901,
+        "mean": 0.004070352569109955,
+        "median": 0.0040667057037353516,
+        "p90": 0.004173755645751953,
+        "p95": 0.004203319549560547,
+        "min": 0.0037622451782226562,
+        "max": 0.01659846305847168,
+        "last": 0.004183769226074219
+      },
+      "samples_per_second": {
+        "count": 4901,
+        "mean": 46.552446468837196,
+        "median": 50.69780657073129,
+        "p90": 51.5438168262573,
+        "p95": 51.69977262038158,
+        "min": 24.271631313791644,
+        "max": 52.137745111178184,
+        "last": 50.72641363249146
+      }
+    }
+  },
+  "update_split_median": {
+    "pytorch": {
+      "step_time": {
+        "generator_update_median": 1.4187675714492798,
+        "generator_update_mean": 1.434105542421341,
+        "generator_update_count": 1000,
+        "guidance_only_median": 0.7800966501235962,
+        "guidance_only_mean": 0.7810032764673233,
+        "guidance_only_count": 4000
+      },
+      "total_time": {
+        "generator_update_median": 1.4240721464157104,
+        "generator_update_mean": 1.4409047586917878,
+        "generator_update_count": 1000,
+        "guidance_only_median": 0.7860348224639893,
+        "guidance_only_mean": 0.7880896516442298,
+        "guidance_only_count": 4000
+      },
+      "data_time": {
+        "generator_update_median": 0.005676984786987305,
+        "generator_update_mean": 0.006799216270446777,
+        "generator_update_count": 1000,
+        "guidance_only_median": 0.00585484504699707,
+        "guidance_only_mean": 0.0070863751769065855,
+        "guidance_only_count": 4000
+      },
+      "samples_per_second": {
+        "generator_update_median": 22.47077637311294,
+        "generator_update_mean": 23.194139389060226,
+        "generator_update_count": 1000,
+        "guidance_only_median": 40.710664579888366,
+        "guidance_only_mean": 44.311702352691526,
+        "guidance_only_count": 4000
+      }
+    },
+    "jittor": {
+      "step_time": {
+        "generator_update_median": 1.0824425220489502,
+        "generator_update_mean": 1.0874861268997191,
+        "generator_update_count": 1000,
+        "guidance_only_median": 0.62428879737854,
+        "guidance_only_mean": 0.6255905799865723,
+        "guidance_only_count": 4000
+      },
+      "total_time": {
+        "generator_update_median": 1.086499571800232,
+        "generator_update_mean": 1.0915635964870454,
+        "generator_update_count": 1000,
+        "guidance_only_median": 0.6283493041992188,
+        "guidance_only_mean": 0.6296630828380585,
+        "guidance_only_count": 4000
+      },
+      "data_time": {
+        "generator_update_median": 0.0040705204010009766,
+        "generator_update_mean": 0.00407746958732605,
+        "generator_update_count": 1000,
+        "guidance_only_median": 0.004063725471496582,
+        "guidance_only_mean": 0.004072502851486206,
+        "guidance_only_count": 4000
+      },
+      "samples_per_second": {
+        "generator_update_median": 29.452381603573905,
+        "generator_update_mean": 29.374490305214838,
+        "generator_update_count": 1000,
+        "guidance_only_median": 50.92708750714073,
+        "guidance_only_mean": 50.834078634166886,
+        "guidance_only_count": 4000
+      }
+    }
+  },
+  "jittor_gpu": {
+    "gpu_utilization_percent": {
+      "count": 4999,
+      "mean": 80.17202202345231,
+      "median": 100.0,
+      "p90": 100.0,
+      "p95": 100.0,
+      "min": 0.0,
+      "max": 100.0,
+      "last": 100.0
+    },
+    "gpu_memory_used_mib": {
+      "count": 4999,
+      "mean": 16400.461825698472,
+      "median": 16401.0,
+      "p90": 16401.0,
+      "p95": 16401.0,
+      "min": 16035.0,
+      "max": 16401.0,
+      "last": 16401.0
+    },
+    "gpu_memory_used_peak_mib": {
+      "count": 4999,
+      "mean": 16400.511102220444,
+      "median": 16401.0,
+      "p90": 16401.0,
+      "p95": 16401.0,
+      "min": 16035.0,
+      "max": 16401.0,
+      "last": 16401.0
+    },
+    "gpu_power_draw_w": {
+      "count": 4999,
+      "mean": 171.53780889511233,
+      "median": 171.41333333333333,
+      "p90": 177.93,
+      "p95": 179.31366666666668,
+      "min": 133.515,
+      "max": 183.88,
+      "last": 168.32666666666668
+    }
+  },
+  "pytorch_memory": {
+    "torch_memory_allocated_mb": {
+      "count": 5000,
+      "mean": 2412.678531347656,
+      "median": 2412.6787109375,
+      "p90": 2412.6787109375,
+      "p95": 2412.6787109375,
+      "min": 2411.78076171875,
+      "max": 2412.6787109375,
+      "last": 2412.6787109375
+    },
+    "torch_memory_reserved_mb": {
+      "count": 5000,
+      "mean": 9287.8668,
+      "median": 9288.0,
+      "p90": 9288.0,
+      "p95": 9288.0,
+      "min": 8622.0,
+      "max": 9288.0,
+      "last": 9288.0
+    },
+    "torch_step_peak_memory_allocated_mb": {
+      "count": 5000,
+      "mean": 8910.780884863281,
+      "median": 8910.61572265625,
+      "p90": 8912.11767578125,
+      "p95": 8912.11767578125,
+      "min": 8240.3759765625,
+      "max": 8912.11767578125,
+      "last": 8910.61572265625
+    },
+    "torch_step_peak_memory_reserved_mb": {
+      "count": 5000,
+      "mean": 9287.8668,
+      "median": 9288.0,
+      "p90": 9288.0,
+      "p95": 9288.0,
+      "min": 8622.0,
+      "max": 9288.0,
+      "last": 9288.0
+    },
+    "torch_run_peak_memory_allocated_mb": {
+      "count": 5000,
+      "mean": 8911.981245800782,
+      "median": 8912.11767578125,
+      "p90": 8912.11767578125,
+      "p95": 8912.11767578125,
+      "min": 8240.3759765625,
+      "max": 8912.11767578125,
+      "last": 8912.11767578125
+    },
+    "torch_run_peak_memory_reserved_mb": {
+      "count": 5000,
+      "mean": 9287.8668,
+      "median": 9288.0,
+      "p90": 9288.0,
+      "p95": 9288.0,
+      "min": 8622.0,
+      "max": 9288.0,
+      "last": 9288.0
+    }
+  }
+}
