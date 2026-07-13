@@ -356,5 +356,4 @@ Jittor 侧 GPU 指标来自 `nvidia-smi` 对齐采样；PyTorch 显存来自 `to
 - 实现了实验结果可视化工具，支持从训练输出生成样本网格、从 jsonl/csv 生成 loss 曲线和性能曲线，并将 PyTorch/Jittor step 0、2500、5000 的采样结果整理为对比图。
 - 实现了轻量图像质量评估流程，使用 `Pixel-FID@8x8` 对已有 CIFAR-10 sample grid 做本地 sanity check，并保存 `fid_results.json` 和完整图像质量统计报告。
 - 实现了性能日志采集与展示，记录 step time、total time、data time、samples per second，并补充 Jittor 侧 `nvidia-smi` GPU 利用率、显存、功耗曲线以及 PyTorch 侧 CUDA allocator 显存指标。
-- 整理了完整实验记录目录 `records/`，将 README 中引用的日志、曲线、样本图、质量报告、性能报告和系统环境信息全部放入项目内，并使用相对路径保证 GitHub 页面可直接查看。
 - 完成了 CIFAR-10 5000 step PyTorch-Jittor 对齐实验整理：训练配置、TTUR 更新节奏、核心 loss 均值、GAN 判别趋势、采样图和性能结果均已在 README 中给出表格或曲线。
