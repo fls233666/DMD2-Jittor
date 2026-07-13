@@ -162,31 +162,6 @@ bash scripts/eval_fid.sh
 | [tools/visualize_samples.py](tools/visualize_samples.py) | 从图片目录或 npz 生成样本网格 |
 | [tools/compute_fid.py](tools/compute_fid.py) | 计算 lightweight pixel-FID |
 
-### 采样脚本
-
-ImageNet-64 官方 generator checkpoint 一步采样：
-
-```bash
-USE_CUDA=1 \
-CONVERTED_CKPT=checkpoints/imagenet64_demo/generator_jittor.pkl \
-bash scripts/sample_imagenet64_demo.sh
-```
-
-直接调用工具：
-
-```bash
-python tools/sample_one_step.py --checkpoint checkpoints/imagenet64_demo/generator_jittor.pkl --use-cuda
-python tools/sample_multistep.py --checkpoint checkpoints/imagenet64_teacher/edm_imagenet64_teacher_jittor.pkl --use-cuda
-```
-
-### PyTorch-Jittor checkpoint / forward 对齐
-
-```bash
-TARGET=generator bash scripts/align_pytorch_jittor.sh
-bash scripts/align_imagenet64_forward.sh
-```
-
-配置见 [configs/pytorch_jittor_align_imagenet64.yaml](configs/pytorch_jittor_align_imagenet64.yaml)。
 
 ## 实验记录索引
 
@@ -232,7 +207,6 @@ README 引用的图片和日志均放在 [records/](records/) 下，使用相对
 | 对齐项 | 误差统计 | 判断 |
 | --- | ---: | --- |
 | CIFAR-10 teacher EDM forward | MAE `2.2411025e-7`, max AE `9.1642141e-7` | teacher 权重转换和 EDM forward 高精度对齐 |
-| ImageNet-64 generator forward | MAE `5.81759195e-6`, median AE `2.71201134e-6`, max AE `1.75967813e-4` | generator checkpoint 转换和 forward 路径基本对齐 |
 
 ### 训练过程 Log 示例
 
