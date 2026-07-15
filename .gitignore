@@ -32,9 +32,6 @@ logs/*
 runs/*
 !runs/.gitkeep
 
-tests/*
-!tests/.gitkeep
-
 # Experiment tools
 wandb/
 tensorboard/
